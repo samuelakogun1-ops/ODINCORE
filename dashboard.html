@@ -3,90 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Odin's Cafe Bank</title>
+    <title>Online Banking | Secure Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Professional Sidebar Overrides */
+        .sidebar {
+            width: 260px;
+            background: #002244;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 20px 0;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+            color: #f1f1f1;
+            letter-spacing: 1px;
+        }
+        .nav-link {
+            display: block;
+            color: #b0c4de;
+            padding: 15px 25px;
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 14px;
+            border-left: 4px solid transparent;
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid #3498db;
+        }
+        .nav-link.active {
+            background: #003366;
+            color: white;
+            border-left: 4px solid #2ecc71;
+            font-weight: bold;
+        }
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            background-color: #f4f7f6;
+            min-height: 100vh;
+        }
+        .balance-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 600px;
+        }
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 10px 0;
+        }
+        .status-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">Odin's Bank</div>
+        <div class="logo">ODIN CENTRAL BANK</div>
         <nav>
-            <a href="dashboard.html" class="nav-link active">Dashboard</a>
-            <a href="#" class="nav-link">Transfer Funds</a>
-            <a href="#" class="nav-link">Transaction History</a>
-            <a href="#" class="nav-link">Settings</a>
-            <a href="index.html" class="nav-link">Logout</a>
+            <a href="dashboard.html" class="nav-link active">📊 Dashboard</a>
+            <a href="#" class="nav-link" onclick="openTransfer()">💸 Transfer Funds</a>
+            <a href="#" class="nav-link">📜 Transaction History</a>
+            <a href="#" class="nav-link">💳 Cards & Services</a>
+            <a href="#" class="nav-link">🛠️ Settings</a>
+            <div style="margin-top: 100px;">
+                <a href="index.html" class="nav-link" style="color: #ff7675;">🚪 Logout</a>
+            </div>
         </nav>
     </div>
 
     <div class="main-content">
-        <h1>Welcome Back, Client</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1>Account Overview</h1>
+            <span class="status-badge">● Verified Account</span>
+        </div>
         
         <div class="balance-card">
-            <h3>Available Balance</h3>
+            <h3 style="color: #7f8c8d; font-size: 14px; margin: 0;">TOTAL AVAILABLE BALANCE</h3>
             <div class="balance-amount" id="displayBalance">$12,450.00</div>
-            <p>Account: ****5678</p>
+            <p style="color: #95a5a6; font-size: 13px;">Account Number: **** **** 5678</p>
         </div>
 
-        <div class="balance-card" style="margin-top: 20px;">
-            <h3 style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Recent Transactions</h3>
-            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f9f9f9;">
-                <span>Apr 16 - Online Transfer</span>
+        <div class="balance-card" style="margin-top: 25px;">
+            <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 16px;">Recent Transactions</h3>
+            
+            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f9f9f9;">
+                <div>
+                    <div style="font-weight: 500;">Online Transfer - External</div>
+                    <div style="font-size: 11px; color: #95a5a6;">April 16, 2026</div>
+                </div>
                 <span style="color: #e74c3c; font-weight: bold;">-$1,200.00</span>
             </div>
-            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f9f9f9;">
-                <span>Apr 15 - Salary Deposit</span>
+
+            <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f9f9f9;">
+                <div>
+                    <div style="font-weight: 500;">Salary Credit - Monthly</div>
+                    <div style="font-size: 11px; color: #95a5a6;">April 15, 2026</div>
+                </div>
                 <span style="color: #2ecc71; font-weight: bold;">+$5,400.00</span>
             </div>
-            <div style="display: flex; justify-content: space-between; padding: 10px 0;">
-                <span>Apr 12 - Cashback Reward</span>
+
+            <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+                <div>
+                    <div style="font-weight: 500;">Cashback Reward</div>
+                    <div style="font-size: 11px; color: #95a5a6;">April 12, 2026</div>
+                </div>
                 <span style="color: #2ecc71; font-weight: bold;">+$25.50</span>
             </div>
         </div>
     </div>
 
-    <div id="transferModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;">
-        <div style="background:white; padding:30px; border-radius:10px; width:400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-            <h2 style="color:#003366; margin-top:0;">Transfer Funds</h2>
+    <div id="transferModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
+        <div style="background:white; padding:40px; border-radius:15px; width:400px; box-shadow: 0 20px 40px rgba(0,0,0,0.4);">
+            <h2 style="color:#002244; margin-top:0;">Secure Transfer</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Please enter the recipient details below.</p>
+            
             <div style="margin-bottom:15px;">
-                <label style="color:#333; display:block; margin-bottom:5px;">Recipient's Account Number</label>
-                <input type="text" id="accNumber" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <label style="color:#333; display:block; margin-bottom:5px; font-size: 12px; font-weight: bold;">RECIPIENT ACCOUNT</label>
+                <input type="text" id="accNumber" placeholder="Enter account number" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:5px;">
             </div>
+            
             <div style="margin-bottom:20px;">
-                <label style="color:#333; display:block; margin-bottom:5px;">Amount ($)</label>
-                <input type="number" id="transferAmount" style="width:100%; padding:12px; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
+                <label style="color:#333; display:block; margin-bottom:5px; font-size: 12px; font-weight: bold;">AMOUNT (USD)</label>
+                <input type="number" id="transferAmount" placeholder="0.00" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:5px;">
             </div>
-            <button onclick="processTransfer()" style="background:#2ecc71; color:white; border:none; padding:15px; width:100%; border-radius:5px; cursor:pointer; font-weight:bold; font-size:16px;">Confirm Transfer</button>
-            <button onclick="document.getElementById('transferModal').style.display='none'" style="background:none; border:none; color:red; margin-top:15px; cursor:pointer; width:100%;">Cancel</button>
+            
+            <button onclick="processTransfer()" style="background:#2ecc71; color:white; border:none; padding:15px; width:100%; border-radius:5px; cursor:pointer; font-weight:bold; font-size:16px; margin-bottom: 10px;">Confirm & Send</button>
+            <button onclick="closeTransfer()" style="background:none; border:none; color:#95a5a6; cursor:pointer; width:100%; font-size: 13px;">Cancel Transaction</button>
         </div>
     </div>
 
     <script>
-        // 1. FREEZE CHECK: Stops the client if you hit "Freeze" in Admin
+        // 1. ADMIN SECURITY: CHECK FOR FREEZE
         if (localStorage.getItem('accStatus') === 'frozen') {
-            document.body.innerHTML = "<div style='background:white; color:red; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;'><h1>ACCOUNT RESTRICTED</h1><p>Your account has been temporarily suspended.<br>Please contact the bank manager for verification.</p></div>";
+            document.body.innerHTML = `
+                <div style="background:#f8f9fa; color:#2c3e50; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center; font-family: sans-serif;">
+                    <div style="font-size: 60px; margin-bottom: 20px;">🔒</div>
+                    <h1 style="color: #e74c3c;">ACCESS DENIED</h1>
+                    <p style="max-width: 400px; line-height: 1.6;">Your account has been flagged for suspicious activity. Access is temporarily restricted. Please visit your nearest branch for identity verification.</p>
+                    <div style="margin-top: 20px; color: #95a5a6; font-size: 12px;">Ref Code: ERR_ACC_LOCKED_403</div>
+                </div>`;
         }
 
-        // 2. ADMIN CONTROL: Updates the balance based on your Admin Panel
+        // 2. UPDATE BALANCE FROM ADMIN
         const savedBalance = localStorage.getItem('clientBalance');
         if (savedBalance) {
             document.getElementById('displayBalance').innerText = '$' + parseFloat(savedBalance).toLocaleString(undefined, {minimumFractionDigits: 2});
         }
 
-        // 3. TRANSFER MODAL: Opens the popup
-        document.querySelectorAll('.nav-link')[1].onclick = function(e) {
-            e.preventDefault();
-            document.getElementById('transferModal').style.display = 'flex';
-        };
+        // 3. MODAL FUNCTIONS
+        function openTransfer() { document.getElementById('transferModal').style.display = 'flex'; }
+        function closeTransfer() { document.getElementById('transferModal').style.display = 'none'; }
 
-        // 4. TRANSFER LOGIC: Shows the success alert
         function processTransfer() {
             const amount = document.getElementById('transferAmount').value;
             const acc = document.getElementById('accNumber').value;
             if(amount && acc) {
-                alert('Transfer of $' + amount + ' to Account ' + acc + ' is being processed by the central bank. Reference: ODIN-' + Math.floor(Math.random() * 1000000));
-                document.getElementById('transferModal').style.display = 'none';
+                alert('SECURITY CHECK: The transfer of $' + amount + ' is pending central bank approval. Reference: ' + Math.random().toString(36).substring(7).toUpperCase());
+                closeTransfer();
             } else {
-                alert('Please enter both an account number and an amount.');
+                alert('Please provide valid transaction details.');
             }
         }
     </script>
