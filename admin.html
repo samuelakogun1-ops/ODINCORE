@@ -6,108 +6,101 @@
     <title>Odin Central | System Controller</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0b1118; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .admin-box { width: 100%; max-width: 650px; background: #1c2631; padding: 30px; border-radius: 15px; border: 1px solid #34495e; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #3498db; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
-        h3 { font-size: 13px; color: #2ecc71; border-bottom: 1px solid #34495e; padding-bottom: 8px; margin-top: 25px; text-transform: uppercase; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        label { display: block; font-size: 11px; color: #95a5a6; margin-top: 12px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: white; border-radius: 5px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; font-size: 14px; }
-        .btn-green { background: #2ecc71; color: white; }
-        .btn-green:hover { background: #27ae60; }
+        .admin-box { width: 100%; max-width: 600px; background: #1c2631; padding: 30px; border-radius: 15px; border: 1px solid #34495e; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #3498db; text-transform: uppercase; margin-bottom: 30px; border-bottom: 2px solid #34495e; padding-bottom: 10px; }
+        
+        .section { background: #16202a; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #2c3e50; }
+        h3 { font-size: 14px; color: #2ecc71; margin-top: 0; text-transform: uppercase; letter-spacing: 1px; }
+        
+        label { display: block; font-size: 11px; color: #95a5a6; margin-top: 10px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: #fff; border-radius: 5px; box-sizing: border-box; margin-top: 5px; outline: none; }
+        
+        /* CHAT INBOX STYLE */
+        .chat-inbox { background: #000; border: 1px solid #2ecc71; padding: 15px; border-radius: 8px; min-height: 50px; margin: 10px 0; color: #2ecc71; font-family: monospace; }
+        
+        button { width: 100%; padding: 16px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; font-size: 15px; }
+        button:hover { background: #27ae60; transform: translateY(-2px); }
+        .btn-blue { background: #3498db; }
+        .btn-blue:hover { background: #2980b9; }
     </style>
 </head>
 <body>
 
     <div class="admin-box">
-        <h2>Odin Central Admin</h2>
+        <h2>Odin Manager Panel</h2>
         
-        <h3>1. Client Profile & Authentication</h3>
-        <div class="form-grid">
-            <div>
-                <label>Login Username</label>
-                <input type="text" id="regUser" placeholder="User ID">
-            </div>
-            <div>
-                <label>Login Password</label>
-                <input type="text" id="regPass" placeholder="Password">
-            </div>
-        </div>
-        <label>Full Name</label>
-        <input type="text" id="uName" placeholder="e.g., Morris Thomas">
-        <label>Occupation</label>
-        <input type="text" id="uJob" placeholder="e.g., Civil Engineer">
-
-        <h3>2. Balances & Loan Status</h3>
-        <div class="form-grid">
-            <div>
-                <label>Total Account Balance</label>
-                <input type="number" id="balChk" placeholder="1000000">
-            </div>
-            <div>
-                <label>Loan Eligibility</label>
-                <select id="loanStat">
-                    <option value="Approved">Approved</option>
-                    <option value="Pending Review">Pending Review</option>
-                    <option value="Declined">Declined</option>
-                </select>
-            </div>
+        <div class="section">
+            <h3>💰 Financial Control</h3>
+            <label>Set Total Account Balance (Numbers Only)</label>
+            <input type="number" id="balInput" placeholder="e.g. 1050700">
+            <button onclick="updateBalance()">Update Client Balance</button>
         </div>
 
-        <h3>3. Transaction History Control</h3>
-        <label>Transaction Date & Time</label>
-        <input type="text" id="txDate" placeholder="e.g., April 17, 2026 | 04:30 PM">
-        <label>Description (Shows in History)</label>
-        <input type="text" id="txDesc" placeholder="e.g., International Wire Deposit">
-        <label>Amount (Use + or -)</label>
-        <input type="text" id="txAmt" placeholder="e.g., +$1,000,000.00">
+        <div class="section">
+            <h3>💬 Client Message Inbox</h3>
+            <label>Message received from client:</label>
+            <div class="chat-inbox" id="incomingMsg">Waiting for client message...</div>
+            
+            <label>Your Reply to Client</label>
+            <textarea id="adminReplyText" rows="3" placeholder="Type your response here..."></textarea>
+            <button class="btn-blue" onclick="sendReply()">Send Reply to Dashboard</button>
+        </div>
 
-        <h3>4. System Behavior & Support</h3>
-        <label>Transaction Success Policy (Transfers & Withdrawals)</label>
-        <select id="transferMode">
-            <option value="Successful">All Transactions Successful</option>
-            <option value="Pending">All Transactions Pending</option>
-            <option value="Visit Bank">Error: "Visit Nearest Branch"</option>
-        </select>
-        
-        <label>Customer Support Message (Admin Response)</label>
-        <textarea id="supportReply" rows="3" placeholder="Type message to client..."></textarea>
-
-        <button class="btn-green" onclick="saveAll()">Register & Synchronize Everything</button>
+        <div class="section">
+            <h3>👤 Profile & Security</h3>
+            <label>Client Full Name</label>
+            <input type="text" id="clientName" placeholder="Update Name">
+            <label>Transfer Policy</label>
+            <select id="tMode">
+                <option value="Successful">Allow All Transfers</option>
+                <option value="Pending">Force 'Pending' Status</option>
+                <option value="Visit Bank">Force 'Visit Bank' Error</option>
+            </select>
+            <button onclick="updateProfile()">Update Profile Settings</button>
+        </div>
     </div>
 
     <script>
-        function saveAll() {
-            // Credentials & Identity
-            localStorage.setItem('bank_user', document.getElementById('regUser').value);
-            localStorage.setItem('bank_pass', document.getElementById('regPass').value);
-            localStorage.setItem('userName', document.getElementById('uName').value);
-            localStorage.setItem('userJob', document.getElementById('uJob').value);
-            
-            // Banking & Loans
-            localStorage.setItem('balChk', document.getElementById('balChk').value);
-            localStorage.setItem('loan_status', document.getElementById('loanStat').value);
-            
-            // Transaction History
-            localStorage.setItem('lastTxDate', document.getElementById('txDate').value);
-            localStorage.setItem('lastTxDesc', document.getElementById('txDesc').value);
-            localStorage.setItem('lastTxAmt', document.getElementById('txAmt').value);
-            
-            // System Policy & Support
-            localStorage.setItem('transfer_mode', document.getElementById('transferMode').value);
-            localStorage.setItem('adminSupportMsg', document.getElementById('supportReply').value);
-            
-            alert('SYSTEM UPDATED: All features, including Loan and Profile details, are now synchronized with the dashboard.');
+        // 1. UPDATE BALANCE
+        function updateBalance() {
+            const val = document.getElementById('balInput').value;
+            if(val) {
+                localStorage.setItem('balChk', val);
+                alert('Balance updated to $' + parseFloat(val).toLocaleString());
+            }
         }
 
-        // Auto-load existing data on open
+        // 2. CHAT SYSTEM
+        function sendReply() {
+            const reply = document.getElementById('adminReplyText').value;
+            if(reply) {
+                localStorage.setItem('admin_reply', reply);
+                alert('Reply sent to client support chat!');
+                document.getElementById('adminReplyText').value = '';
+            }
+        }
+
+        // AUTO-CHECK FOR CLIENT MESSAGES
+        setInterval(() => {
+            const msg = localStorage.getItem('client_to_admin');
+            if(msg) {
+                document.getElementById('incomingMsg').innerText = "CLIENT SAYS: " + msg;
+                document.getElementById('incomingMsg').style.borderColor = "#f1c40f"; // Highlight new msg
+            }
+        }, 1000);
+
+        // 3. PROFILE UPDATES
+        function updateProfile() {
+            localStorage.setItem('userName', document.getElementById('clientName').value);
+            localStorage.setItem('transfer_mode', document.getElementById('tMode').value);
+            alert('Profile and Security settings synchronized.');
+        }
+
+        // Load existing data
         window.onload = function() {
-            document.getElementById('regUser').value = localStorage.getItem('bank_user') || '';
-            document.getElementById('uName').value = localStorage.getItem('userName') || '';
-            document.getElementById('uJob').value = localStorage.getItem('userJob') || '';
-            document.getElementById('balChk').value = localStorage.getItem('balChk') || '';
-            document.getElementById('txDate').value = localStorage.getItem('lastTxDate') || '';
-        };
+            document.getElementById('balInput').value = localStorage.getItem('balChk');
+            document.getElementById('clientName').value = localStorage.getItem('userName');
+        }
     </script>
 </body>
 </html>
