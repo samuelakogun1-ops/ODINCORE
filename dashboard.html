@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Banking | Odin Central</title>
+    <title>Secure Banking | Odin Central Dashboard</title>
     <style>
         :root {
             --odin-red: #ff0000;
-            --dark-sidebar: rgba(0, 0, 0, 0.3);
-            --glass: rgba(255, 255, 255, 0.95);
+            --dark-sidebar: rgba(0, 0, 0, 0.4);
+            --glass: rgba(255, 255, 255, 0.98);
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--odin-red);
             display: flex;
             height: 100vh;
@@ -21,48 +21,59 @@
             overflow: hidden;
         }
 
-        /* SIDEBAR & ATM */
+        /* SIDEBAR AREA */
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: var(--dark-sidebar);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             padding: 25px;
             display: flex;
             flex-direction: column;
             border-right: 1px solid rgba(255,255,255,0.1);
         }
 
+        .profile-section {
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+        }
+
         .nav-links a {
             color: white;
             text-decoration: none;
-            padding: 15px;
+            padding: 14px 18px;
             display: block;
             border-radius: 8px;
             margin-bottom: 5px;
-            transition: 0.3s;
             font-size: 14px;
+            transition: 0.2s;
+            cursor: pointer;
         }
 
-        .nav-links a:hover { background: rgba(255,255,255,0.1); }
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255,255,255,0.15);
+            font-weight: bold;
+        }
 
+        /* ATM CARD DISPLAY */
         .atm-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            background: linear-gradient(135deg, #111 0%, #333 100%);
             padding: 20px;
             border-radius: 15px;
-            margin-top: 30px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            position: relative;
+            margin-top: auto;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             border: 1px solid #444;
         }
 
-        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 6px; margin-bottom: 20px; }
+        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 6px; margin-bottom: 15px; }
 
-        /* MAIN CONTENT */
+        /* MAIN CONTENT AREA */
         .main-content {
             flex: 1;
             padding: 40px;
             overflow-y: auto;
-            background: linear-gradient(rgba(255,0,0,0.9), rgba(150,0,0,1));
+            background: linear-gradient(135deg, rgba(255,0,0,0.95) 0%, rgba(140,0,0,1) 100%);
         }
 
         .glass-panel {
@@ -71,60 +82,77 @@
             padding: 30px;
             border-radius: 20px;
             margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        /* FORMS & INPUTS */
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        .btn-action {
+            background: var(--odin-red);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-action:hover { background: #cc0000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+        .view { display: none; }
+        .active-view { display: block; animation: slideUp 0.4s ease; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .tx-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
-
-        /* SUPPORT CHAT */
-        #chatWidget {
-            display: none;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 320px;
-            background: white;
-            color: #333;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            z-index: 9999;
-        }
-
-        .chat-header { background: #222; color: white; padding: 15px; border-radius: 15px 15px 0 0; font-weight: bold; }
-        .chat-body { height: 250px; padding: 15px; overflow-y: auto; font-size: 13px; }
-        .chat-input { border: none; border-top: 1px solid #eee; width: 100%; padding: 15px; box-sizing: border-box; border-radius: 0 0 15px 15px; }
-
-        .view { display: none; }
-        .active-view { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h2 style="letter-spacing: 2px;">ODIN CENTRAL</h2>
+        <div class="profile-section">
+            <h2 style="margin:0; letter-spacing:1px;">ODIN CENTRAL</h2>
+            <p style="margin:10px 0 0 0; font-size:16px; font-weight:bold;" id="sideName">Client Name</p>
+            <p style="margin:0; font-size:12px; opacity:0.8;" id="sideJob">Private Client</p>
+        </div>
+
         <nav class="nav-links">
-            <a href="#" onclick="showView('v-home')">📊 Overview</a>
-            <a href="#" onclick="showView('v-transfer')">💸 Transfer Funds</a>
-            <a href="#" onclick="showView('v-history')">📜 History</a>
-            <a href="#" onclick="showView('v-settings')">⚙️ Settings</a>
-            <a href="#" onclick="toggleChat()" style="background: rgba(255,255,255,0.2);">💬 Live Support</a>
+            <a onclick="showView('v-home', this)" class="active">📊 Overview</a>
+            <a onclick="showView('v-transfer', this)">💸 International Wire</a>
+            <a onclick="showView('v-withdraw', this)">🏧 Withdrawal</a>
+            <a onclick="showView('v-loan', this)">💰 Loan Application</a>
+            <a onclick="showView('v-history', this)">📜 History</a>
+            <a onclick="showView('v-support', this)">💬 Support Service</a>
         </nav>
 
         <div class="atm-card">
             <div class="chip"></div>
-            <div id="cardNum" style="font-size: 16px; letter-spacing: 3px; margin-bottom: 20px;">**** **** **** 5678</div>
-            <div style="display: flex; justify-content: space-between; font-size: 11px;">
-                <span id="cardName">CLIENT NAME</span>
+            <div id="cardNum" style="font-size: 17px; letter-spacing: 3px; margin-bottom: 20px; color:#fff;">**** **** **** 5678</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; text-transform: uppercase;">
+                <span id="cardName">Client Name</span>
                 <span>EXP: 12/28</span>
             </div>
-            <div style="text-align: right; margin-top: 10px; font-weight: bold; font-style: italic;">VISA</div>
+            <div style="text-align: right; margin-top: 10px; font-weight: bold; font-style: italic; color:#fff;">VISA</div>
         </div>
     </div>
 
@@ -133,18 +161,56 @@
         <div id="v-home" class="view active-view">
             <h1>Account Portfolio</h1>
             <div class="glass-panel">
-                <p style="margin:0; color:#666; font-size:12px;">TOTAL BALANCE</p>
-                <h1 id="totalBal" style="font-size: 48px; color: var(--odin-red); margin: 10px 0;">$0.00</h1>
-                <p id="welcomeName" style="color:#333; font-weight: 600;">Welcome, User</p>
+                <p style="margin:0; font-size:12px; color:#666; text-transform:uppercase;">Total Consolidated Balance</p>
+                <h1 id="mainBal" style="font-size: 55px; color: var(--odin-red); margin: 15px 0;">$0.00</h1>
+                <p id="welcomeMsg" style="margin:0; font-weight: 600;">Welcome back, User</p>
+            </div>
+        </div>
+
+        <div id="v-transfer" class="view">
+            <h1>International Wire Transfer</h1>
+            <div class="glass-panel">
+                <label>Beneficiary Bank Name</label><input type="text" placeholder="e.g. Chase Bank">
+                <label>Swift / BIC Code</label><input type="text" placeholder="Enter Swift Code">
+                <label>Account Number / IBAN</label><input type="text" placeholder="Enter IBAN">
+                <label>Recipient Full Name</label><input type="text" placeholder="Legal Name">
+                <label>Amount to Transfer</label><input type="number" placeholder="0.00">
+                <button class="btn-action" onclick="processTx()">Execute Wire Transfer</button>
+            </div>
+        </div>
+
+        <div id="v-withdraw" class="view">
+            <h1>Withdraw Funds</h1>
+            <div class="glass-panel">
+                <p>Select Withdrawal Source</p>
+                <select>
+                    <option>Virtual ATM Card</option>
+                    <option>Linked US Checking Account</option>
+                </select>
+                <label>Amount to Withdraw</label>
+                <input type="number" placeholder="0.00">
+                <button class="btn-action" onclick="processTx()">Process Withdrawal</button>
+            </div>
+        </div>
+
+        <div id="v-loan" class="view">
+            <h1>Loan Application Portal</h1>
+            <div class="glass-panel">
+                <p>Application Status: <b id="loanStatDisplay" style="color: blue;">Checking...</b></p>
+                <hr style="opacity:0.2;">
+                <label>Loan Amount Requested</label><input type="number" placeholder="$0.00">
+                <label>Repayment Term</label>
+                <select><option>12 Months</option><option>24 Months</option><option>60 Months</option></select>
+                <button class="btn-action" onclick="alert('Application Sent for Processing')">Submit Application</button>
             </div>
         </div>
 
         <div id="v-history" class="view">
-            <h1>Transaction History</h1>
+            <h1>Transaction Logs</h1>
             <div class="glass-panel">
                 <div class="tx-item">
                     <div>
-                        <strong id="histDesc">Initial Deposit</strong><br>
+                        <strong id="histDesc">Account Initialization</strong><br>
                         <small id="histDate">April 10, 2026</small>
                     </div>
                     <div id="histAmt" style="color: green; font-weight: bold;">+$0.00</div>
@@ -152,62 +218,62 @@
             </div>
         </div>
 
-        <div id="v-settings" class="view">
-            <h1>Account Settings</h1>
+        <div id="v-support" class="view">
+            <h1>Priority Support Chat</h1>
             <div class="glass-panel">
-                <h3>Security & Privacy</h3>
-                <p>Transfer Status: <span id="statMode" style="color: blue; font-weight: bold;">Standard</span></p>
-                <p>Account Type: <span style="color: #d4af37; font-weight: bold;">Private Priority</span></p>
-                <hr>
-                <button onclick="alert('Verification Code Sent to Mobile')" style="padding:10px; background:var(--odin-red); color:white; border:none; border-radius:5px; cursor:pointer;">Enable 2FA</button>
+                <div style="background:#f8f9fa; padding:20px; border-radius:10px; min-height:150px;">
+                    <p><b>Support Agent:</b> Good day. How can your manager assist you today?</p>
+                    <p style="background: #fff0f0; padding:15px; border-radius:10px; border-left: 5px solid var(--odin-red); margin-top:20px;">
+                        <b>Admin:</b> <span id="adminMsgText">Connecting...</span>
+                    </p>
+                </div>
+                <input type="text" style="margin-top:20px;" placeholder="Message support...">
             </div>
         </div>
 
     </div>
 
-    <div id="chatWidget">
-        <div class="chat-header">Odin Support Concierge</div>
-        <div class="chat-body" id="chatContent">
-            <p style="background:#f0f0f0; padding:10px; border-radius:10px;"><b>Agent:</b> Hello! Your dedicated wealth manager is online. How can we help you today?</p>
-            <p style="background:#fff0f0; padding:10px; border-radius:10px; border-left: 4px solid var(--odin-red);">
-                <b>Admin:</b> <span id="adminReplyText">Connecting to secure server...</span>
-            </p>
-        </div>
-        <input type="text" class="chat-input" placeholder="Type your message here...">
-    </div>
-
     <script>
-        function showView(id) {
+        function showView(viewId, element) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
-            document.getElementById(id).classList.add('active-view');
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active-view');
+            element.classList.add('active');
         }
 
-        function toggleChat() {
-            const chat = document.getElementById('chatWidget');
-            chat.style.display = (chat.style.display === 'block') ? 'none' : 'block';
+        function processTx() {
+            const mode = localStorage.getItem('transfer_mode') || 'Pending';
+            if(mode === 'Visit Bank') {
+                alert('SECURITY ALERT: Unusual activity. Please visit an Odin Central branch with a valid ID.');
+            } else if(mode === 'Pending') {
+                alert('TRANSFER PENDING: This transaction has been queued for security review. ETA: 24-48 hours.');
+            } else {
+                alert('SUCCESS: Transaction completed successfully. Ref ID: #OD' + Math.floor(Math.random()*999999));
+            }
         }
 
         function sync() {
-            // Pull from Admin LocalStorage
+            // Identity & Profile
             const name = localStorage.getItem('userName') || 'Client';
-            const bal = parseFloat(localStorage.getItem('balChk') || 0);
-            
-            // Dashboard Header
-            document.getElementById('totalBal').innerText = '$' + bal.toLocaleString();
-            document.getElementById('welcomeName').innerText = 'Welcome back, ' + name;
-            
-            // ATM Card
+            const job = localStorage.getItem('userJob') || 'Private Wealth Client';
+            document.getElementById('sideName').innerText = name;
             document.getElementById('cardName').innerText = name.toUpperCase();
+            document.getElementById('welcomeMsg').innerText = 'Welcome back, ' + name;
+            document.getElementById('sideJob').innerText = job;
             document.getElementById('cardNum').innerText = localStorage.getItem('userCard') || '**** **** **** 5678';
-            
-            // History Engine
-            document.getElementById('histDesc').innerText = localStorage.getItem('lastTxDesc') || 'Account Initialized';
+
+            // Balances
+            const bal = parseFloat(localStorage.getItem('balChk') || 0);
+            document.getElementById('mainBal').innerText = '$' + bal.toLocaleString();
+
+            // History & Loans
+            document.getElementById('histDesc').innerText = localStorage.getItem('lastTxDesc') || 'Initial Deposit';
             document.getElementById('histDate').innerText = localStorage.getItem('lastTxDate') || 'April 17, 2026';
             document.getElementById('histAmt').innerText = localStorage.getItem('lastTxAmt') || '+$0.00';
-            
-            // Settings & Support
-            document.getElementById('statMode').innerText = localStorage.getItem('transfer_mode') || 'Active';
-            document.getElementById('adminReplyText').innerText = localStorage.getItem('adminSupportMsg') || 'Thank you for choosing Odin Central. We are reviewing your recent activity.';
+            document.getElementById('loanStatDisplay').innerText = localStorage.getItem('loan_status') || 'Pending Review';
+
+            // Support
+            document.getElementById('adminMsgText').innerText = localStorage.getItem('adminSupportMsg') || 'Thank you for your patience. Your manager is reviewing your records.';
         }
 
         window.onload = sync;
