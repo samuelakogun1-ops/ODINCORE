@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Control | Odin's Cafe Bank</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 40px; }
+        .admin-card { background: white; padding: 30px; border-radius: 10px; max-width: 500px; margin: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #003366; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #003366; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="admin-card">
+        <h1>Admin Control Panel</h1>
+        <p>Update Client Information</p>
+        <label>Set New Balance ($)</label>
+        <input type="number" id="newBalance" placeholder="e.g. 50000.00">
+        <label>Update Account Status</label>
+        <input type="text" id="accStatus" placeholder="Active / Pending / Restricted">
+        <button onclick="updateSystem()">Apply Changes</button>
+    </div>
+
+    <script>
+        function updateSystem() {
+            const balance = document.getElementById('newBalance').value;
+            if(balance) {
+                // This saves the data to the browser's memory
+                localStorage.setItem('clientBalance', balance);
+                alert('System Updated! The client will now see a balance of $' + balance);
+            }
+        }
+    </script>
+</body>
+</html>
