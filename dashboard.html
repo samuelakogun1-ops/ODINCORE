@@ -3,251 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Banking | Odin Central Dashboard</title>
+    <title>Secure Banking | Odin Central</title>
     <style>
         :root {
             --odin-red: #ff0000;
-            --dark-glass: rgba(0, 0, 0, 0.25);
-            --white-glass: rgba(255, 255, 255, 0.95);
+            --dark-sidebar: rgba(0, 0, 0, 0.3);
+            --glass: rgba(255, 255, 255, 0.95);
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background: var(--odin-red);
             display: flex;
             height: 100vh;
-            overflow: hidden;
             color: white;
+            overflow: hidden;
         }
 
-        /* Sidebar */
+        /* SIDEBAR & ATM */
         .sidebar {
-            width: 260px;
-            background: var(--dark-glass);
+            width: 280px;
+            background: var(--dark-sidebar);
             backdrop-filter: blur(10px);
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            padding: 30px 0;
             border-right: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .logo-area {
-            text-align: center;
-            margin-bottom: 40px;
-            font-weight: 800;
-            font-size: 22px;
-            letter-spacing: 1px;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
-            padding: 15px 30px;
+            padding: 15px;
             display: block;
-            font-size: 14px;
+            border-radius: 8px;
+            margin-bottom: 5px;
             transition: 0.3s;
-            border-left: 4px solid transparent;
+            font-size: 14px;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            background: rgba(255,255,255,0.1);
-            border-left: 4px solid white;
+        .nav-links a:hover { background: rgba(255,255,255,0.1); }
+
+        .atm-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            position: relative;
+            border: 1px solid #444;
         }
 
-        /* Main Content */
+        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 6px; margin-bottom: 20px; }
+
+        /* MAIN CONTENT */
         .main-content {
             flex: 1;
             padding: 40px;
             overflow-y: auto;
-            background: linear-gradient(135deg, rgba(255,0,0,1) 0%, rgba(180,0,0,1) 100%);
+            background: linear-gradient(rgba(255,0,0,0.9), rgba(150,0,0,1));
         }
 
-        .view { display: none; animation: fadeIn 0.4s ease; }
-        .active-view { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Banking Cards */
-        .acc-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .acc-card {
-            background: var(--white-glass);
-            color: #333;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
-
-        .acc-card h4 { margin: 0; font-size: 12px; color: #666; text-transform: uppercase; }
-        .acc-card .balance { font-size: 24px; font-weight: 800; margin-top: 10px; color: #d63031; }
-
-        .summary-card {
-            background: var(--white-glass);
+        .glass-panel {
+            background: var(--glass);
             color: #333;
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 20px;
             margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
 
-        /* Personal Info Bar */
-        .info-bar {
-            background: var(--dark-glass);
-            padding: 15px 25px;
-            border-radius: 10px;
+        .tx-item {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            margin-top: 20px;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        /* Forms */
-        .transfer-form input, .transfer-form select {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
+        /* SUPPORT CHAT */
+        #chatWidget {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 320px;
+            background: white;
+            color: #333;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            z-index: 9999;
         }
 
-        .btn-action {
-            background: #d63031;
-            color: white;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        .chat-header { background: #222; color: white; padding: 15px; border-radius: 15px 15px 0 0; font-weight: bold; }
+        .chat-body { height: 250px; padding: 15px; overflow-y: auto; font-size: 13px; }
+        .chat-input { border: none; border-top: 1px solid #eee; width: 100%; padding: 15px; box-sizing: border-box; border-radius: 0 0 15px 15px; }
 
-        .btn-action:hover { background: #ff0000; }
-
+        .view { display: none; }
+        .active-view { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo-area">ODIN CENTRAL</div>
-        <div style="text-align: center; margin-bottom: 30px;">
-            <img id="uPhoto" src="https://via.placeholder.com/80" style="width: 85px; height: 85px; border-radius: 50%; border: 3px solid white; object-fit: cover;">
-            <p id="uNameSide" style="font-weight: 600; margin-top: 10px;">Private Client</p>
-        </div>
+        <h2 style="letter-spacing: 2px;">ODIN CENTRAL</h2>
         <nav class="nav-links">
-            <a href="#" class="active" onclick="switchView('home', this)">📊 Dashboard</a>
-            <a href="#" onclick="switchView('transfer', this)">💸 Transfer Funds</a>
-            <a href="#" onclick="switchView('history', this)">📜 History</a>
-            <a href="#" onclick="switchView('settings', this)">⚙️ Settings</a>
-            <a href="index.html" style="margin-top: 40px; color: #ffcccc;">🚪 Secure Logout</a>
+            <a href="#" onclick="showView('v-home')">📊 Overview</a>
+            <a href="#" onclick="showView('v-transfer')">💸 Transfer Funds</a>
+            <a href="#" onclick="showView('v-history')">📜 History</a>
+            <a href="#" onclick="showView('v-settings')">⚙️ Settings</a>
+            <a href="#" onclick="toggleChat()" style="background: rgba(255,255,255,0.2);">💬 Live Support</a>
         </nav>
+
+        <div class="atm-card">
+            <div class="chip"></div>
+            <div id="cardNum" style="font-size: 16px; letter-spacing: 3px; margin-bottom: 20px;">**** **** **** 5678</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                <span id="cardName">CLIENT NAME</span>
+                <span>EXP: 12/28</span>
+            </div>
+            <div style="text-align: right; margin-top: 10px; font-weight: bold; font-style: italic;">VISA</div>
+        </div>
     </div>
 
     <div class="main-content">
         
-        <div id="home" class="view active-view">
-            <h1 style="margin:0;">Account Portfolio</h1>
-            <p style="opacity: 0.8;">Welcome back, <span id="uNameWelcome">User</span></p>
-
-            <div class="acc-grid">
-                <div class="acc-card"><h4>Checking</h4><div class="balance" id="dChk">$0.00</div></div>
-                <div class="acc-card"><h4>Savings</h4><div class="balance" id="dSav">$0.00</div></div>
-                <div class="acc-card"><h4>Personal Wealth</h4><div class="balance" id="dPers">$0.00</div></div>
-            </div>
-
-            <div class="summary-card">
-                <p style="margin:0; font-size:12px; color:#666;">TOTAL CONSOLIDATED BALANCE</p>
-                <h1 id="dTotal" style="font-size: 48px; margin: 10px 0; color: #d63031;">$0.00</h1>
-                <p style="margin:0; font-size:12px; color:#999;">Account ID: <span id="dAccNum">**** **** 5678</span></p>
-            </div>
-
-            <div class="info-bar">
-                <span><b>Gender:</b> <span id="dGender">-</span></span>
-                <span><b>DOB:</b> <span id="dDob">-</span></span>
-                <span><b>Occupation:</b> <span id="dJob">-</span></span>
-                <span><b>Processing:</b> <span id="dTime">Standard</span></span>
+        <div id="v-home" class="view active-view">
+            <h1>Account Portfolio</h1>
+            <div class="glass-panel">
+                <p style="margin:0; color:#666; font-size:12px;">TOTAL BALANCE</p>
+                <h1 id="totalBal" style="font-size: 48px; color: var(--odin-red); margin: 10px 0;">$0.00</h1>
+                <p id="welcomeName" style="color:#333; font-weight: 600;">Welcome, User</p>
             </div>
         </div>
 
-        <div id="transfer" class="view">
-            <h1>Wire Transfer Portal</h1>
-            <div class="summary-card transfer-form">
-                <label>Recipient Name</label>
-                <input type="text" placeholder="Full legal name">
-                <label>Recipient Account / IBAN</label>
-                <input type="text" placeholder="Enter Account Number">
-                <label>Amount to Transfer</label>
-                <input type="number" id="sendAmt" placeholder="0.00">
-                <button class="btn-action" onclick="handleTransfer()">Execute Transfer</button>
+        <div id="v-history" class="view">
+            <h1>Transaction History</h1>
+            <div class="glass-panel">
+                <div class="tx-item">
+                    <div>
+                        <strong id="histDesc">Initial Deposit</strong><br>
+                        <small id="histDate">April 10, 2026</small>
+                    </div>
+                    <div id="histAmt" style="color: green; font-weight: bold;">+$0.00</div>
+                </div>
             </div>
         </div>
 
-        <div id="history" class="view">
-            <h1>Transaction Logs</h1>
-            <div class="summary-card" id="txHistory">
-                <p style="color:#666; text-align:center;">No recent transactions to display.</p>
+        <div id="v-settings" class="view">
+            <h1>Account Settings</h1>
+            <div class="glass-panel">
+                <h3>Security & Privacy</h3>
+                <p>Transfer Status: <span id="statMode" style="color: blue; font-weight: bold;">Standard</span></p>
+                <p>Account Type: <span style="color: #d4af37; font-weight: bold;">Private Priority</span></p>
+                <hr>
+                <button onclick="alert('Verification Code Sent to Mobile')" style="padding:10px; background:var(--odin-red); color:white; border:none; border-radius:5px; cursor:pointer;">Enable 2FA</button>
             </div>
         </div>
 
     </div>
 
+    <div id="chatWidget">
+        <div class="chat-header">Odin Support Concierge</div>
+        <div class="chat-body" id="chatContent">
+            <p style="background:#f0f0f0; padding:10px; border-radius:10px;"><b>Agent:</b> Hello! Your dedicated wealth manager is online. How can we help you today?</p>
+            <p style="background:#fff0f0; padding:10px; border-radius:10px; border-left: 4px solid var(--odin-red);">
+                <b>Admin:</b> <span id="adminReplyText">Connecting to secure server...</span>
+            </p>
+        </div>
+        <input type="text" class="chat-input" placeholder="Type your message here...">
+    </div>
+
     <script>
-        function switchView(viewId, element) {
+        function showView(id) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
-            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active-view');
-            element.classList.add('active');
+            document.getElementById(id).classList.add('active-view');
         }
 
-        function handleTransfer() {
-            // Check Admin-set transfer policy
-            const mode = localStorage.getItem('transfer_mode') || 'Pending';
-            
-            if (mode === 'Visit Bank') {
-                alert('SECURITY ALERT: Unusual activity detected. This transfer requires in-person verification. Please visit your nearest Odin Central branch.');
-            } else if (mode === 'Pending') {
-                alert('TRANSFER PENDING: Your transaction has been submitted for review. Expected processing time: 24-48 hours.');
-            } else {
-                alert('SUCCESS: Transfer completed successfully. Transaction ID: #OT' + Math.floor(Math.random()*999999));
-            }
+        function toggleChat() {
+            const chat = document.getElementById('chatWidget');
+            chat.style.display = (chat.style.display === 'block') ? 'none' : 'block';
         }
 
-        function loadDashboard() {
-            // Retrieve full client profile from Admin
+        function sync() {
+            // Pull from Admin LocalStorage
             const name = localStorage.getItem('userName') || 'Client';
-            const curr = localStorage.getItem('currency') || '$';
+            const bal = parseFloat(localStorage.getItem('balChk') || 0);
             
-            document.getElementById('uNameSide').innerText = name;
-            document.getElementById('uNameWelcome').innerText = name;
-            document.getElementById('uPhoto').src = localStorage.getItem('userPhotoURL') || 'https://via.placeholder.com/80';
+            // Dashboard Header
+            document.getElementById('totalBal').innerText = '$' + bal.toLocaleString();
+            document.getElementById('welcomeName').innerText = 'Welcome back, ' + name;
             
-            document.getElementById('dGender').innerText = localStorage.getItem('userGender') || '-';
-            document.getElementById('dDob').innerText = localStorage.getItem('userDob') || '-';
-            document.getElementById('dJob').innerText = localStorage.getItem('userJob') || '-';
-            document.getElementById('dTime').innerText = localStorage.getItem('procTime') || 'Instant';
-            document.getElementById('dAccNum').innerText = localStorage.getItem('userCard') || '**** **** 5678';
-
-            const chk = parseFloat(localStorage.getItem('balChk') || 0);
-            const sav = parseFloat(localStorage.getItem('balSav') || 0);
-            const per = parseFloat(localStorage.getItem('balPers') || 0);
-            const total = chk + sav + per;
-
-            document.getElementById('dChk').innerText = curr + chk.toLocaleString();
-            document.getElementById('dSav').innerText = curr + sav.toLocaleString();
-            document.getElementById('dPers').innerText = curr + per.toLocaleString();
-            document.getElementById('dTotal').innerText = curr + total.toLocaleString();
+            // ATM Card
+            document.getElementById('cardName').innerText = name.toUpperCase();
+            document.getElementById('cardNum').innerText = localStorage.getItem('userCard') || '**** **** **** 5678';
+            
+            // History Engine
+            document.getElementById('histDesc').innerText = localStorage.getItem('lastTxDesc') || 'Account Initialized';
+            document.getElementById('histDate').innerText = localStorage.getItem('lastTxDate') || 'April 17, 2026';
+            document.getElementById('histAmt').innerText = localStorage.getItem('lastTxAmt') || '+$0.00';
+            
+            // Settings & Support
+            document.getElementById('statMode').innerText = localStorage.getItem('transfer_mode') || 'Active';
+            document.getElementById('adminReplyText').innerText = localStorage.getItem('adminSupportMsg') || 'Thank you for choosing Odin Central. We are reviewing your recent activity.';
         }
 
-        window.onload = loadDashboard;
+        window.onload = sync;
     </script>
 </body>
 </html>
