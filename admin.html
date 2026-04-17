@@ -2,146 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin Central | System Controller</title>
+    <title>Odin Master | System Control</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0b1118; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .admin-box { width: 100%; max-width: 800px; background: #1c2631; padding: 30px; border-radius: 15px; border: 1px solid #34495e; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #3498db; text-transform: uppercase; margin-bottom: 25px; border-bottom: 2px solid #34495e; padding-bottom: 10px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0b1118; color: white; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: #1c2631; padding: 25px; border-radius: 15px; border: 1px solid #34495e; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .section { background: #16202a; padding: 20px; border-radius: 10px; border: 1px solid #2c3e50; margin-bottom: 20px; }
-        .full-width { grid-column: span 2; }
-        h3 { font-size: 13px; color: #2ecc71; margin-top: 0; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #2c3e50; padding-bottom: 5px; margin-bottom: 15px; }
-        label { display: block; font-size: 11px; color: #95a5a6; margin-top: 10px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: #fff; border-radius: 5px; box-sizing: border-box; margin-top: 5px; outline: none; }
-        .chat-inbox { background: #000; border: 1px solid #f1c40f; padding: 15px; border-radius: 8px; min-height: 40px; margin: 10px 0; color: #f1c40f; font-family: monospace; font-size: 13px; }
-        button { width: 100%; padding: 14px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; transition: 0.3s; }
-        button:hover { background: #27ae60; transform: translateY(-2px); }
+        .full { grid-column: span 2; }
+        h3 { color: #2ecc71; text-transform: uppercase; font-size: 14px; border-bottom: 1px solid #2c3e50; padding-bottom: 10px; }
+        label { display: block; font-size: 11px; color: #95a5a6; margin-top: 10px; }
+        input, select, textarea { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: #fff; border-radius: 5px; margin-top: 5px; }
+        button { width: 100%; padding: 14px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; }
         .btn-blue { background: #3498db; }
-        .btn-history { background: #9b59b6; }
-        .btn-red { background: #e74c3c; font-size: 10px; padding: 5px; margin-top: 10px; }
+        .btn-purple { background: #9b59b6; }
+        .chat-box { background: #000; border: 1px solid #f1c40f; padding: 15px; border-radius: 8px; color: #f1c40f; font-family: monospace; min-height: 40px; margin: 10px 0; }
     </style>
 </head>
 <body>
 
-    <div class="admin-box">
-        <h2>Odin Master Control</h2>
-        
-        <div class="grid">
-            <div class="section">
-                <h3>💰 Account Wealth</h3>
-                <label>Main Account Balance ($)</label>
-                <input type="number" id="balInput" placeholder="e.g. 204255897">
-                <button onclick="saveBal()">Update Balance</button>
-            </div>
+<div class="container">
+    <h2 style="text-align:center; color:#3498db;">ODIN MASTER CONTROL</h2>
 
-            <div class="section">
-                <h3>📜 Transaction History Editor</h3>
-                <label>Date & Time</label>
-                <input type="text" id="histDate" placeholder="e.g. April 17, 2026 - 14:30">
-                <label>Description</label>
-                <input type="text" id="histDesc" placeholder="e.g. International Wire Inbound">
-                <label>Amount (+/-)</label>
-                <input type="text" id="histAmt" placeholder="e.g. +$50,000.00">
-                <button class="btn-history" onclick="addHistory()">Add to Dashboard History</button>
-                <button class="btn-red" onclick="clearHistory()">Clear All Transactions</button>
-            </div>
+    <div class="grid">
+        <div class="section">
+            <h3>👤 User Registration</h3>
+            <label>Full Name</label><input type="text" id="regName" placeholder="Client Name">
+            <label>Assign Username</label><input type="text" id="regUser" placeholder="Login Username">
+            <label>Assign Password</label><input type="text" id="regPass" placeholder="Login Password">
+            <button onclick="registerUser()">Register New User</button>
+        </div>
 
-            <div class="section full-width">
-                <h3>💬 Live Concierge Inbox</h3>
-                <label>Latest Message from Client:</label>
-                <div class="chat-inbox" id="incomingMsg">Waiting for client message...</div>
-                
-                <label>Your Official Reply</label>
-                <textarea id="adminReplyText" rows="2" placeholder="Type your response to the client here..."></textarea>
-                <button class="btn-blue" onclick="sendReply()">Send Reply to Client Dashboard</button>
-            </div>
+        <div class="section">
+            <h3>💰 Account Wealth</h3>
+            <label>Set Balance ($)</label><input type="number" id="balInput">
+            <label>Set Job Title</label><input type="text" id="jobInput" placeholder="e.g. Marine Engineer">
+            <button class="btn-blue" onclick="saveFin()">Update Wealth</button>
+        </div>
 
-            <div class="section">
-                <h3>👤 Client Identity</h3>
-                <label>Full Legal Name</label>
-                <input type="text" id="clientName">
-                <label>Profession / Job Title</label>
-                <input type="text" id="clientJob">
-                <button onclick="saveProfile()">Update Identity Details</button>
+        <div class="section full">
+            <h3>📜 Transaction History Editor</h3>
+            <div class="grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div><label>Date & Time</label><input type="text" id="hDate" placeholder="April 17, 2026"></div>
+                <div><label>Description</label><input type="text" id="hDesc" placeholder="Inbound Transfer"></div>
+                <div><label>Amount (+/-)</label><input type="text" id="hAmt" placeholder="+$50,000"></div>
             </div>
+            <button class="btn-purple" onclick="addHistory()">Add to List</button>
+        </div>
 
-            <div class="section">
-                <h3>🔒 Security Policy</h3>
-                <label>Transfer Permission</label>
-                <select id="tMode">
-                    <option value="Successful">Allow All Transfers</option>
-                    <option value="Pending">Force 'Pending' Mode</option>
-                    <option value="Visit Bank">Force 'Security Error'</option>
-                </select>
-                <button onclick="saveSecurity()">Lock System Policy</button>
-            </div>
+        <div class="section full">
+            <h3>💬 Live Concierge Inbox</h3>
+            <div class="chat-box" id="inbox">Waiting for client message...</div>
+            <textarea id="reply" rows="2" placeholder="Your reply..."></textarea>
+            <button class="btn-blue" onclick="sendReply()">Send Reply to Dashboard</button>
         </div>
     </div>
+</div>
 
-    <script>
-        // 1. BALANCE CONTROL
-        function saveBal() { 
-            localStorage.setItem('balChk', document.getElementById('balInput').value); 
-            alert('Main Balance Updated'); 
-        }
-        
-        // 2. TRANSACTION HISTORY CONTROL
-        function addHistory() {
-            let existing = JSON.parse(localStorage.getItem('user_history') || "[]");
-            const newTx = {
-                date: document.getElementById('histDate').value,
-                desc: document.getElementById('histDesc').value,
-                amt: document.getElementById('histAmt').value
-            };
-            existing.unshift(newTx); // Adds new transaction to the top of the list
-            localStorage.setItem('user_history', JSON.stringify(existing));
-            alert('Transaction Added to Dashboard');
-        }
+<script>
+    function registerUser() {
+        localStorage.setItem('userName', document.getElementById('regName').value);
+        localStorage.setItem('loginUser', document.getElementById('regUser').value);
+        localStorage.setItem('loginPass', document.getElementById('regPass').value);
+        alert('User Created Successfully');
+    }
 
-        function clearHistory() { 
-            localStorage.removeItem('user_history'); 
-            alert('All History Records Cleared'); 
-        }
+    function saveFin() {
+        localStorage.setItem('balChk', document.getElementById('balInput').value);
+        localStorage.setItem('userJob', document.getElementById('jobInput').value);
+        alert('Financials Updated');
+    }
 
-        // 3. PROFILE CONTROL
-        function saveProfile() {
-            localStorage.setItem('userName', document.getElementById('clientName').value);
-            localStorage.setItem('userJob', document.getElementById('clientJob').value);
-            alert('Client Identity Details Updated');
-        }
+    function addHistory() {
+        let h = JSON.parse(localStorage.getItem('user_history') || "[]");
+        h.unshift({ date: document.getElementById('hDate').value, desc: document.getElementById('hDesc').value, amt: document.getElementById('hAmt').value });
+        localStorage.setItem('user_history', JSON.stringify(h));
+        alert('Transaction Added');
+    }
 
-        // 4. SECURITY CONTROL
-        function saveSecurity() {
-            localStorage.setItem('transfer_mode', document.getElementById('tMode').value);
-            alert('Security Policy Synchronized');
-        }
+    function sendReply() {
+        localStorage.setItem('admin_reply', document.getElementById('reply').value);
+        alert('Reply Sent');
+    }
 
-        // 5. CHAT SYSTEM
-        function sendReply() {
-            const reply = document.getElementById('adminReplyText').value;
-            if(reply) {
-                localStorage.setItem('admin_reply', reply);
-                alert('Reply Sent to Client');
-                document.getElementById('adminReplyText').value = '';
-            }
-        }
-
-        // REAL-TIME CHAT MONITOR
-        setInterval(() => {
-            const msg = localStorage.getItem('client_to_admin');
-            if(msg) {
-                document.getElementById('incomingMsg').innerText = "CLIENT SAYS: " + msg;
-                document.getElementById('incomingMsg').style.borderColor = "#2ecc71";
-            }
-        }, 1000);
-
-        // INITIAL LOAD
-        window.onload = function() {
-            document.getElementById('balInput').value = localStorage.getItem('balChk') || "";
-            document.getElementById('clientName').value = localStorage.getItem('userName') || "";
-            document.getElementById('clientJob').value = localStorage.getItem('userJob') || "";
-        }
-    </script>
+    setInterval(() => {
+        const m = localStorage.getItem('client_to_admin');
+        if(m) document.getElementById('inbox').innerText = "CLIENT: " + m;
+    }, 1000);
+</script>
 </body>
 </html>
