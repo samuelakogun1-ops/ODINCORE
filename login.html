@@ -3,73 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Login | Odin's Cafe Bank</title>
+    <title>Secure Login | Odin Central Bank</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        /* High-end Banking Background */
         body {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1550565118-3a14e8d0386f?auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            background: linear-gradient(rgba(0, 34, 68, 0.7), rgba(0, 34, 68, 0.7)), 
+                        url('https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .login-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             width: 100%;
-            max-width: 400px;
+            max-width: 380px;
             text-align: center;
         }
-        .login-card h2 { color: #003366; margin-bottom: 20px; }
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; margin-bottom: 5px; color: #555; }
+
+        .login-card h2 {
+            color: #002244;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .login-card p {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #002244;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
         .input-group input {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 6px;
+            box-sizing: border-box;
             font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
         }
-        .login-btn {
-            background: #003366;
+
+        .input-group input:focus {
+            border-color: #3498db;
+        }
+
+        .btn-secure {
+            width: 100%;
+            padding: 15px;
+            background: #002244;
             color: white;
             border: none;
-            padding: 15px;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 18px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background 0.3s;
         }
-        .login-btn:hover { background: #0055aa; }
+
+        .btn-secure:hover {
+            background: #003366;
+        }
+
+        .footer-links {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #95a5a6;
+        }
+
+        .footer-links a {
+            color: #3498db;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
+
     <div class="login-card">
         <h2>Client Login</h2>
-        <form id="loginForm">
+        <p>Enter your credentials to access your secure wealth management portal.</p>
+
+        <form id="authForm">
             <div class="input-group">
-                <label>Account Number / Email</label>
-                <input type="text" id="username" placeholder="Enter your ID" required>
+                <label>Account ID / Username</label>
+                <input type="text" id="accID" placeholder="Enter your ID" required>
             </div>
+
             <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="password" placeholder="••••••••" required>
+                <label>Security Password</label>
+                <input type="password" id="accPass" placeholder="••••••••" required>
             </div>
-            <button type="submit" class="login-btn">Secure Access</button>
+
+            <button type="submit" class="btn-secure">Secure Access</button>
         </form>
-        <p style="margin-top: 15px; font-size: 14px; color: #777;">Forgot password? Contact your branch manager.</p>
+
+        <div class="footer-links">
+            <p>Forgot password? <a href="#">Contact your branch manager.</a></p>
+            <p style="margin-top: 10px; opacity: 0.7;">🛡️ 256-bit SSL Encrypted Session</p>
+        </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').onsubmit = function(e) {
+        document.getElementById('authForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // For now, we will redirect any login to the dashboard
-            window.location.href = 'dashboard.html';
-        };
+
+            // Get what the user typed
+            const typedID = document.getElementById('accID').value;
+            const typedPass = document.getElementById('accPass').value;
+
+            // Get the credentials saved from the Admin panel
+            const savedID = localStorage.getItem('bank_user');
+            const savedPass = localStorage.getItem('bank_pass');
+
+            // Verification Logic
+            if (typedID === savedID && typedPass === savedPass) {
+                // If it matches, go to dashboard
+                window.location.href = 'dashboard.html';
+            } else {
+                // If it fails, show an error
+                alert('ACCESS DENIED: Invalid Account ID or Password. Please verify your credentials with the administrator.');
+            }
+        });
     </script>
+
 </body>
 </html>
