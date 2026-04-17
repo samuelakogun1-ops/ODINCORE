@@ -13,7 +13,7 @@
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: var(--odin-red);
             display: flex;
             height: 100vh;
@@ -21,9 +21,9 @@
             overflow: hidden;
         }
 
-        /* SIDEBAR AREA */
+        /* SIDEBAR */
         .sidebar {
-            width: 300px;
+            width: 280px;
             background: var(--dark-sidebar);
             backdrop-filter: blur(15px);
             padding: 25px;
@@ -32,48 +32,25 @@
             border-right: 1px solid rgba(255,255,255,0.1);
         }
 
-        .profile-section {
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            margin-bottom: 20px;
-        }
-
         .nav-links a {
             color: white;
             text-decoration: none;
-            padding: 14px 18px;
+            padding: 15px;
             display: block;
             border-radius: 8px;
             margin-bottom: 5px;
-            font-size: 14px;
-            transition: 0.2s;
             cursor: pointer;
+            transition: 0.3s;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            background: rgba(255,255,255,0.15);
-            font-weight: bold;
-        }
+        .nav-links a:hover, .nav-links a.active { background: rgba(255,255,255,0.2); font-weight: bold; }
 
-        /* ATM CARD DISPLAY */
-        .atm-card {
-            background: linear-gradient(135deg, #111 0%, #333 100%);
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: auto;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            border: 1px solid #444;
-        }
-
-        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 6px; margin-bottom: 15px; }
-
-        /* MAIN CONTENT AREA */
+        /* MAIN CONTENT */
         .main-content {
             flex: 1;
             padding: 40px;
             overflow-y: auto;
-            background: linear-gradient(135deg, rgba(255,0,0,0.95) 0%, rgba(140,0,0,1) 100%);
+            background: linear-gradient(135deg, rgba(255,0,0,0.9) 0%, rgba(120,0,0,1) 100%);
         }
 
         .glass-panel {
@@ -85,197 +62,158 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        /* FORMS & INPUTS */
-        input, select {
+        /* CHAT SYSTEM */
+        #chatDisplay {
+            height: 250px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .msg { margin: 5px 0; padding: 10px; border-radius: 8px; max-width: 80%; font-size: 14px; }
+        .msg-admin { background: #ffebeb; color: #d00; align-self: flex-start; border-left: 4px solid red; }
+        .msg-client { background: #ebf5ff; color: #0056b3; align-self: flex-end; }
+
+        input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 14px;
-            margin: 10px 0 20px 0;
+            padding: 12px;
+            margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 8px;
             box-sizing: border-box;
-            font-size: 15px;
         }
 
         .btn-action {
             background: var(--odin-red);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 15px;
             width: 100%;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
         }
-
-        .btn-action:hover { background: #cc0000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
         .view { display: none; }
-        .active-view { display: block; animation: slideUp 0.4s ease; }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .tx-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
+        .active-view { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="profile-section">
-            <h2 style="margin:0; letter-spacing:1px;">ODIN CENTRAL</h2>
-            <p style="margin:10px 0 0 0; font-size:16px; font-weight:bold;" id="sideName">Client Name</p>
-            <p style="margin:0; font-size:12px; opacity:0.8;" id="sideJob">Private Client</p>
+        <h2 style="letter-spacing:1px;">ODIN CENTRAL</h2>
+        <div style="padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.2); margin-bottom:20px;">
+            <p id="sideName" style="margin:0; font-weight:bold;">Loading...</p>
+            <small style="opacity:0.7;">Private Wealth Account</small>
         </div>
 
         <nav class="nav-links">
-            <a onclick="showView('v-home', this)" class="active">📊 Overview</a>
-            <a onclick="showView('v-transfer', this)">💸 International Wire</a>
-            <a onclick="showView('v-withdraw', this)">🏧 Withdrawal</a>
-            <a onclick="showView('v-loan', this)">💰 Loan Application</a>
-            <a onclick="showView('v-history', this)">📜 History</a>
-            <a onclick="showView('v-support', this)">💬 Support Service</a>
+            <a onclick="showView('v-home', this)" class="active">📊 Account Overview</a>
+            <a onclick="showView('v-transfer', this)">💸 Wire Transfer</a>
+            <a onclick="showView('v-support', this)">💬 Priority Support</a>
         </nav>
-
-        <div class="atm-card">
-            <div class="chip"></div>
-            <div id="cardNum" style="font-size: 17px; letter-spacing: 3px; margin-bottom: 20px; color:#fff;">**** **** **** 5678</div>
-            <div style="display: flex; justify-content: space-between; font-size: 11px; text-transform: uppercase;">
-                <span id="cardName">Client Name</span>
-                <span>EXP: 12/28</span>
-            </div>
-            <div style="text-align: right; margin-top: 10px; font-weight: bold; font-style: italic; color:#fff;">VISA</div>
-        </div>
     </div>
 
     <div class="main-content">
         
         <div id="v-home" class="view active-view">
-            <h1>Account Portfolio</h1>
+            <h1>Portfolio Summary</h1>
             <div class="glass-panel">
-                <p style="margin:0; font-size:12px; color:#666; text-transform:uppercase;">Total Consolidated Balance</p>
-                <h1 id="mainBal" style="font-size: 55px; color: var(--odin-red); margin: 15px 0;">$0.00</h1>
-                <p id="welcomeMsg" style="margin:0; font-weight: 600;">Welcome back, User</p>
+                <p style="margin:0; color:#666; font-size:12px; text-transform:uppercase;">Available Balance</p>
+                <h1 id="mainBal" style="font-size: 60px; color: var(--odin-red); margin: 10px 0;">$0.00</h1>
+                <p id="welcomeUser" style="color:#333; font-weight:600;">Secure Connection Active</p>
             </div>
         </div>
 
         <div id="v-transfer" class="view">
-            <h1>International Wire Transfer</h1>
+            <h1>International Transfer</h1>
             <div class="glass-panel">
-                <label>Beneficiary Bank Name</label><input type="text" placeholder="e.g. Chase Bank">
-                <label>Swift / BIC Code</label><input type="text" placeholder="Enter Swift Code">
-                <label>Account Number / IBAN</label><input type="text" placeholder="Enter IBAN">
-                <label>Recipient Full Name</label><input type="text" placeholder="Legal Name">
-                <label>Amount to Transfer</label><input type="number" placeholder="0.00">
-                <button class="btn-action" onclick="processTx()">Execute Wire Transfer</button>
-            </div>
-        </div>
-
-        <div id="v-withdraw" class="view">
-            <h1>Withdraw Funds</h1>
-            <div class="glass-panel">
-                <p>Select Withdrawal Source</p>
-                <select>
-                    <option>Virtual ATM Card</option>
-                    <option>Linked US Checking Account</option>
-                </select>
-                <label>Amount to Withdraw</label>
-                <input type="number" placeholder="0.00">
-                <button class="btn-action" onclick="processTx()">Process Withdrawal</button>
-            </div>
-        </div>
-
-        <div id="v-loan" class="view">
-            <h1>Loan Application Portal</h1>
-            <div class="glass-panel">
-                <p>Application Status: <b id="loanStatDisplay" style="color: blue;">Checking...</b></p>
-                <hr style="opacity:0.2;">
-                <label>Loan Amount Requested</label><input type="number" placeholder="$0.00">
-                <label>Repayment Term</label>
-                <select><option>12 Months</option><option>24 Months</option><option>60 Months</option></select>
-                <button class="btn-action" onclick="alert('Application Sent for Processing')">Submit Application</button>
-            </div>
-        </div>
-
-        <div id="v-history" class="view">
-            <h1>Transaction Logs</h1>
-            <div class="glass-panel">
-                <div class="tx-item">
-                    <div>
-                        <strong id="histDesc">Account Initialization</strong><br>
-                        <small id="histDate">April 10, 2026</small>
-                    </div>
-                    <div id="histAmt" style="color: green; font-weight: bold;">+$0.00</div>
-                </div>
+                <label>Beneficiary Bank</label><input type="text" placeholder="e.g. Deutsche Bank">
+                <label>IBAN / Account Number</label><input type="text" placeholder="Enter Details">
+                <label>Amount ($)</label><input type="number" placeholder="0.00">
+                <button class="btn-action" onclick="handleTransfer()">Confirm & Send Wire</button>
             </div>
         </div>
 
         <div id="v-support" class="view">
-            <h1>Priority Support Chat</h1>
+            <h1>Concierge Chat</h1>
             <div class="glass-panel">
-                <div style="background:#f8f9fa; padding:20px; border-radius:10px; min-height:150px;">
-                    <p><b>Support Agent:</b> Good day. How can your manager assist you today?</p>
-                    <p style="background: #fff0f0; padding:15px; border-radius:10px; border-left: 5px solid var(--odin-red); margin-top:20px;">
-                        <b>Admin:</b> <span id="adminMsgText">Connecting...</span>
-                    </p>
+                <div id="chatDisplay">
+                    <div class="msg msg-admin"><b>System:</b> Secure chat established. A manager is ready to assist.</div>
                 </div>
-                <input type="text" style="margin-top:20px;" placeholder="Message support...">
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="clientChatInput" placeholder="Type your message here...">
+                    <button onclick="sendChat()" style="background:red; color:white; border:none; border-radius:8px; padding:0 20px; cursor:pointer;">Send</button>
+                </div>
             </div>
         </div>
 
     </div>
 
     <script>
-        function showView(viewId, element) {
+        function showView(id, el) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
             document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active-view');
-            element.classList.add('active');
+            document.getElementById(id).classList.add('active-view');
+            el.classList.add('active');
         }
 
-        function processTx() {
-            const mode = localStorage.getItem('transfer_mode') || 'Pending';
-            if(mode === 'Visit Bank') {
-                alert('SECURITY ALERT: Unusual activity. Please visit an Odin Central branch with a valid ID.');
-            } else if(mode === 'Pending') {
-                alert('TRANSFER PENDING: This transaction has been queued for security review. ETA: 24-48 hours.');
-            } else {
-                alert('SUCCESS: Transaction completed successfully. Ref ID: #OD' + Math.floor(Math.random()*999999));
+        // --- LIVE SYNC ENGINE ---
+        function sync() {
+            // 1. Update Name
+            const name = localStorage.getItem('userName') || 'Valued Client';
+            document.getElementById('sideName').innerText = name;
+            document.getElementById('welcomeUser').innerText = 'Welcome back, ' + name;
+
+            // 2. Update Balance (Live from Admin)
+            const rawBal = localStorage.getItem('balChk') || "0";
+            const formattedBal = parseFloat(rawBal).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('mainBal').innerText = "$" + formattedBal;
+
+            // 3. Receive Admin Replies
+            const reply = localStorage.getItem('admin_reply');
+            if(reply) {
+                const box = document.getElementById('chatDisplay');
+                box.innerHTML += `<div class="msg msg-admin"><b>Manager:</b> ${reply}</div>`;
+                box.scrollTop = box.scrollHeight;
+                localStorage.removeItem('admin_reply'); // Clear after showing
             }
         }
 
-        function sync() {
-            // Identity & Profile
-            const name = localStorage.getItem('userName') || 'Client';
-            const job = localStorage.getItem('userJob') || 'Private Wealth Client';
-            document.getElementById('sideName').innerText = name;
-            document.getElementById('cardName').innerText = name.toUpperCase();
-            document.getElementById('welcomeMsg').innerText = 'Welcome back, ' + name;
-            document.getElementById('sideJob').innerText = job;
-            document.getElementById('cardNum').innerText = localStorage.getItem('userCard') || '**** **** **** 5678';
-
-            // Balances
-            const bal = parseFloat(localStorage.getItem('balChk') || 0);
-            document.getElementById('mainBal').innerText = '$' + bal.toLocaleString();
-
-            // History & Loans
-            document.getElementById('histDesc').innerText = localStorage.getItem('lastTxDesc') || 'Initial Deposit';
-            document.getElementById('histDate').innerText = localStorage.getItem('lastTxDate') || 'April 17, 2026';
-            document.getElementById('histAmt').innerText = localStorage.getItem('lastTxAmt') || '+$0.00';
-            document.getElementById('loanStatDisplay').innerText = localStorage.getItem('loan_status') || 'Pending Review';
-
-            // Support
-            document.getElementById('adminMsgText').innerText = localStorage.getItem('adminSupportMsg') || 'Thank you for your patience. Your manager is reviewing your records.';
+        // --- CHAT FUNCTIONS ---
+        function sendChat() {
+            const input = document.getElementById('clientChatInput');
+            if(input.value.trim() !== "") {
+                const msg = input.value;
+                localStorage.setItem('client_to_admin', msg); // Send to Admin
+                
+                const box = document.getElementById('chatDisplay');
+                box.innerHTML += `<div class="msg msg-client"><b>You:</b> ${msg}</div>`;
+                box.scrollTop = box.scrollHeight;
+                input.value = "";
+            }
         }
 
+        // --- TRANSFER SECURITY ---
+        function handleTransfer() {
+            const mode = localStorage.getItem('transfer_mode') || 'Pending';
+            if(mode === 'Visit Bank') {
+                alert('ERROR 403: Security restriction. Please visit your local branch to authorize this wire.');
+            } else if(mode === 'Pending') {
+                alert('PENDING: Transaction received. Verification in progress (ETA 24h).');
+            } else {
+                alert('SUCCESS: Wire transfer initiated. Transaction ID: #OD' + Math.floor(Math.random()*99999));
+            }
+        }
+
+        // Run sync every 1 second
+        setInterval(sync, 1000);
         window.onload = sync;
     </script>
 </body>
