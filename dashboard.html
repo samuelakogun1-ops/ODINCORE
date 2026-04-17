@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Odin's Cafe Bank</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; }
+        .sidebar { width: 250px; background: #003366; color: white; height: 100vh; position: fixed; padding: 20px; }
+        .main-content { margin-left: 290px; padding: 40px; }
+        .balance-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
+        .balance-card h3 { color: #888; margin: 0; }
+        .balance-amount { font-size: 32px; font-weight: bold; color: #2ecc71; margin: 10px 0; }
+        .nav-link { color: white; text-decoration: none; display: block; margin: 20px 0; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Odin's Bank</h2>
+        <a href="#" class="nav-link">Overview</a>
+        <a href="#" class="nav-link">Transfer Funds</a>
+        <a href="#" class="nav-link">Statements</a>
+        <a href="index.html" class="nav-link" style="margin-top: 50px; color: #ff4444;">Logout</a>
+    </div>
+    <div class="main-content">
+        <h1>Welcome Back, Client</h1>
+        <div class="balance-card">
+            <h3>Available Balance</h3>
+            <div class="balance-amount">$12,450.00</div>
+            <p>Account: ****5678</p>
+        </div>
+    </div>
+</body>
+</html>
