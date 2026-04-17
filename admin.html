@@ -8,7 +8,7 @@
         body { font-family: 'Segoe UI', sans-serif; background: #0b1118; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .admin-box { width: 100%; max-width: 550px; background: #1c2631; padding: 30px; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid #34495e; }
         h2 { text-align: center; color: #3498db; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
-        h3 { font-size: 16px; color: #2ecc71; border-bottom: 1px solid #34495e; padding-bottom: 10px; margin-top: 30px; }
+        h3 { font-size: 14px; color: #2ecc71; border-bottom: 1px solid #34495e; padding-bottom: 10px; margin-top: 30px; text-transform: uppercase; }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 11px; color: #95a5a6; margin-bottom: 5px; text-transform: uppercase; }
         input { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: white; border-radius: 5px; box-sizing: border-box; }
@@ -18,7 +18,6 @@
         .btn-red { background: #e74c3c; color: white; }
         .btn-green { background: #2ecc71; color: white; }
         
-        /* Security Overlay */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b1118; display: flex; justify-content: center; align-items: center; z-index: 10000; }
         .login-card { background: #1c2631; padding: 40px; border-radius: 15px; text-align: center; border: 1px solid #34495e; }
     </style>
@@ -27,21 +26,29 @@
 
     <div id="loginOverlay">
         <div class="login-card">
-            <h2 style="margin-top:0;">Manager Access</h2>
-            <p style="color: #95a5a6; font-size: 14px;">Please enter your administrative credentials.</p>
-            <input type="password" id="adminPass" placeholder="Manager Password" style="width: 280px; text-align: center; font-size: 18px;">
-            <button onclick="checkPass()" style="width: 280px; background: #3498db; color: white;">Login to Console</button>
+            <h2>Manager Access</h2>
+            <input type="password" id="adminPass" placeholder="Manager Password" style="width: 280px; text-align: center; font-size: 18px; margin-bottom: 15px;">
+            <button onclick="checkPass()" style="width: 280px; background: #3498db; color: white;">Access Console</button>
         </div>
     </div>
 
     <div class="admin-box">
         <h2>Odin Central Bank</h2>
-        <p style="text-align:center; color:#95a5a6; font-size:12px;">Global Wealth Management Controller</p>
         
+        <h3>1. Client Login Credentials</h3>
         <div class="form-group">
-            <h3>User Registration & Profile</h3>
-            <label>Client Full Name</label>
-            <input type="text" id="uName" placeholder="e.g. John Doe">
+            <label>Account ID / Username (For Login)</label>
+            <input type="text" id="regUser" placeholder="e.g. user777">
+        </div>
+        <div class="form-group">
+            <label>Account Password (For Login)</label>
+            <input type="text" id="regPass" placeholder="e.g. pass123">
+        </div>
+
+        <h3>2. Client Profile Info</h3>
+        <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="uName" placeholder="e.g. Samuel A.">
         </div>
         <div class="form-group">
             <label>Virtual Card Number</label>
@@ -52,58 +59,66 @@
             <input type="number" id="uBal" placeholder="0.00">
         </div>
         <div class="form-group">
-            <label>Profile Photo Link</label>
-            <input type="text" id="uPhoto" placeholder="Paste image URL here">
+            <label>Profile Photo URL</label>
+            <input type="text" id="uPhoto" placeholder="Link to image">
         </div>
-        <button class="btn-blue" onclick="saveUser()">Update Client Profile</button>
+        <button class="btn-blue" onclick="registerUser()">Register & Save Client</button>
 
+        <h3>3. Transaction Injection</h3>
         <div class="form-group">
-            <h3>Manual Transaction Entry</h3>
-            <label>Description (Merchant / Type)</label>
-            <input type="text" id="tDesc" placeholder="e.g. Amazon Intl Purchase">
+            <label>Description</label>
+            <input type="text" id="tDesc" placeholder="e.g. Wire Transfer Received">
         </div>
         <div class="form-group">
             <label>Amount (Use '-' for withdrawals)</label>
-            <input type="text" id="tAmt" placeholder="e.g. -120.50 or +5000.00">
+            <input type="text" id="tAmt" placeholder="e.g. +50,000.00">
         </div>
         <div class="form-group">
             <label>Date & Time Stamp</label>
-            <input type="text" id="tDate" placeholder="e.g. Apr 17, 2026 - 09:45 AM">
+            <input type="text" id="tDate" placeholder="e.g. Apr 17, 2026 - 09:00 AM">
         </div>
-        <button class="btn-purple" onclick="addTx()">Inject Transaction</button>
+        <button class="btn-purple" onclick="addTx()">Add to History</button>
 
-        <div class="form-group">
-            <h3>System Controls</h3>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-red" onclick="setStatus('frozen')">Freeze Account</button>
-                <button class="btn-green" onclick="setStatus('active')">Unfreeze</button>
-            </div>
+        <h3>4. Security Controls</h3>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-red" onclick="setStatus('frozen')">Freeze Account</button>
+            <button class="btn-green" onclick="setStatus('active')">Unfreeze</button>
         </div>
         
         <button style="background:none; color:#e74c3c; font-size:11px; border:1px solid #e74c3c; margin-top:20px;" onclick="clearData()">Wipe All System Data</button>
     </div>
 
     <script>
-        // 1. PASSWORD CHECK (Current password is: 1234)
+        // Password for Admin Console (Default: 1234)
         function checkPass() {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === '1234') { 
+            if(document.getElementById('adminPass').value === '1234') { 
                 document.getElementById('loginOverlay').style.display = 'none';
-            } else { 
-                alert('Invalid Credentials. Unauthorized access logged.'); 
+            } else { alert('Access Denied.'); }
+        }
+
+        // Register User and Credentials
+        function registerUser() {
+            const user = document.getElementById('regUser').value;
+            const pass = document.getElementById('regPass').value;
+            const name = document.getElementById('uName').value;
+            const card = document.getElementById('uCard').value;
+            const bal = document.getElementById('uBal').value;
+            const photo = document.getElementById('uPhoto').value;
+
+            if(user && pass) {
+                localStorage.setItem('bank_user', user);
+                localStorage.setItem('bank_pass', pass);
+                localStorage.setItem('userName', name);
+                localStorage.setItem('userCard', card);
+                localStorage.setItem('clientBalance', bal);
+                localStorage.setItem('userPhotoURL', photo);
+                alert('User Registered! They can now login at index.html');
+            } else {
+                alert('Username and Password are required.');
             }
         }
 
-        // 2. SAVE USER PROFILE
-        function saveUser() {
-            localStorage.setItem('userName', document.getElementById('uName').value);
-            localStorage.setItem('userCard', document.getElementById('uCard').value);
-            localStorage.setItem('clientBalance', document.getElementById('uBal').value);
-            localStorage.setItem('userPhotoURL', document.getElementById('uPhoto').value);
-            alert('Client Profile Updated Successfully!');
-        }
-
-        // 3. ADD CUSTOM TRANSACTION
+        // Add Transactions
         function addTx() {
             const desc = document.getElementById('tDesc').value;
             const amt = document.getElementById('tAmt').value;
@@ -111,31 +126,19 @@
 
             if(desc && amt && date) {
                 let txs = JSON.parse(localStorage.getItem('transactions')) || [];
-                txs.unshift({ desc, amt, date }); // Adds new transaction to the top
+                txs.unshift({ desc, amt, date });
                 localStorage.setItem('transactions', JSON.stringify(txs));
-                alert('Transaction Injected into History!');
-                
-                // Clear inputs for next entry
-                document.getElementById('tDesc').value = '';
-                document.getElementById('tAmt').value = '';
-                document.getElementById('tDate').value = '';
-            } else {
-                alert('Please fill all transaction fields.');
+                alert('Transaction added to client history!');
             }
         }
 
-        // 4. SECURITY STATUS
         function setStatus(status) {
             localStorage.setItem('accStatus', status);
-            alert('Account security status set to: ' + status.toUpperCase());
+            alert('Security status set to ' + status.toUpperCase());
         }
 
-        // 5. RESET DATA
         function clearData() {
-            if(confirm('Are you sure? This will delete the user and all history.')) {
-                localStorage.clear();
-                location.reload();
-            }
+            if(confirm('Wipe everything?')) { localStorage.clear(); location.reload(); }
         }
     </script>
 </body>
