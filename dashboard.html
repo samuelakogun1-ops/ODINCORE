@@ -3,22 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Banking | Secure Dashboard</title>
+    <title>Secure Banking | Odin Central Bank</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Mobile-friendly and UI adjustments */
+        .card-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #3a3a3a 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            min-height: 180px;
+        }
+        .chip {
+            width: 45px;
+            height: 35px;
+            background: #d4af37;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .section-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .input-box {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="logo">ODIN CENTRAL BANK</div>
+        <div class="logo">ODIN CENTRAL</div>
+        
         <div style="text-align: center; padding: 10px;">
-            <img id="userPhoto" src="https://via.placeholder.com/80" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #2ecc71; object-fit: cover;">
-            <p style="font-size: 12px; color: #b0c4de; margin-top: 10px;">Welcome, Verified User</p>
+            <img id="uPhoto" src="https://via.placeholder.com/80" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #2ecc71; object-fit: cover;">
+            <p id="uNameSide" style="font-size: 14px; color: white; margin-top: 10px; font-weight: bold;">Verified Client</p>
         </div>
+
         <nav>
-            <a href="dashboard.html" class="nav-link active">📊 Dashboard</a>
-            <a href="#" class="nav-link" onclick="openModal('transferModal')">💸 Transfer Funds</a>
-            <a href="#" class="nav-link" onclick="openModal('withdrawModal')">🏧 Withdraw</a>
-            <a href="#" class="nav-link">📜 Transactions</a>
-            <a href="#" class="nav-link">🛠️ Settings</a>
+            <a href="#" class="nav-link active" onclick="showView('home')">📊 Dashboard</a>
+            <a href="#" class="nav-link" onclick="showView('transfer')">💸 Transfer Funds</a>
+            <a href="#" class="nav-link" onclick="showView('settings')">⚙️ Account Settings</a>
+            <a href="#" class="nav-link" onclick="showView('support')">🎧 Customer Support</a>
             <div style="margin-top: 50px;">
                 <a href="index.html" class="nav-link" style="color: #ff7675;">🚪 Logout</a>
             </div>
@@ -26,49 +61,135 @@
     </div>
 
     <div class="main-content">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-            <h1>Account Overview</h1>
-            <span class="status-badge">● International Gold Member</span>
-        </div>
-        
-        <div class="balance-card">
-            <h3 style="color: #7f8c8d; font-size: 14px; margin: 0;">TOTAL AVAILABLE BALANCE</h3>
-            <div class="balance-amount" id="displayBalance">$12,450.00</div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button onclick="openModal('transferModal')" style="background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Transfer</button>
-                <button onclick="openModal('withdrawModal')" style="background: #2c3e50; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Withdraw</button>
+        <div id="homeView">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h1>Welcome Back, <span id="uNameTop">Client</span></h1>
+                <span class="status-badge">● International Member</span>
+            </div>
+
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="balance-card" style="flex: 1.5; min-width: 300px;">
+                    <h3 style="color: #7f8c8d; font-size: 12px; margin: 0; letter-spacing: 1px;">AVAILABLE BALANCE</h3>
+                    <div class="balance-amount" id="displayBalance">$0.00</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="showView('transfer')" style="background: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold;">Quick Transfer</button>
+                    </div>
+                </div>
+
+                <div class="card-gradient" style="flex: 1; min-width: 300px;">
+                    <div class="chip"></div>
+                    <div id="uCardDisplay" style="font-size: 20px; letter-spacing: 3px; margin-bottom: 20px;">**** **** **** ****</div>
+                    <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <div>
+                            <p style="margin:0; opacity:0.6;">CARD HOLDER</p>
+                            <p id="uNameCard" style="margin:0; font-weight:bold; text-transform:uppercase;">CLIENT NAME</p>
+                        </div>
+                        <div>
+                            <p style="margin:0; opacity:0.6;">EXPIRES</p>
+                            <p style="margin:0; font-weight:bold;">12/28</p>
+                        </div>
+                    </div>
+                    <div style="position: absolute; top: 20px; right: 25px; font-weight: bold; font-style: italic; font-size: 20px;">VISA</div>
+                </div>
+            </div>
+
+            <div class="balance-card" style="margin-top: 25px; max-width: 100%;">
+                <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 16px;">Transaction History</h3>
+                <div id="historyList">
+                    </div>
             </div>
         </div>
 
-        <div class="balance-card" style="margin-top: 25px;">
-            <h3 style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 16px;">Recent Transactions</h3>
-            <div id="transactionList">
-                <div class="transaction-item"><span>Salary Credit</span><span class="text-green">+$5,400.00</span></div>
-            </div>
+        <div id="transferView" class="section-panel">
+            <h2>International Wire Transfer</h2>
+            <p style="color: #666; font-size: 14px;">Move funds securely to any bank worldwide.</p>
+            <input type="text" class="input-box" placeholder="Beneficiary Bank Name">
+            <input type="text" class="input-box" placeholder="SWIFT / BIC Code">
+            <input type="text" class="input-box" placeholder="Account Number / IBAN">
+            <input type="number" class="input-box" placeholder="Amount (USD)">
+            <button onclick="alert('SECURITY ALERT: This transaction requires a high-level authorization code. Please contact support.')" class="btn-primary" style="margin-top: 10px;">Send Funds</button>
         </div>
-    </div>
 
-    <div id="withdrawModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:9999;">
-        <div style="background:white; padding:40px; border-radius:15px; width:400px;">
-            <h2 style="color:#002244;">Withdraw Funds</h2>
-            <p style="font-size: 13px; color: red;"><b>Notice:</b> External withdrawals require a valid Tax Clearance Code.</p>
-            <input type="number" placeholder="Enter Amount" style="width:100%; padding:12px; margin: 15px 0; border:1px solid #ddd; border-radius:5px;">
-            <button onclick="alert('ERROR: Tax Code Required. Please contact support.')" style="background:#e74c3c; color:white; border:none; padding:15px; width:100%; border-radius:5px; font-weight:bold;">Request Withdrawal</button>
-            <button onclick="closeModal('withdrawModal')" style="background:none; border:none; color:#95a5a6; cursor:pointer; width:100%; margin-top:10px;">Cancel</button>
+        <div id="settingsView" class="section-panel">
+            <h2>Security & Settings</h2>
+            <div style="border-bottom: 1px solid #eee; padding: 15px 0;">
+                <p><b>Account Status:</b> <span style="color: green;">Active / Verified</span></p>
+                <p><b>2FA Authentication:</b> Enabled (SMS)</p>
+                <p><b>Daily Limit:</b> $100,000.00 USD</p>
+            </div>
+            <button class="btn-primary" style="background: #34495e; margin-top: 20px;">Update Security Keys</button>
+        </div>
+
+        <div id="supportView" class="section-panel">
+            <h2>Priority Concierge Support</h2>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; height: 200px; margin-bottom: 10px; border: 1px solid #eee; overflow-y: auto;">
+                <p><b>[System]:</b> Welcome to Odin Central Priority Support. A wealth manager is currently reviewing your account. How can we help?</p>
+            </div>
+            <input type="text" class="input-box" placeholder="Type your message...">
+            <button class="btn-primary">Connect to Live Agent</button>
         </div>
     </div>
 
     <script>
-        // 1. ADMIN PHOTO & BALANCE CONTROL
-        const savedPhoto = localStorage.getItem('userPhotoURL');
-        if (savedPhoto) { document.getElementById('userPhoto').src = savedPhoto; }
+        // 1. DATA SYNC: Pull everything from Admin
+        function loadData() {
+            // Check for Freeze
+            if (localStorage.getItem('accStatus') === 'frozen') {
+                document.body.innerHTML = `<div style="background:#0b1118; color:white; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center; font-family:sans-serif;"><h1>🔒 ACCESS RESTRICTED</h1><p>Contact your manager regarding a pending security flag.</p></div>`;
+                return;
+            }
 
-        const savedBalance = localStorage.getItem('clientBalance');
-        if (savedBalance) { document.getElementById('displayBalance').innerText = '$' + parseFloat(savedBalance).toLocaleString(); }
+            // Load Profile
+            const name = localStorage.getItem('userName') || 'Verified Client';
+            document.getElementById('uNameSide').innerText = name;
+            document.getElementById('uNameTop').innerText = name;
+            document.getElementById('uNameCard').innerText = name;
+            
+            document.getElementById('uCardDisplay').innerText = localStorage.getItem('userCard') || '4400 **** **** 5678';
+            document.getElementById('uPhoto').src = localStorage.getItem('userPhotoURL') || 'https://via.placeholder.com/80';
+            
+            const bal = localStorage.getItem('clientBalance') || '12450.00';
+            document.getElementById('displayBalance').innerText = '$' + parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
 
-        // 2. MODAL LOGIC
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+            // Load Transactions from Admin
+            const txs = JSON.parse(localStorage.getItem('transactions')) || [
+                {desc: 'Initial Account Deposit', amt: '+12,450.00', date: 'Apr 10, 2026 - 10:00 AM'}
+            ];
+            
+            let html = '';
+            txs.forEach(t => {
+                const color = t.amt.includes('-') ? '#e74c3c' : '#2ecc71';
+                html += `
+                    <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f9f9f9;">
+                        <div>
+                            <div style="font-weight: 500;">${t.desc}</div>
+                            <div style="font-size: 11px; color: #95a5a6;">${t.date}</div>
+                        </div>
+                        <span style="color: ${color}; font-weight: bold;">${t.amt}</span>
+                    </div>`;
+            });
+            document.getElementById('historyList').innerHTML = html;
+        }
+
+        // 2. NAVIGATION: Switch between sections
+        function showView(view) {
+            // Hide all
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('transferView').style.display = 'none';
+            document.getElementById('settingsView').style.display = 'none';
+            document.getElementById('supportView').style.display = 'none';
+            
+            // Show selected
+            document.getElementById(view + 'View').style.display = 'block';
+            
+            // Update nav active state
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(l => l.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        // Initialize
+        loadData();
     </script>
 </body>
 </html>
