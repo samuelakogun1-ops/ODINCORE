@@ -2,31 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Odin's Cafe Bank</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f7f6; margin: 0; }
-        .sidebar { width: 250px; background: #003366; color: white; height: 100vh; position: fixed; padding: 20px; }
-        .main-content { margin-left: 290px; padding: 40px; }
-        .balance-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 300px; }
-        .balance-card h3 { color: #888; margin: 0; }
-        .balance-amount { font-size: 32px; font-weight: bold; color: #2ecc71; margin: 10px 0; }
-        .nav-link { color: white; text-decoration: none; display: block; margin: 20px 0; font-size: 18px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="sidebar">
-        <h2>Odin's Bank</h2>
-        <a href="#" class="nav-link">Overview</a>
-        <a href="#" class="nav-link">Transfer Funds</a>
-        <a href="#" class="nav-link">Statements</a>
-        <a href="index.html" class="nav-link" style="margin-top: 50px; color: #ff4444;">Logout</a>
+        <div class="logo">Odin's Bank</div>
+        <nav>
+            <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            <a href="#" class="nav-link">Transfer Funds</a>
+            <a href="#" class="nav-link">Transaction History</a>
+            <a href="#" class="nav-link">Settings</a>
+            <a href="index.html" class="nav-link">Logout</a>
+        </nav>
     </div>
+
     <div class="main-content">
         <h1>Welcome Back, Client</h1>
+        
         <div class="balance-card">
             <h3>Available Balance</h3>
             <div class="balance-amount" id="displayBalance">$12,450.00</div>
             <p>Account: ****5678</p>
+        </div>
+
+        <div class="balance-card" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;">Recent Transactions</h3>
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f9f9f9;">
+                <span>Apr 16 - Online Transfer</span>
+                <span style="color: #e74c3c; font-weight: bold;">-$1,200.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f9f9f9;">
+                <span>Apr 15 - Salary Deposit</span>
+                <span style="color: #2ecc71; font-weight: bold;">+$5,400.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                <span>Apr 12 - Cashback Reward</span>
+                <span style="color: #2ecc71; font-weight: bold;">+$25.50</span>
+            </div>
         </div>
     </div>
 
@@ -47,19 +61,24 @@
     </div>
 
     <script>
-        // 1. ADMIN CONTROL: This updates the balance when you change it in admin.html
+        // 1. FREEZE CHECK: Stops the client if you hit "Freeze" in Admin
+        if (localStorage.getItem('accStatus') === 'frozen') {
+            document.body.innerHTML = "<div style='background:white; color:red; height:100vh; display:flex; justify-content:center; align-items:center; flex-direction:column; text-align:center;'><h1>ACCOUNT RESTRICTED</h1><p>Your account has been temporarily suspended.<br>Please contact the bank manager for verification.</p></div>";
+        }
+
+        // 2. ADMIN CONTROL: Updates the balance based on your Admin Panel
         const savedBalance = localStorage.getItem('clientBalance');
         if (savedBalance) {
             document.getElementById('displayBalance').innerText = '$' + parseFloat(savedBalance).toLocaleString(undefined, {minimumFractionDigits: 2});
         }
 
-        // 2. TRANSFER MODAL: This opens the pop-up when clicking "Transfer Funds"
+        // 3. TRANSFER MODAL: Opens the popup
         document.querySelectorAll('.nav-link')[1].onclick = function(e) {
             e.preventDefault();
             document.getElementById('transferModal').style.display = 'flex';
         };
 
-        // 3. TRANSFER LOGIC: This shows the success alert
+        // 4. TRANSFER LOGIC: Shows the success alert
         function processTransfer() {
             const amount = document.getElementById('transferAmount').value;
             const acc = document.getElementById('accNumber').value;
