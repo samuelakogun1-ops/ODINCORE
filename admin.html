@@ -3,155 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Controller | Odin Central Bank</title>
+    <title>Odin Central | System Controller</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0b1118; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .admin-box { width: 100%; max-width: 600px; background: #1c2631; padding: 30px; border-radius: 15px; border: 1px solid #34495e; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #3498db; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+        .admin-box { width: 100%; max-width: 650px; background: #1c2631; padding: 30px; border-radius: 15px; border: 1px solid #34495e; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #3498db; text-transform: uppercase; letter-spacing: 2px; }
         h3 { font-size: 13px; color: #2ecc71; border-bottom: 1px solid #34495e; padding-bottom: 8px; margin-top: 25px; text-transform: uppercase; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { display: block; font-size: 11px; color: #95a5a6; margin-top: 12px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: white; border-radius: 5px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: #3498db; }
+        input, select, textarea { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: white; border-radius: 5px; box-sizing: border-box; outline: none; }
         button { width: 100%; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; font-size: 14px; }
         .btn-blue { background: #3498db; color: white; }
         .btn-green { background: #2ecc71; color: white; }
-        .btn-red { background: #e74c3c; color: white; }
-        
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b1118; display: flex; justify-content: center; align-items: center; z-index: 10000; }
-        .login-card { background: #1c2631; padding: 40px; border-radius: 15px; text-align: center; border: 1px solid #34495e; }
     </style>
 </head>
 <body>
 
-    <div id="loginOverlay">
-        <div class="login-card">
-            <h2>Manager Access</h2>
-            <input type="password" id="adminPass" placeholder="Admin Password" style="width: 250px; text-align: center; font-size: 18px; margin-bottom: 15px;">
-            <button onclick="checkPass()" style="width: 250px;" class="btn-blue">Access Console</button>
-        </div>
-    </div>
-
     <div class="admin-box">
         <h2>Odin Central Admin</h2>
         
-        <h3>1. Login Credentials</h3>
+        <h3>1. Client Profile & ATM</h3>
         <div class="form-grid">
             <div>
-                <label>Account ID (Username)</label>
+                <label>Login Username</label>
                 <input type="text" id="regUser" placeholder="User ID">
             </div>
             <div>
-                <label>Account Password</label>
+                <label>Login Password</label>
                 <input type="text" id="regPass" placeholder="Password">
             </div>
         </div>
-
-        <h3>2. Client Identity</h3>
-        <label>Full Name</label>
-        <input type="text" id="uName" placeholder="Full legal name">
-        <div class="form-grid">
-            <div>
-                <label>Gender</label>
-                <select id="uGender">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </div>
-            <div>
-                <label>Date of Birth</label>
-                <input type="text" id="uDob" placeholder="e.g., 14 July 1980">
-            </div>
-        </div>
-        <label>Occupation</label>
-        <input type="text" id="uJob" placeholder="e.g., Civil Engineer">
-
-        <h3>3. Account Management</h3>
-        <div class="form-grid">
-            <div>
-                <label>Checking Balance</label>
-                <input type="number" id="balChk" placeholder="0.00">
-            </div>
-            <div>
-                <label>Savings Balance</label>
-                <input type="number" id="balSav" placeholder="0.00">
-            </div>
-        </div>
-        <div class="form-grid">
-            <div>
-                <label>Personal Balance</label>
-                <input type="number" id="balPers" placeholder="0.00">
-            </div>
-            <div>
-                <label>Currency</label>
-                <select id="uCurr">
-                    <option value="$">USD ($)</option>
-                    <option value="€">EUR (€)</option>
-                    <option value="£">GBP (£)</option>
-                </select>
-            </div>
-        </div>
-        <label>Virtual Card Number</label>
+        <label>Full Name (Appears on Card & Dashboard)</label>
+        <input type="text" id="uName" placeholder="e.g., Morris Thomas">
+        <label>ATM Card Number</label>
         <input type="text" id="uCard" placeholder="4400 0000 0000 5678">
-        <label>Profile Photo URL</label>
-        <input type="text" id="uPhoto" placeholder="Link to profile image">
 
-        <h3>4. System Controls</h3>
-        <label>Processing Time</label>
-        <input type="text" id="procTime" placeholder="e.g., 24 - 48 Hours">
-        
-        <label>Transfer Behavior</label>
-        <select id="transferMode" style="border: 1px solid #2ecc71;">
-            <option value="Pending">Transfers show "PENDING"</option>
-            <option value="Successful">Transfers show "SUCCESSFUL"</option>
-            <option value="Visit Bank">Error: "Visit Nearest Branch"</option>
+        <h3>2. Account Balances</h3>
+        <div class="form-grid">
+            <div>
+                <label>Checking Account</label>
+                <input type="number" id="balChk" placeholder="1000000">
+            </div>
+            <div>
+                <label>Savings Account</label>
+                <input type="number" id="balSav" placeholder="0">
+            </div>
+        </div>
+
+        <h3>3. Transaction History Manager</h3>
+        <label>Transaction Date & Time (Customizable)</label>
+        <input type="text" id="txDate" placeholder="e.g., April 17, 2026 | 03:45 PM">
+        <label>Description</label>
+        <input type="text" id="txDesc" placeholder="e.g., International Wire Transfer Credit">
+        <label>Amount (Use + or -)</label>
+        <input type="text" id="txAmt" placeholder="e.g., +$1,000,000.00">
+
+        <h3>4. System Behavior & Support</h3>
+        <label>Transfer Success Policy</label>
+        <select id="transferMode">
+            <option value="Successful">Make Transfers Successful</option>
+            <option value="Pending">Keep Transfers Pending</option>
+            <option value="Visit Bank">Force "Visit Nearest Branch" Error</option>
         </select>
-
-        <button class="btn-green" onclick="saveAll()">Register & Synchronize Client</button>
         
-        <button class="btn-red" style="margin-top: 10px; background: transparent; border: 1px solid #e74c3c; color: #e74c3c;" onclick="clearData()">Wipe System Data</button>
+        <label>Customer Support Reply (Admin Chat)</label>
+        <textarea id="supportReply" rows="3" placeholder="Type message to client..."></textarea>
+
+        <button class="btn-green" onclick="saveAll()">Register & Synchronize Everything</button>
     </div>
 
     <script>
-        // Password for Admin (Default: 1234)
-        function checkPass() {
-            if(document.getElementById('adminPass').value === '1234') { 
-                document.getElementById('loginOverlay').style.display = 'none';
-            } else { alert('Access Denied.'); }
-        }
-
         function saveAll() {
-            // Core Auth
+            // Credentials
             localStorage.setItem('bank_user', document.getElementById('regUser').value);
             localStorage.setItem('bank_pass', document.getElementById('regPass').value);
             
-            // Profile Info
+            // Identity & ATM
             localStorage.setItem('userName', document.getElementById('uName').value);
-            localStorage.setItem('userGender', document.getElementById('uGender').value);
-            localStorage.setItem('userDob', document.getElementById('uDob').value);
-            localStorage.setItem('userJob', document.getElementById('uJob').value);
-            localStorage.setItem('userPhotoURL', document.getElementById('uPhoto').value);
+            localStorage.setItem('userCard', document.getElementById('uCard').value);
             
-            // Banking Info
+            // Balances
             localStorage.setItem('balChk', document.getElementById('balChk').value);
             localStorage.setItem('balSav', document.getElementById('balSav').value);
-            localStorage.setItem('balPers', document.getElementById('balPers').value);
-            localStorage.setItem('userCard', document.getElementById('uCard').value);
-            localStorage.setItem('currency', document.getElementById('uCurr').value);
             
-            // System Policy
-            localStorage.setItem('procTime', document.getElementById('procTime').value);
+            // Transaction History
+            localStorage.setItem('lastTxDate', document.getElementById('txDate').value);
+            localStorage.setItem('lastTxDesc', document.getElementById('txDesc').value);
+            localStorage.setItem('lastTxAmt', document.getElementById('txAmt').value);
+            
+            // Settings & Support
             localStorage.setItem('transfer_mode', document.getElementById('transferMode').value);
+            localStorage.setItem('adminSupportMsg', document.getElementById('supportReply').value);
             
-            alert('CLIENT PROFILE UPDATED: All changes are now live on the dashboard.');
+            alert('SYSTEM SYNCHRONIZED: The dashboard, transaction history, and ATM card are now updated.');
         }
 
-        function clearData() {
-            if(confirm('This will delete all registered user data. Continue?')) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
+        // Auto-load existing data
+        window.onload = function() {
+            document.getElementById('regUser').value = localStorage.getItem('bank_user') || '';
+            document.getElementById('uName').value = localStorage.getItem('userName') || '';
+            document.getElementById('balChk').value = localStorage.getItem('balChk') || '';
+        };
     </script>
 </body>
 </html>
