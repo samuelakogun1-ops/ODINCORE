@@ -7,14 +7,14 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0b1118; color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
         .admin-box { width: 100%; max-width: 650px; background: #1c2631; padding: 30px; border-radius: 15px; border: 1px solid #34495e; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #3498db; text-transform: uppercase; letter-spacing: 2px; }
+        h2 { text-align: center; color: #3498db; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
         h3 { font-size: 13px; color: #2ecc71; border-bottom: 1px solid #34495e; padding-bottom: 8px; margin-top: 25px; text-transform: uppercase; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         label { display: block; font-size: 11px; color: #95a5a6; margin-top: 12px; text-transform: uppercase; }
         input, select, textarea { width: 100%; padding: 12px; background: #0b1118; border: 1px solid #34495e; color: white; border-radius: 5px; box-sizing: border-box; outline: none; }
         button { width: 100%; padding: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 20px; transition: 0.3s; font-size: 14px; }
-        .btn-blue { background: #3498db; color: white; }
         .btn-green { background: #2ecc71; color: white; }
+        .btn-green:hover { background: #27ae60; }
     </style>
 </head>
 <body>
@@ -22,7 +22,7 @@
     <div class="admin-box">
         <h2>Odin Central Admin</h2>
         
-        <h3>1. Client Profile & ATM</h3>
+        <h3>1. Client Profile & Authentication</h3>
         <div class="form-grid">
             <div>
                 <label>Login Username</label>
@@ -33,40 +33,44 @@
                 <input type="text" id="regPass" placeholder="Password">
             </div>
         </div>
-        <label>Full Name (Appears on Card & Dashboard)</label>
+        <label>Full Name</label>
         <input type="text" id="uName" placeholder="e.g., Morris Thomas">
-        <label>ATM Card Number</label>
-        <input type="text" id="uCard" placeholder="4400 0000 0000 5678">
+        <label>Occupation</label>
+        <input type="text" id="uJob" placeholder="e.g., Civil Engineer">
 
-        <h3>2. Account Balances</h3>
+        <h3>2. Balances & Loan Status</h3>
         <div class="form-grid">
             <div>
-                <label>Checking Account</label>
+                <label>Total Account Balance</label>
                 <input type="number" id="balChk" placeholder="1000000">
             </div>
             <div>
-                <label>Savings Account</label>
-                <input type="number" id="balSav" placeholder="0">
+                <label>Loan Eligibility</label>
+                <select id="loanStat">
+                    <option value="Approved">Approved</option>
+                    <option value="Pending Review">Pending Review</option>
+                    <option value="Declined">Declined</option>
+                </select>
             </div>
         </div>
 
-        <h3>3. Transaction History Manager</h3>
-        <label>Transaction Date & Time (Customizable)</label>
-        <input type="text" id="txDate" placeholder="e.g., April 17, 2026 | 03:45 PM">
-        <label>Description</label>
-        <input type="text" id="txDesc" placeholder="e.g., International Wire Transfer Credit">
+        <h3>3. Transaction History Control</h3>
+        <label>Transaction Date & Time</label>
+        <input type="text" id="txDate" placeholder="e.g., April 17, 2026 | 04:30 PM">
+        <label>Description (Shows in History)</label>
+        <input type="text" id="txDesc" placeholder="e.g., International Wire Deposit">
         <label>Amount (Use + or -)</label>
         <input type="text" id="txAmt" placeholder="e.g., +$1,000,000.00">
 
         <h3>4. System Behavior & Support</h3>
-        <label>Transfer Success Policy</label>
+        <label>Transaction Success Policy (Transfers & Withdrawals)</label>
         <select id="transferMode">
-            <option value="Successful">Make Transfers Successful</option>
-            <option value="Pending">Keep Transfers Pending</option>
-            <option value="Visit Bank">Force "Visit Nearest Branch" Error</option>
+            <option value="Successful">All Transactions Successful</option>
+            <option value="Pending">All Transactions Pending</option>
+            <option value="Visit Bank">Error: "Visit Nearest Branch"</option>
         </select>
         
-        <label>Customer Support Reply (Admin Chat)</label>
+        <label>Customer Support Message (Admin Response)</label>
         <textarea id="supportReply" rows="3" placeholder="Type message to client..."></textarea>
 
         <button class="btn-green" onclick="saveAll()">Register & Synchronize Everything</button>
@@ -74,35 +78,35 @@
 
     <script>
         function saveAll() {
-            // Credentials
+            // Credentials & Identity
             localStorage.setItem('bank_user', document.getElementById('regUser').value);
             localStorage.setItem('bank_pass', document.getElementById('regPass').value);
-            
-            // Identity & ATM
             localStorage.setItem('userName', document.getElementById('uName').value);
-            localStorage.setItem('userCard', document.getElementById('uCard').value);
+            localStorage.setItem('userJob', document.getElementById('uJob').value);
             
-            // Balances
+            // Banking & Loans
             localStorage.setItem('balChk', document.getElementById('balChk').value);
-            localStorage.setItem('balSav', document.getElementById('balSav').value);
+            localStorage.setItem('loan_status', document.getElementById('loanStat').value);
             
             // Transaction History
             localStorage.setItem('lastTxDate', document.getElementById('txDate').value);
             localStorage.setItem('lastTxDesc', document.getElementById('txDesc').value);
             localStorage.setItem('lastTxAmt', document.getElementById('txAmt').value);
             
-            // Settings & Support
+            // System Policy & Support
             localStorage.setItem('transfer_mode', document.getElementById('transferMode').value);
             localStorage.setItem('adminSupportMsg', document.getElementById('supportReply').value);
             
-            alert('SYSTEM SYNCHRONIZED: The dashboard, transaction history, and ATM card are now updated.');
+            alert('SYSTEM UPDATED: All features, including Loan and Profile details, are now synchronized with the dashboard.');
         }
 
-        // Auto-load existing data
+        // Auto-load existing data on open
         window.onload = function() {
             document.getElementById('regUser').value = localStorage.getItem('bank_user') || '';
             document.getElementById('uName').value = localStorage.getItem('userName') || '';
+            document.getElementById('uJob').value = localStorage.getItem('userJob') || '';
             document.getElementById('balChk').value = localStorage.getItem('balChk') || '';
+            document.getElementById('txDate').value = localStorage.getItem('lastTxDate') || '';
         };
     </script>
 </body>
