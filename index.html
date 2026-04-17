@@ -3,51 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finances - Professional Banking Solutions</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Bank Manager | Admin Control</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #1a2a3a; color: white; display: flex; justify-content: center; padding: 40px; }
+        .admin-card { background: #2c3e50; padding: 30px; border-radius: 15px; width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #34495e; }
+        h2 { text-align: center; color: #3498db; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px; }
+        .section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #3e5871; }
+        label { display: block; margin-bottom: 8px; font-size: 13px; color: #bdc3c7; }
+        input { width: 100%; padding: 12px; border-radius: 5px; border: 1px solid #34495e; background: #1a2a3a; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
+        .btn-update { background: #3498db; color: white; }
+        .btn-update:hover { background: #2980b9; }
+        .btn-photo { background: #9b59b6; color: white; }
+        .btn-photo:hover { background: #8e44ad; }
+        .btn-freeze { background: #e74c3c; color: white; }
+        .btn-freeze:hover { background: #c0392b; }
+        .btn-unfreeze { background: #2ecc71; color: white; }
+        .btn-unfreeze:hover { background: #27ae60; }
+        .status-msg { text-align: center; font-size: 12px; margin-top: 15px; color: #2ecc71; display: none; }
+    </style>
 </head>
 <body>
-
-    <header>
-        <nav class="navbar">
-            <div class="logo">Finances<span>.</span></div>
-            <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
-                <li><a href="#">About Us <i class="fas fa-chevron-down"></i></a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-        </nav>
-    </header>
-
-    <section class="hero">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>BANKING SOLUTIONS</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae minima delectus accusamus accusantium deleniti libero excepturi porro illo.</p>
-           <a href="login.html" class="btn">Client Login</a>
-            
-            <div class="slider-dots">
-                <span></span>
-                <span class="active"></span>
-                <span></span>
-            </div>
-
-            <div class="mouse-scroll">
-                <div class="wheel"></div>
-            </div>
+    <div class="admin-card">
+        <h2>Manager Console</h2>
+        
+        <div class="section">
+            <label>CLIENT AVAILABLE BALANCE (USD)</label>
+            <input type="number" id="newBalance" placeholder="e.g. 50000.00">
+            <button class="btn-update" onclick="updateBalance()">Update Balance</button>
         </div>
-    </section>
 
-    <section class="about-section">
-        <h2>About Us</h2>
-    </section>
+        <div class="section">
+            <label>CLIENT PROFILE PHOTO (URL)</label>
+            <input type="text" id="photoURL" placeholder="Paste image link here">
+            <button class="btn-photo" onclick="updatePhoto()">Update Profile Photo</button>
+        </div>
 
+        <div class="section" style="border-bottom: none;">
+            <label>ACCOUNT SECURITY STATUS</label>
+            <button class="btn-freeze" onclick="setStatus('frozen')">Freeze Account</button>
+            <button class="btn-unfreeze" onclick="setStatus('active')">Unfreeze Account</button>
+        </div>
+
+        <div id="statusMsg" class="status-msg">Changes applied successfully!</div>
+    </div>
+
+    <script>
+        function showFeedback() {
+            const msg = document.getElementById('statusMsg');
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
+
+        function updateBalance() {
+            const val = document.getElementById('newBalance').value;
+            if(val) {
+                localStorage.setItem('clientBalance', val);
+                showFeedback();
+            }
+        }
+
+        function updatePhoto() {
+            const url = document.getElementById('photoURL').value;
+            if(url) {
+                localStorage.setItem('userPhotoURL', url);
+                showFeedback();
+            }
+        }
+
+        function setStatus(status) {
+            localStorage.setItem('accStatus', status);
+            alert('Account is now ' + status.toUpperCase());
+            showFeedback();
+        }
+    </script>
 </body>
 </html>
