@@ -3,120 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Banking | Odin Central</title>
+    <title>Dashboard | Odin Private Banking</title>
     <style>
-        :root { --main-red: #c0392b; --dark-bg: #0b0f19; --card-bg: rgba(22, 30, 46, 0.9); --text: #ffffff; }
-        body { margin: 0; font-family: sans-serif; background: var(--dark-bg); color: var(--text); display: flex; min-height: 100vh; }
-        
-        /* Sidebar */
-        .sidebar { width: 280px; background: #1a1a1a; padding: 20px; border-right: 1px solid rgba(255,255,255,0.1); }
-        .brand { font-size: 22px; font-weight: bold; color: white; margin-bottom: 30px; }
-        .nav-item { padding: 15px; cursor: pointer; color: #bbb; border-radius: 8px; margin-bottom: 5px; transition: 0.3s; }
-        .nav-item:hover, .nav-item.active { background: var(--main-red); color: white; }
+        :root { --primary-blue: #2563eb; --sidebar-bg: #0f172a; --bg-dark: #020617; --glass: rgba(30, 41, 59, 0.7); }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; min-height: 100vh; }
+
+        /* Sidebar Navigation */
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
+        .brand { font-size: 22px; font-weight: 800; color: var(--primary-blue); margin-bottom: 30px; letter-spacing: 1px; }
+        .user-meta { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .user-meta h3 { margin: 0; font-size: 16px; }
+        .user-meta p { margin: 5px 0 0; font-size: 12px; color: #94a3b8; text-transform: uppercase; }
+
+        .menu-item { padding: 14px 12px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-size: 14px; }
+        .menu-item:hover, .menu-item.active { background: rgba(37, 99, 235, 0.1); color: white; }
+        .menu-item i { font-size: 18px; }
+
+        /* Main Content Area */
+        .main { flex: 1; padding: 40px; background: radial-gradient(circle at top right, #1e293b, #020617); }
+        .view { display: none; } .view.active { display: block; }
 
         /* Virtual ATM Card */
-        .atm-card { background: linear-gradient(135deg, #2c3e50, #000000); padding: 20px; border-radius: 15px; margin-top: 50px; position: relative; border: 1px solid #444; }
-        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 5px; margin-bottom: 20px; }
-        .card-num { font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
+        .atm-card { width: 100%; max-width: 350px; height: 200px; background: linear-gradient(135deg, #1e293b, #000); border-radius: 20px; padding: 25px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); margin-bottom: 30px; }
+        .chip { width: 45px; height: 35px; background: linear-gradient(135deg, #d4af37, #f1c40f); border-radius: 6px; margin-bottom: 30px; }
+        .card-num { font-size: 20px; letter-spacing: 3px; font-family: 'Courier New', monospace; margin-bottom: 15px; }
+        .card-holder { font-size: 12px; text-transform: uppercase; opacity: 0.8; }
 
-        /* Main Area */
-        .content { flex: 1; padding: 40px; background: linear-gradient(to bottom right, #c0392b, #0b0f19); }
-        .view { display: none; } .view.active { display: block; }
-        .glass-box { background: white; color: black; padding: 30px; border-radius: 20px; margin-top: 20px; }
-        .balance-box { background: var(--card-bg); color: white; padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        .btn { background: var(--main-red); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* Balance & Stats */
+        .stat-card { background: var(--glass); padding: 30px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        .balance-label { font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .balance-val { font-size: 48px; font-weight: 800; margin: 10px 0; color: white; }
 
-        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; } }
+        /* Transaction List */
+        .tx-list { margin-top: 30px; }
+        .tx-row { display: flex; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; border-right: none; } .main { padding: 20px; } }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="brand">ODIN CENTRAL</div>
-    <div style="font-size: 14px; margin-bottom: 20px;"><b id="uName">Morris Thomas</b><br><span style="color:#888" id="uJob">Private Client</span></div>
-    
-    <div class="nav-item active" onclick="show('v-overview')">Overview</div>
-    <div class="nav-item" onclick="show('v-wire')">Wire Transfer</div>
-    <div class="nav-item" onclick="show('v-withdraw')">Withdrawal</div>
-    <div class="nav-item" onclick="show('v-loan')">Loan Portal</div>
-
-    <div class="atm-card">
-        <div class="chip"></div>
-        <div class="card-num">**** **** **** 8892</div>
-        <div style="display:flex; justify-content:space-between; font-size:10px;">
-            <span id="cardHolder">MORRIS THOMAS</span>
-            <span>EXP: 12/28</span>
-        </div>
+    <div class="brand">ODIN PRIVATE</div>
+    <div class="user-meta">
+        <h3 id="uName">Morris Thomas</h3>
+        <p id="uJob">Oil Rig Engineer</p>
     </div>
+    
+    <div class="menu-item active" onclick="nav('overview')">Dashboard</div>
+    <div class="menu-item" onclick="nav('account')">My Account</div>
+    <div class="menu-item" onclick="nav('summary')">Account Summary</div>
+    <div class="menu-item" onclick="nav('send')">Send Money</div>
+    <div class="menu-item" onclick="nav('cross')">Cross-border Transfer</div>
+    <div class="menu-item" onclick="nav('deposit')">Deposit Check</div>
+    <div class="menu-item" onclick="nav('cards')">Virtual Cards</div>
+    <div class="menu-item" onclick="nav('crypto')">Crypto Currency</div>
 </div>
 
-<div class="content">
-    <div id="v-overview" class="view active">
-        <div class="balance-box">
-            <div style="font-size:12px; opacity:0.7;">TOTAL ACCOUNT BALANCE</div>
-            <h1 id="mainBal" style="font-size:48px; margin:10px 0;">$0.00</h1>
-            <div style="color:#22c55e;">● Verified Portfolio</div>
+<div class="main">
+    <div id="overview" class="view active">
+        <div class="atm-card">
+            <div class="chip"></div>
+            <div class="card-num">**** **** **** 8892</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                <div>
+                    <div class="card-holder" id="cName">MORRIS THOMAS</div>
+                    <div style="font-size:10px; opacity:0.6;">Valid Thru: 12/28</div>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" width="40" style="opacity:0.8;">
+            </div>
         </div>
-        <h3 style="margin-top:30px;">Recent Activity</h3>
-        <div id="ledger" style="background:var(--card-bg); padding:20px; border-radius:15px;">No transactions.</div>
-    </div>
 
-    <div id="v-wire" class="view">
-        <h1>International Wire</h1>
-        <div class="glass-box">
-            <input type="text" placeholder="Bank Name">
-            <input type="text" placeholder="IBAN/Swift">
-            <input type="number" placeholder="Amount">
-            <button class="btn">Execute Transfer</button>
+        <div class="stat-card">
+            <div class="balance-label">Available Portfolio Balance</div>
+            <div class="balance-val" id="uBal">$0.00</div>
+            <div style="color:#22c55e; font-size:12px; font-weight:600;">● SYSTEM STATUS: VERIFIED</div>
         </div>
-    </div>
 
-    <div id="v-withdraw" class="view">
-        <h1>Withdrawal</h1>
-        <div class="glass-box">
-            <select><option>ATM Card Transfer</option><option>Bank Transfer</option></select>
-            <input type="number" placeholder="Amount">
-            <button class="btn">Confirm Withdrawal</button>
+        <h3 style="margin-top:40px;">Recent Activity</h3>
+        <div class="stat-card" id="txHistory">
+            <div style="color:#94a3b8;">No recent movements detected.</div>
         </div>
     </div>
 
-    <div id="v-loan" class="view">
-        <h1>Loan Application</h1>
-        <div class="glass-box">
-            <p>Status: <b style="color: #3b82f6;">Active Review</b></p>
-            <input type="number" placeholder="Requested Amount">
-            <button class="btn">Submit</button>
+    <div id="generic" class="view">
+        <h1 id="viewTitle">Service Portal</h1>
+        <div class="stat-card">
+            <p>This secure portal is currently under active review. Please contact your private concierge for immediate assistance.</p>
+            <button style="background:var(--primary-blue); color:white; border:none; padding:15px 30px; border-radius:10px; font-weight:bold; cursor:pointer;">Contact Support</button>
         </div>
     </div>
 </div>
 
 <script>
-    function show(id) {
+    function nav(viewId) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+        
+        const target = document.getElementById(viewId);
+        if (target) {
+            target.classList.add('active');
+        } else {
+            document.getElementById('generic').classList.add('active');
+            document.getElementById('viewTitle').innerText = viewId.toUpperCase();
+        }
         event.currentTarget.classList.add('active');
     }
 
-    function sync() {
-        document.getElementById('uName').innerText = localStorage.getItem('userName') || "Morris Thomas";
-        document.getElementById('cardHolder').innerText = (localStorage.getItem('userName') || "Morris Thomas").toUpperCase();
-        document.getElementById('uJob').innerText = localStorage.getItem('userJob') || "Private Client";
-        const bal = localStorage.getItem('balChk') || "0";
-        document.getElementById('mainBal').innerText = "$" + parseFloat(bal).toLocaleString();
-
+    function refreshData() {
+        // Sync with Odin Master Control Admin Panel
+        const name = localStorage.getItem('userName') || "Morris Thomas";
+        const job = localStorage.getItem('userJob') || "Oil Rig Engineer";
+        const bal = localStorage.getItem('balChk') || "1000000";
         const history = JSON.parse(localStorage.getItem('user_history') || "[]");
-        if(history.length > 0) {
-            document.getElementById('ledger').innerHTML = history.map(t => `
-                <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
-                    <div><b>${t.desc}</b><br><small>${t.date}</small></div>
-                    <div style="color:${t.amt.includes('+')?'#22c55e':'#ef4444'}">${t.amt}</div>
-                </div>`).join('');
+
+        document.getElementById('uName').innerText = name;
+        document.getElementById('cName').innerText = name.toUpperCase();
+        document.getElementById('uJob').innerText = job;
+        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
+
+        if (history.length > 0) {
+            document.getElementById('txHistory').innerHTML = history.map(t => `
+                <div class="tx-row">
+                    <div><b>${t.desc}</b><br><small style="color:#94a3b8;">${t.date}</small></div>
+                    <div style="color:${t.amt.includes('+') ? '#22c55e' : '#ef4444'}; font-weight:bold;">${t.amt}</div>
+                </div>
+            `).join('');
         }
     }
-    window.onload = sync; setInterval(sync, 3000);
+
+    window.onload = refreshData;
+    setInterval(refreshData, 3000); // Keep dashboard synced every 3 seconds
 </script>
 </body>
 </html>
