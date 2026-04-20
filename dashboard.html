@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Banking | Private Wealth Portal</title>
+    <title>Dashboard | Odin Private Wealth</title>
     <style>
         :root {
             --accent: #3b82f6;
-            --bg: #0b0f19;
+            --bg-dark: #0b0f19;
             --panel: #161e2e;
             --text-main: #ffffff;
             --text-dim: #94a3b8;
@@ -16,294 +16,125 @@
 
         body {
             margin: 0;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
+            font-family: -apple-system, system-ui, sans-serif;
+            background-color: var(--bg-dark);
             color: var(--text-main);
             display: flex;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        /* --- SIDEBAR NAVIGATION --- */
+        /* Sidebar Navigation */
         .sidebar {
-            width: 280px;
+            width: 260px;
             background: #020617;
             padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
             border-right: 1px solid var(--border);
         }
 
-        .brand-logo {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--accent);
-            letter-spacing: 1px;
-            margin-bottom: 40px;
-            padding-left: 10px;
+        .brand { font-size: 20px; font-weight: 800; color: var(--accent); margin-bottom: 40px; }
+        
+        .user-info { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        .user-info h3 { margin: 0; font-size: 16px; }
+        .user-info p { margin: 5px 0 0; font-size: 12px; color: var(--text-dim); }
+
+        .nav-item {
+            padding: 12px 15px;
+            color: var(--text-dim);
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            font-weight: 500;
         }
 
-        .user-profile {
-            padding: 0 10px 30px 10px;
+        .nav-item.active { background: var(--panel); color: white; }
+
+        /* Main Content */
+        .main { flex: 1; padding: 40px; }
+
+        .card {
+            background: rgba(22, 30, 46, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 25px;
             margin-bottom: 20px;
+        }
+
+        .balance { font-size: 42px; font-weight: bold; margin: 10px 0; letter-spacing: -1px; }
+
+        .tx-list { margin-top: 20px; }
+        .tx-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
             border-bottom: 1px solid var(--border);
         }
 
-        #uName { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-        #uJob { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .nav-group { flex: 1; }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 15px;
-            color: var(--text-dim);
-            text-decoration: none;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
+        /* Mobile Fixes */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; box-sizing: border-box; }
+            .main { padding: 20px; }
+            .balance { font-size: 32px; }
         }
-        .nav-item:hover, .nav-item.active {
-            background: var(--panel);
-            color: white;
-        }
-        .nav-item i { margin-right: 12px; font-style: normal; font-size: 18px; }
-
-        /* ATM CARD PREVIEW */
-        .atm-preview {
-            background: linear-gradient(135deg, #1e293b 0%, #020617 100%);
-            border: 1px solid #334155;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .chip { width: 38px; height: 28px; background: #fbbf24; border-radius: 5px; margin-bottom: 20px; }
-
-        /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-            background: radial-gradient(circle at top right, #1e1b4b, #0b0f19);
-        }
-
-        .glass-card {
-            background: rgba(22, 30, 46, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 35px;
-            margin-bottom: 30px;
-        }
-
-        .balance-label { color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .balance-value { font-size: 52px; font-weight: 700; margin: 15px 0; color: #fff; }
-
-        /* TRANSACTION LIST */
-        .tx-list-container { margin-top: 20px; }
-        .tx-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .tx-desc { font-weight: 500; font-size: 14px; }
-        .tx-date { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
-        .tx-amt { font-weight: 700; font-size: 15px; }
-
-        /* FORMS */
-        .view { display: none; }
-        .view.active { display: block; animation: slideUp 0.4s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        input, select {
-            width: 100%; padding: 15px; background: #0f172a; border: 1px solid #334155;
-            color: white; border-radius: 10px; margin: 12px 0; font-size: 14px;
-        }
-        .btn-action {
-            background: var(--accent); color: white; border: none; padding: 18px;
-            width: 100%; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s;
-        }
-        .btn-action:hover { background: #2563eb; transform: translateY(-1px); }
-
-        /* CHAT */
-        #chatFlow { height: 250px; overflow-y: auto; margin-bottom: 20px; display: flex; flex-direction: column; }
-        .bubble { padding: 12px 16px; border-radius: 12px; margin: 6px 0; font-size: 13px; max-width: 85%; line-height: 1.4; }
-        .b-manager { background: #334155; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .b-user { background: var(--accent); align-self: flex-end; border-bottom-right-radius: 2px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="brand-logo">ODIN PRIVATE</div>
-        
-        <div class="user-profile">
-            <div id="uName">Loading...</div>
-            <div id="uJob">Establishing Connection...</div>
+        <div class="brand">ODIN PRIVATE</div>
+        <div class="user-info">
+            <h3 id="uName">Loading...</h3>
+            <p id="uJob">Connecting...</p>
         </div>
-
-        <nav class="nav-group">
-            <div class="nav-item active" onclick="show('v-dash', this)"><i>🏠</i> Overview</div>
-            <div class="nav-item" onclick="show('v-wire', this)"><i>💸</i> Wire Transfer</div>
-            <div class="nav-item" onclick="show('v-crypto', this)"><i>₿</i> Crypto Assets</div>
-            <div class="nav-item" onclick="show('v-cards', this)"><i>💳</i> Digital Cards</div>
-            <div class="nav-item" onclick="show('v-chat', this)"><i>💬</i> Secure Support</div>
-        </nav>
-
-        <div class="atm-preview">
-            <div class="chip"></div>
-            <div style="font-size: 15px; letter-spacing: 3px; margin-bottom: 15px;">**** **** **** 8892</div>
-            <div style="display:flex; justify-content:space-between; font-size: 9px; color: var(--text-dim); text-transform: uppercase;">
-                <span id="cardHolder">NAME</span>
-                <span>01/29</span>
-            </div>
-        </div>
+        <div class="nav-item active">Overview</div>
+        <div class="nav-item">Wire Transfer</div>
+        <div class="nav-item">Withdrawal</div>
+        <div class="nav-item">Support</div>
     </div>
 
-    <div class="main-content">
-
-        <div id="v-dash" class="view active">
-            <h2 style="margin-top:0;">Account Summary</h2>
-            <div class="glass-card">
-                <div class="balance-label">Consolidated Portfolio Balance</div>
-                <div class="balance-value" id="mainBal">$0.00</div>
-                <div style="display:flex; gap:15px; font-size:12px; color:#22c55e;">
-                    <span>● Verified</span>
-                    <span>● Secure SSL</span>
-                </div>
-            </div>
-
-            <h3>Recent Transactions</h3>
-            <div class="glass-card" style="padding: 10px 30px;" id="ledgerList">
-                <p style="text-align:center; color: var(--text-dim); font-size: 14px;">Initializing ledger...</p>
-            </div>
+    <div class="main">
+        <div class="card">
+            <div style="font-size: 12px; color: var(--text-dim);">TOTAL ACCOUNT BALANCE</div>
+            <div class="balance" id="mainBal">$0.00</div>
+            <div style="color: #22c55e; font-size: 12px;">Verified Portfolio</div>
         </div>
 
-        <div id="v-wire" class="view">
-            <h2>International Wire</h2>
-            <div class="glass-card">
-                <label class="balance-label">Beneficiary Account / IBAN</label>
-                <input type="text" placeholder="Enter recipient details">
-                <label class="balance-label">Swift / BIC</label>
-                <input type="text" placeholder="Bank Identifier Code">
-                <label class="balance-label">Amount to Send (USD)</label>
-                <input type="number" placeholder="0.00">
-                <button class="btn-action" onclick="checkPolicy()">Initialize Global Wire</button>
-            </div>
+        <h3>Recent Activity</h3>
+        <div class="card" id="ledger">
+            <div style="color: var(--text-dim); font-size: 14px;">No transactions recorded yet.</div>
         </div>
-
-        <div id="v-crypto" class="view">
-            <h2>Crypto Assets</h2>
-            <div class="glass-card" style="display:grid; grid-template-columns: 1fr 1fr 1fr; text-align:center; gap:20px;">
-                <div><small class="balance-label">Bitcoin</small><div style="font-size:20px; font-weight:bold; margin-top:5px;">0.442 BTC</div></div>
-                <div><small class="balance-label">Ethereum</small><div style="font-size:20px; font-weight:bold; margin-top:5px;">12.85 ETH</div></div>
-                <div><small class="balance-label">USDT</small><div style="font-size:20px; font-weight:bold; margin-top:5px;">50k USDT</div></div>
-            </div>
-            <button class="btn-action">Exchange to USD</button>
-        </div>
-
-        <div id="v-cards" class="view">
-            <h2>Digital Card Management</h2>
-            <div class="glass-card" style="background: linear-gradient(135deg, #4338ca, #6366f1); border:none;">
-                <p style="font-size: 12px; opacity:0.8; margin:0;">Active Virtual Mastercard</p>
-                <h1 style="letter-spacing: 4px; margin: 25px 0;">4452 8812 9901 2234</h1>
-                <div style="display:flex; justify-content:space-between; font-family: monospace;">
-                    <div>EXP: 01/29</div>
-                    <div>CVV: 442</div>
-                </div>
-            </div>
-            <button class="btn-action">Freeze Card Access</button>
-        </div>
-
-        <div id="v-chat" class="view">
-            <h2>Wealth Manager Concierge</h2>
-            <div class="glass-card">
-                <div id="chatFlow">
-                    <div class="bubble b-manager">Welcome to Odin Private. How may I assist your portfolio today?</div>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <input type="text" id="chatIn" style="margin:0;" placeholder="Secure message...">
-                    <button onclick="sendMsg()" style="width:100px; margin:0;" class="btn-action">Send</button>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <script>
-        function show(id, el) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-        }
-
-        function sync() {
-            // Identity & General Info
-            const name = localStorage.getItem('userName') || 'Private Client';
-            const job = localStorage.getItem('userJob') || 'Wealth Management';
-            const bal = localStorage.getItem('balChk') || '0';
-
-            document.getElementById('uName').innerText = name;
-            document.getElementById('cardHolder').innerText = name.toUpperCase();
-            document.getElementById('uJob').innerText = job;
-            document.getElementById('mainBal').innerText = "$" + parseFloat(bal).toLocaleString('en-US', {minimumFractionDigits: 2});
-
-            // Ledger / History Sync
+        function syncDashboard() {
+            // Get data from Admin Panel
+            const name = localStorage.getItem('userName') || "Morris Thomas";
+            const job = localStorage.getItem('userJob') || "Oil Rig Engineer";
+            const balance = localStorage.getItem('balChk') || "0";
             const history = JSON.parse(localStorage.getItem('user_history') || "[]");
-            const ledgerBox = document.getElementById('ledgerList');
-            if(history.length > 0) {
-                ledgerBox.innerHTML = history.map(tx => `
-                    <div class="tx-row">
+
+            // Update Screen
+            document.getElementById('uName').innerText = name;
+            document.getElementById('uJob').innerText = job;
+            document.getElementById('mainBal').innerText = "$" + Number(balance).toLocaleString(undefined, {minimumFractionDigits: 2});
+
+            // Update History
+            if (history.length > 0) {
+                document.getElementById('ledger').innerHTML = history.map(t => `
+                    <div class="tx-item">
                         <div>
-                            <div class="tx-desc">${tx.desc}</div>
-                            <div class="tx-date">${tx.date}</div>
+                            <div style="font-weight:bold; font-size:14px;">${t.desc}</div>
+                            <div style="font-size:11px; color:var(--text-dim);">${t.date}</div>
                         </div>
-                        <div class="tx-amt" style="color: ${tx.amt.includes('+') ? '#22c55e' : '#ef4444'}">${tx.amt}</div>
+                        <div style="color:${t.amt.includes('+') ? '#22c55e' : '#ef4444'}; font-weight:bold;">${t.amt}</div>
                     </div>
                 `).join('');
-            } else {
-                ledgerBox.innerHTML = `<p style="text-align:center; color: var(--text-dim); font-size: 14px;">No transactions recorded.</p>`;
-            }
-
-            // Admin Chat Sync
-            const reply = localStorage.getItem('admin_reply');
-            if(reply) {
-                const box = document.getElementById('chatFlow');
-                box.innerHTML += `<div class="bubble b-manager"><b>Manager:</b> ${reply}</div>`;
-                box.scrollTop = box.scrollHeight;
-                localStorage.removeItem('admin_reply');
             }
         }
 
-        function sendMsg() {
-            const input = document.getElementById('chatIn');
-            if(input.value.trim() !== "") {
-                localStorage.setItem('client_to_admin', input.value);
-                document.getElementById('chatFlow').innerHTML += `<div class="bubble b-user"><b>You:</b> ${input.value}</div>`;
-                document.getElementById('chatFlow').scrollTop = document.getElementById('chatFlow').scrollHeight;
-                input.value = "";
-            }
-        }
-
-        function checkPolicy() {
-            const mode = localStorage.getItem('transfer_mode') || 'Pending';
-            if(mode === 'Security Error') {
-                alert('ACCESS DENIED: Your account has been temporarily flagged for security review. Please contact your manager.');
-            } else if(mode === 'Pending') {
-                alert('TRANSACTION HOLD: Verification required. This transfer will remain pending for 24-48 hours.');
-            } else {
-                alert('PROCESSING: Your global wire request has been transmitted.');
-            }
-        }
-
-        setInterval(sync, 1000);
-        window.onload = sync;
+        // Run sync on load and every 3 seconds
+        window.onload = syncDashboard;
+        setInterval(syncDashboard, 3000);
     </script>
 </body>
 </html>
