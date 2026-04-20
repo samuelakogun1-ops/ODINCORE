@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Odin Private</title>
+    <title>Dashboard | Odin Private Banking</title>
     <style>
         :root { --primary-blue: #2563eb; --sidebar-bg: #0f172a; --bg-dark: #020617; --glass: rgba(30, 41, 59, 0.7); }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; min-height: 100vh; }
@@ -11,23 +11,42 @@
         /* Sidebar Navigation */
         .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
         .brand { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 30px; }
-        .user-meta { margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-        .menu-item { padding: 12px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+        .user-meta { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        .menu-item { padding: 12px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; transition: 0.2s; font-size: 14px; }
         .menu-item:hover, .menu-item.active { background: var(--primary-blue); color: white; }
 
         /* ATM Card Styling */
-        .atm-card { background: linear-gradient(135deg, #1e293b, #000); padding: 20px; border-radius: 15px; border: 1px solid #444; margin-top: auto; }
-        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 5px; margin-bottom: 15px; }
-        .card-num { font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
+        .atm-card { background: linear-gradient(135deg, #1e293b, #000); padding: 20px; border-radius: 15px; border: 1px solid #444; margin-top: auto; position: relative; }
+        .chip { width: 40px; height: 30px; background: linear-gradient(135deg, #d4af37, #f1c40f); border-radius: 5px; margin-bottom: 15px; }
+        .card-num { font-size: 18px; letter-spacing: 2px; font-family: monospace; margin-bottom: 10px; }
+        .card-holder { font-size: 10px; text-transform: uppercase; opacity: 0.7; }
 
-        /* Main Content & Form Styling */
-        .main { flex: 1; padding: 40px; background: radial-gradient(circle at top right, #1e293b, #020617); }
+        /* Main Area */
+        .main { flex: 1; padding: 40px; background: radial-gradient(circle at top right, #1e293b, #020617); overflow-y: auto; }
         .view { display: none; } .view.active { display: block; }
-        .form-card { background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; }
-        .btn-action { background: var(--primary-blue); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        /* Layout Panels */
+        .form-card { background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-top: 20px; }
+        .balance-val { font-size: 52px; font-weight: 800; margin: 15px 0; letter-spacing: -1px; }
+        
+        /* Inputs & Buttons */
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
+        .btn-action { background: var(--primary-blue); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-action:hover { opacity: 0.8; }
 
-        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; } }
+        /* Chat UI */
+        .chat-box { height: 250px; overflow-y: auto; background: #020617; border-radius: 10px; padding: 15px; border: 1px solid #334155; margin-bottom: 15px; }
+        .msg { margin-bottom: 10px; padding: 10px; border-radius: 8px; font-size: 13px; max-width: 85%; }
+        .msg.sent { background: var(--primary-blue); margin-left: auto; }
+        .msg.received { background: #334155; }
+
+        @media (max-width: 768px) { 
+            body { flex-direction: column; } 
+            .sidebar { width: 100%; border-right: none; padding: 15px; } 
+            .main { padding: 20px; }
+            .balance-val { font-size: 36px; }
+        }
     </style>
 </head>
 <body>
@@ -36,89 +55,112 @@
     <div class="brand">ODIN PRIVATE</div>
     <div class="user-meta">
         <h3 id="uName">Morris Thomas</h3>
-        <p style="font-size:12px; color:#888;" id="uJob">Oil Rig Engineer</p>
+        <p id="uJob" style="font-size:11px; color:#64748b; margin:0;">OIL RIG ENGINEER</p>
     </div>
     
-    <div class="menu-item active" onclick="nav('v-dash')">Dashboard</div>
-    <div class="menu-item" onclick="nav('v-send')">Send Money</div>
-    <div class="menu-item" onclick="nav('v-cross')">Cross-border Transfer</div>
-    <div class="menu-item" onclick="nav('v-cards')">Virtual Cards</div>
+    <div class="menu-item active" onclick="nav('v-dash', this)">Dashboard</div>
+    <div class="menu-item" onclick="nav('v-account', this)">My Account</div>
+    <div class="menu-item" onclick="nav('v-summary', this)">Account Summary</div>
+    <div class="menu-item" onclick="nav('v-send', this)">Send Money</div>
+    <div class="menu-item" onclick="nav('v-cross', this)">Cross-border Transfer</div>
+    <div class="menu-item" onclick="nav('v-cards', this)">Virtual Cards</div>
+    <div class="menu-item" onclick="nav('v-contact', this)">Secure Support</div>
     
     <div class="atm-card">
         <div class="chip"></div>
         <div class="card-num">**** **** **** 8892</div>
-        <div style="font-size:10px;" id="cName">MORRIS THOMAS</div>
+        <div class="card-holder" id="cName">MORRIS THOMAS</div>
     </div>
 </div>
 
 <div class="main">
     <div id="v-dash" class="view active">
         <div class="form-card">
-            <p style="color:#94a3b8; font-size:12px;">AVAILABLE BALANCE</p>
-            <h1 id="uBal" style="font-size:48px; margin:10px 0;">$0.00</h1>
-            <div style="color:#22c55e;">● Secure & Verified</div>
+            <p style="color:#94a3b8; font-size:12px; margin:0;">TOTAL ACCOUNT BALANCE</p>
+            <h1 class="balance-val" id="uBal">$0.00</h1>
+            <div style="color:#22c55e; font-size:13px; font-weight:bold;">✔ Verified Portfolio</div>
         </div>
-        <h3 style="margin-top:30px;">Recent Activity</h3>
-        <div id="txLog" class="form-card">No transactions yet.</div>
+        <h3 style="margin-top:35px;">Recent Transactions</h3>
+        <div id="txLog" class="form-card" style="padding:15px;">No transactions recorded.</div>
     </div>
 
     <div id="v-send" class="view">
         <h1>Send Money</h1>
         <div class="form-card">
             <input type="text" placeholder="Recipient Name">
-            <input type="text" placeholder="Account Number">
+            <input type="text" placeholder="Account Number / IBAN">
             <input type="number" placeholder="Amount ($)">
-            <button class="btn-action">Confirm Transfer</button>
+            <button class="btn-action">Proceed to Transfer</button>
         </div>
     </div>
 
     <div id="v-cross" class="view">
-        <h1>Cross-border Transfer</h1>
+        <h1>International Wire</h1>
         <div class="form-card">
-            <select><option>Select Destination Country</option><option>United Kingdom</option><option>Germany</option></select>
-            <input type="text" placeholder="SWIFT/BIC Code">
+            <select><option>Select Destination Country</option><option>United Kingdom</option><option>Germany</option><option>Switzerland</option></select>
+            <input type="text" placeholder="Swift / BIC Code">
             <input type="number" placeholder="Amount">
-            <button class="btn-action">Initiate International Wire</button>
+            <button class="btn-action">Initiate Wire</button>
         </div>
     </div>
 
-    <div id="v-cards" class="view">
-        <h1>My Virtual Cards</h1>
-        <div class="form-card" style="background: linear-gradient(45deg, #1e293b, #334155);">
-            <div class="chip"></div>
-            <h3>Active Debit Mastercard</h3>
-            <p>Status: <span style="color:#22c55e;">Active</span></p>
-            <button class="btn-action" style="background:rgba(255,255,255,0.1);">Manage Limits</button>
+    <div id="v-contact" class="view">
+        <h1>Secure Support</h1>
+        <div class="form-card">
+            <div class="chat-box" id="chatArea">
+                <div class="msg received">Welcome to Odin Private Wealth Support. How can we assist you today?</div>
+            </div>
+            <textarea id="msgInput" placeholder="Enter your message..."></textarea>
+            <button class="btn-action" onclick="sendMsg()">Send Message</button>
         </div>
     </div>
+
+    <div id="v-account" class="view"><h1>My Account</h1><div class="form-card">Profile management is currently encrypted.</div></div>
+    <div id="v-summary" class="view"><h1>Account Summary</h1><div class="form-card">Detailed statements are generated monthly.</div></div>
+    <div id="v-cards" class="view"><h1>Virtual Cards</h1><div class="form-card">Management portal for Card **** 8892 is active.</div></div>
 </div>
 
 <script>
-    function nav(id) {
+    function nav(viewId, element) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
+        document.getElementById(viewId).classList.add('active');
+        element.classList.add('active');
     }
 
-    function sync() {
+    function sendMsg() {
+        const input = document.getElementById('msgInput');
+        if(input.value.trim() !== "") {
+            const chat = document.getElementById('chatArea');
+            chat.innerHTML += `<div class="msg sent">${input.value}</div>`;
+            localStorage.setItem('last_odin_msg', input.value);
+            input.value = "";
+            chat.scrollTop = chat.scrollHeight;
+        }
+    }
+
+    function syncData() {
+        // Sync with Odin Master Control Admin Panel
         const name = localStorage.getItem('userName') || "Morris Thomas";
         const bal = localStorage.getItem('balChk') || "1000000";
         const history = JSON.parse(localStorage.getItem('user_history') || "[]");
 
         document.getElementById('uName').innerText = name;
         document.getElementById('cName').innerText = name.toUpperCase();
-        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString();
+        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
 
         if(history.length > 0) {
             document.getElementById('txLog').innerHTML = history.map(t => `
-                <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #334155;">
-                    <span>${t.desc}</span><span style="color:${t.amt.includes('+')?'#22c55e':'#ef4444'}">${t.amt}</span>
-                </div>`).join('');
+                <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div><span style="font-weight:600;">${t.desc}</span><br><small style="color:#64748b;">${t.date}</small></div>
+                    <div style="color:${t.amt.includes('+') ? '#22c55e' : '#ef4444'}; font-weight:bold;">${t.amt}</div>
+                </div>
+            `).join('');
         }
     }
-    window.onload = sync;
-    setInterval(sync, 2000);
+
+    window.onload = syncData;
+    setInterval(syncData, 2500); // Constant sync with Admin Panel
 </script>
 </body>
 </html>
