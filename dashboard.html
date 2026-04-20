@@ -3,138 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Odin Private Wealth</title>
+    <title>Private Banking | Odin Central</title>
     <style>
-        :root {
-            --accent: #3b82f6;
-            --bg-dark: #0b0f19;
-            --panel: #161e2e;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
-            --border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, system-ui, sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar Navigation */
-        .sidebar {
-            width: 260px;
-            background: #020617;
-            padding: 30px 20px;
-            border-right: 1px solid var(--border);
-        }
-
-        .brand { font-size: 20px; font-weight: 800; color: var(--accent); margin-bottom: 40px; }
+        :root { --main-red: #c0392b; --dark-bg: #0b0f19; --card-bg: rgba(22, 30, 46, 0.9); --text: #ffffff; }
+        body { margin: 0; font-family: sans-serif; background: var(--dark-bg); color: var(--text); display: flex; min-height: 100vh; }
         
-        .user-info { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .user-info h3 { margin: 0; font-size: 16px; }
-        .user-info p { margin: 5px 0 0; font-size: 12px; color: var(--text-dim); }
+        /* Sidebar */
+        .sidebar { width: 280px; background: #1a1a1a; padding: 20px; border-right: 1px solid rgba(255,255,255,0.1); }
+        .brand { font-size: 22px; font-weight: bold; color: white; margin-bottom: 30px; }
+        .nav-item { padding: 15px; cursor: pointer; color: #bbb; border-radius: 8px; margin-bottom: 5px; transition: 0.3s; }
+        .nav-item:hover, .nav-item.active { background: var(--main-red); color: white; }
 
-        .nav-item {
-            padding: 12px 15px;
-            color: var(--text-dim);
-            border-radius: 8px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            font-weight: 500;
-        }
+        /* Virtual ATM Card */
+        .atm-card { background: linear-gradient(135deg, #2c3e50, #000000); padding: 20px; border-radius: 15px; margin-top: 50px; position: relative; border: 1px solid #444; }
+        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 5px; margin-bottom: 20px; }
+        .card-num { font-size: 18px; letter-spacing: 2px; margin-bottom: 10px; }
 
-        .nav-item.active { background: var(--panel); color: white; }
+        /* Main Area */
+        .content { flex: 1; padding: 40px; background: linear-gradient(to bottom right, #c0392b, #0b0f19); }
+        .view { display: none; } .view.active { display: block; }
+        .glass-box { background: white; color: black; padding: 30px; border-radius: 20px; margin-top: 20px; }
+        .balance-box { background: var(--card-bg); color: white; padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .btn { background: var(--main-red); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* Main Content */
-        .main { flex: 1; padding: 40px; }
-
-        .card {
-            background: rgba(22, 30, 46, 0.6);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .balance { font-size: 42px; font-weight: bold; margin: 10px 0; letter-spacing: -1px; }
-
-        .tx-list { margin-top: 20px; }
-        .tx-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        /* Mobile Fixes */
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; box-sizing: border-box; }
-            .main { padding: 20px; }
-            .balance { font-size: 32px; }
-        }
+        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="brand">ODIN PRIVATE</div>
-        <div class="user-info">
-            <h3 id="uName">Loading...</h3>
-            <p id="uJob">Connecting...</p>
-        </div>
-        <div class="nav-item active">Overview</div>
-        <div class="nav-item">Wire Transfer</div>
-        <div class="nav-item">Withdrawal</div>
-        <div class="nav-item">Support</div>
-    </div>
+<div class="sidebar">
+    <div class="brand">ODIN CENTRAL</div>
+    <div style="font-size: 14px; margin-bottom: 20px;"><b id="uName">Morris Thomas</b><br><span style="color:#888" id="uJob">Private Client</span></div>
+    
+    <div class="nav-item active" onclick="show('v-overview')">Overview</div>
+    <div class="nav-item" onclick="show('v-wire')">Wire Transfer</div>
+    <div class="nav-item" onclick="show('v-withdraw')">Withdrawal</div>
+    <div class="nav-item" onclick="show('v-loan')">Loan Portal</div>
 
-    <div class="main">
-        <div class="card">
-            <div style="font-size: 12px; color: var(--text-dim);">TOTAL ACCOUNT BALANCE</div>
-            <div class="balance" id="mainBal">$0.00</div>
-            <div style="color: #22c55e; font-size: 12px;">Verified Portfolio</div>
-        </div>
-
-        <h3>Recent Activity</h3>
-        <div class="card" id="ledger">
-            <div style="color: var(--text-dim); font-size: 14px;">No transactions recorded yet.</div>
+    <div class="atm-card">
+        <div class="chip"></div>
+        <div class="card-num">**** **** **** 8892</div>
+        <div style="display:flex; justify-content:space-between; font-size:10px;">
+            <span id="cardHolder">MORRIS THOMAS</span>
+            <span>EXP: 12/28</span>
         </div>
     </div>
+</div>
 
-    <script>
-        function syncDashboard() {
-            // Get data from Admin Panel
-            const name = localStorage.getItem('userName') || "Morris Thomas";
-            const job = localStorage.getItem('userJob') || "Oil Rig Engineer";
-            const balance = localStorage.getItem('balChk') || "0";
-            const history = JSON.parse(localStorage.getItem('user_history') || "[]");
+<div class="content">
+    <div id="v-overview" class="view active">
+        <div class="balance-box">
+            <div style="font-size:12px; opacity:0.7;">TOTAL ACCOUNT BALANCE</div>
+            <h1 id="mainBal" style="font-size:48px; margin:10px 0;">$0.00</h1>
+            <div style="color:#22c55e;">● Verified Portfolio</div>
+        </div>
+        <h3 style="margin-top:30px;">Recent Activity</h3>
+        <div id="ledger" style="background:var(--card-bg); padding:20px; border-radius:15px;">No transactions.</div>
+    </div>
 
-            // Update Screen
-            document.getElementById('uName').innerText = name;
-            document.getElementById('uJob').innerText = job;
-            document.getElementById('mainBal').innerText = "$" + Number(balance).toLocaleString(undefined, {minimumFractionDigits: 2});
+    <div id="v-wire" class="view">
+        <h1>International Wire</h1>
+        <div class="glass-box">
+            <input type="text" placeholder="Bank Name">
+            <input type="text" placeholder="IBAN/Swift">
+            <input type="number" placeholder="Amount">
+            <button class="btn">Execute Transfer</button>
+        </div>
+    </div>
 
-            // Update History
-            if (history.length > 0) {
-                document.getElementById('ledger').innerHTML = history.map(t => `
-                    <div class="tx-item">
-                        <div>
-                            <div style="font-weight:bold; font-size:14px;">${t.desc}</div>
-                            <div style="font-size:11px; color:var(--text-dim);">${t.date}</div>
-                        </div>
-                        <div style="color:${t.amt.includes('+') ? '#22c55e' : '#ef4444'}; font-weight:bold;">${t.amt}</div>
-                    </div>
-                `).join('');
-            }
+    <div id="v-withdraw" class="view">
+        <h1>Withdrawal</h1>
+        <div class="glass-box">
+            <select><option>ATM Card Transfer</option><option>Bank Transfer</option></select>
+            <input type="number" placeholder="Amount">
+            <button class="btn">Confirm Withdrawal</button>
+        </div>
+    </div>
+
+    <div id="v-loan" class="view">
+        <h1>Loan Application</h1>
+        <div class="glass-box">
+            <p>Status: <b style="color: #3b82f6;">Active Review</b></p>
+            <input type="number" placeholder="Requested Amount">
+            <button class="btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function show(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function sync() {
+        document.getElementById('uName').innerText = localStorage.getItem('userName') || "Morris Thomas";
+        document.getElementById('cardHolder').innerText = (localStorage.getItem('userName') || "Morris Thomas").toUpperCase();
+        document.getElementById('uJob').innerText = localStorage.getItem('userJob') || "Private Client";
+        const bal = localStorage.getItem('balChk') || "0";
+        document.getElementById('mainBal').innerText = "$" + parseFloat(bal).toLocaleString();
+
+        const history = JSON.parse(localStorage.getItem('user_history') || "[]");
+        if(history.length > 0) {
+            document.getElementById('ledger').innerHTML = history.map(t => `
+                <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <div><b>${t.desc}</b><br><small>${t.date}</small></div>
+                    <div style="color:${t.amt.includes('+')?'#22c55e':'#ef4444'}">${t.amt}</div>
+                </div>`).join('');
         }
-
-        // Run sync on load and every 3 seconds
-        window.onload = syncDashboard;
-        setInterval(syncDashboard, 3000);
-    </script>
+    }
+    window.onload = sync; setInterval(sync, 3000);
+</script>
 </body>
 </html>
