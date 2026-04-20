@@ -3,86 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin Master Control | Status Manager</title>
+    <title>Odin Master Control | Full System</title>
     <style>
         :root { --admin-blue: #2563eb; --admin-green: #22c55e; --admin-red: #ef4444; --panel-bg: #1e293b; }
-        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 30px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 25px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1300px; margin: 0 auto; }
         .card { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
-        .card-title { color: var(--admin-green); font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; }
-        label { display: block; font-size: 11px; color: #94a3b8; margin-top: 10px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 5px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 6px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .card-title { color: var(--admin-green); font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+        label { display: block; font-size: 10px; color: #94a3b8; margin-top: 10px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
         .btn-blue { background: var(--admin-blue); color: white; }
         .btn-green { background: var(--admin-green); color: white; }
+        .btn-red { background: var(--admin-red); color: white; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align:center; color:var(--admin-blue);">ODIN MASTER CONTROL</h1>
+    <h1 style="text-align:center; color:var(--admin-blue); font-size: 24px;">ODIN MASTER CONTROL</h1>
 
     <div class="grid">
         <div class="card">
-            <div class="card-title">● Transaction Status Manager</div>
-            <label>Set Global Transaction Status</label>
+            <div class="card-title">● User Account Creation</div>
+            <label>Legal Full Name</label>
+            <input type="text" id="regName" placeholder="e.g. Morris Thomas">
+            <label>Login Username</label>
+            <input type="text" id="regUser" placeholder="morris">
+            <label>Login Password</label>
+            <input type="text" id="regPass" placeholder="****">
+            <label>Initial Vault Balance ($)</label>
+            <input type="number" id="regVault" placeholder="500000">
+            <button class="btn btn-green" onclick="deployAccount()">Deploy New Account</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">● Account Wealth Control</div>
+            <label>Main Account Balance ($)</label>
+            <input type="number" id="admBal" placeholder="700000000">
+            <label>Professional Occupation</label>
+            <input type="text" id="admJob" placeholder="Oil Rig Offshore Engineer">
+            <label>Global Transaction Status</label>
             <select id="globalStatus">
                 <option value="Success">Transfer Successful ✅</option>
                 <option value="Pending">Pending Verification ⏳</option>
                 <option value="Branch">Action Required: Visit Nearest Branch 🏦</option>
-                <option value="Review">Under Active Review 📄</option>
             </select>
+            <button class="btn btn-blue" onclick="syncSystem()">Sync Profile & Wealth</button>
+        </div>
 
-            <label>Main Account Balance ($)</label>
-            <input type="number" id="admBal" placeholder="1000000">
-
-            <button class="btn btn-blue" onclick="syncAll()">Sync Status & Wealth</button>
+        <div class="card" style="grid-column: span 1;">
+            <div class="card-title">● Transaction Ledger (History Injector)</div>
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;"><label>Date</label><input type="text" id="txDate" placeholder="April 20, 2026"></div>
+                <div style="flex:1;"><label>Time</label><input type="text" id="txTime" placeholder="16:58"></div>
+            </div>
+            <label>Description</label>
+            <input type="text" id="txDesc" placeholder="International Wire Transfer">
+            <label>Amount (+/-)</label>
+            <input type="text" id="txAmt" placeholder="+500000">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-blue" onclick="addTx()">Add to Ledger</button>
+                <button class="btn btn-red" onclick="clearTx()">Purge Ledger</button>
+            </div>
         </div>
 
         <div class="card">
-            <div class="card-title">● History Injector</div>
-            <label>Description</label>
-            <input type="text" id="txDesc" placeholder="e.g. Wire Transfer">
-            <label>Amount (+/-)</label>
-            <input type="text" id="txAmt" placeholder="+50,000.00">
-            <label>Specific Status for this entry</label>
-            <select id="txStatus">
-                <option value="Completed">Completed</option>
-                <option value="Processing">Processing</option>
-                <option value="On Hold">On Hold</option>
-            </select>
-            <button class="btn btn-green" onclick="addTx()">Inject Transaction</button>
-        </div>
-
-        <div class="card" style="grid-column: span 2;">
             <div class="card-title">● Live Concierge Inbox</div>
-            <div id="inbox" style="background:#020617; padding:15px; border-radius:6px; color:#f1c40f; font-family:monospace; margin-bottom:10px;">Waiting for client...</div>
-            <textarea id="admReply" placeholder="Send instructions to client dashboard..."></textarea>
-            <button class="btn btn-blue" onclick="sendReply()">Broadcast Reply</button>
+            <div id="inbox" style="background:#020617; padding:15px; border-radius:6px; color:#f1c40f; font-family:monospace; font-size:12px; min-height:40px; border:1px solid #d4af37;">Waiting for secure upload...</div>
+            <label>Official Manager Reply</label>
+            <textarea id="admReply" rows="3" placeholder="Enter instructions for the client..."></textarea>
+            <button class="btn btn-green" onclick="sendReply()">Broadcast Secure Reply</button>
         </div>
     </div>
 
     <script>
-        function syncAll() {
+        function deployAccount() {
+            localStorage.setItem('userName', document.getElementById('regName').value);
+            localStorage.setItem('userPass', document.getElementById('regPass').value);
+            alert("Account Deployed Successfully.");
+        }
+
+        function syncSystem() {
             localStorage.setItem('balChk', document.getElementById('admBal').value);
+            localStorage.setItem('userJob', document.getElementById('admJob').value);
             localStorage.setItem('global_tx_status', document.getElementById('globalStatus').value);
-            alert("System Synced: " + document.getElementById('globalStatus').value);
+            alert("Wealth and Status Synced.");
         }
 
         function addTx() {
             let history = JSON.parse(localStorage.getItem('user_history') || "[]");
             history.unshift({
+                date: document.getElementById('txDate').value,
+                time: document.getElementById('txTime').value,
                 desc: document.getElementById('txDesc').value,
-                amt: document.getElementById('txAmt').value,
-                status: document.getElementById('txStatus').value,
-                date: new Date().toLocaleDateString()
+                amt: document.getElementById('txAmt').value
             });
             localStorage.setItem('user_history', JSON.stringify(history));
-            alert("Transaction Injected");
+            alert("Transaction Injected.");
+        }
+
+        function clearTx() {
+            localStorage.removeItem('user_history');
+            alert("Ledger Cleared.");
         }
 
         function sendReply() {
             localStorage.setItem('admin_reply', document.getElementById('admReply').value);
-            alert("Message Broadcasted");
+            alert("Reply Broadcasted.");
         }
 
         setInterval(() => {
