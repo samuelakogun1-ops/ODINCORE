@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin Master Control | Full System</title>
+    <title>Odin Master Control | Global System</title>
     <style>
         :root { --admin-blue: #2563eb; --admin-green: #22c55e; --admin-red: #ef4444; --panel-bg: #1e293b; }
         body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; margin: 0; padding: 25px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1300px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1400px; margin: 0 auto; }
         .card { background: var(--panel-bg); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
         .card-title { color: var(--admin-green); font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 5px; }
         label { display: block; font-size: 10px; color: #94a3b8; margin-top: 10px; text-transform: uppercase; }
@@ -20,13 +20,13 @@
 </head>
 <body>
 
-    <h1 style="text-align:center; color:var(--admin-blue); font-size: 24px;">ODIN MASTER CONTROL</h1>
+    <h1 style="text-align:center; color:var(--admin-blue); font-size: 24px; margin-bottom: 30px;">ODIN MASTER CONTROL</h1>
 
     <div class="grid">
         <div class="card">
             <div class="card-title">● User Account Creation</div>
             <label>Legal Full Name</label>
-            <input type="text" id="regName" placeholder="e.g. Morris Thomas">
+            <input type="text" id="regName" placeholder="Morris Thomas">
             <label>Login Username</label>
             <input type="text" id="regUser" placeholder="morris">
             <label>Login Password</label>
@@ -37,33 +37,33 @@
         </div>
 
         <div class="card">
-            <div class="card-title">● Account Wealth Control</div>
-            <label>Main Account Balance ($)</label>
+            <div class="card-title">● Wealth & Debit Control</div>
+            <label>Set Main Account Balance ($)</label>
             <input type="number" id="admBal" placeholder="700000000">
-            <label>Professional Occupation</label>
-            <input type="text" id="admJob" placeholder="Oil Rig Offshore Engineer">
+            <label>Amount to Debit (-)</label>
+            <input type="number" id="debitAmt" placeholder="0">
             <label>Global Transaction Status</label>
             <select id="globalStatus">
                 <option value="Success">Transfer Successful ✅</option>
                 <option value="Pending">Pending Verification ⏳</option>
                 <option value="Branch">Action Required: Visit Nearest Branch 🏦</option>
             </select>
-            <button class="btn btn-blue" onclick="syncSystem()">Sync Profile & Wealth</button>
+            <button class="btn btn-red" onclick="applyDebit()">Debit Account & Sync</button>
         </div>
 
-        <div class="card" style="grid-column: span 1;">
+        <div class="card">
             <div class="card-title">● Transaction Ledger (History Injector)</div>
             <div style="display:flex; gap:10px;">
                 <div style="flex:1;"><label>Date</label><input type="text" id="txDate" placeholder="April 20, 2026"></div>
-                <div style="flex:1;"><label>Time</label><input type="text" id="txTime" placeholder="16:58"></div>
+                <div style="flex:1;"><label>Time</label><input type="text" id="txTime" placeholder="17:15"></div>
             </div>
             <label>Description</label>
             <input type="text" id="txDesc" placeholder="International Wire Transfer">
             <label>Amount (+/-)</label>
-            <input type="text" id="txAmt" placeholder="+500000">
+            <input type="text" id="txAmt" placeholder="-25000">
             <div style="display: flex; gap: 10px;">
-                <button class="btn btn-blue" onclick="addTx()">Add to Ledger</button>
-                <button class="btn btn-red" onclick="clearTx()">Purge Ledger</button>
+                <button class="btn btn-blue" onclick="addTx()">Inject to Dashboard</button>
+                <button class="btn btn-red" onclick="clearTx()">Purge History</button>
             </div>
         </div>
 
@@ -77,19 +77,38 @@
     </div>
 
     <script>
+        // Account Deployment
         function deployAccount() {
             localStorage.setItem('userName', document.getElementById('regName').value);
             localStorage.setItem('userPass', document.getElementById('regPass').value);
-            alert("Account Deployed Successfully.");
+            alert("Account Deployed.");
         }
 
-        function syncSystem() {
-            localStorage.setItem('balChk', document.getElementById('admBal').value);
-            localStorage.setItem('userJob', document.getElementById('admJob').value);
+        // Debit and Wealth Logic
+        function applyDebit() {
+            const currentBal = Number(document.getElementById('admBal').value);
+            const debit = Number(document.getElementById('debitAmt').value);
+            const newBal = currentBal - debit;
+
+            localStorage.setItem('balChk', newBal);
             localStorage.setItem('global_tx_status', document.getElementById('globalStatus').value);
-            alert("Wealth and Status Synced.");
+            
+            // Log the debit as a transaction automatically
+            if(debit > 0) {
+                let history = JSON.parse(localStorage.getItem('user_history') || "[]");
+                history.unshift({
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    desc: "Account Debit - Wire",
+                    amt: "-" + debit.toLocaleString()
+                });
+                localStorage.setItem('user_history', JSON.stringify(history));
+            }
+            
+            alert("Debit Applied. New Balance: $" + newBal.toLocaleString());
         }
 
+        // Transaction Ledger
         function addTx() {
             let history = JSON.parse(localStorage.getItem('user_history') || "[]");
             history.unshift({
@@ -99,7 +118,7 @@
                 amt: document.getElementById('txAmt').value
             });
             localStorage.setItem('user_history', JSON.stringify(history));
-            alert("Transaction Injected.");
+            alert("History Updated.");
         }
 
         function clearTx() {
@@ -107,6 +126,7 @@
             alert("Ledger Cleared.");
         }
 
+        // Concierge System
         function sendReply() {
             localStorage.setItem('admin_reply', document.getElementById('admReply').value);
             alert("Reply Broadcasted.");
