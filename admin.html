@@ -16,99 +16,118 @@
         .btn-blue { background: var(--admin-blue); color: white; }
         .btn-green { background: var(--admin-green); color: white; }
         .btn-red { background: var(--admin-red); color: white; }
+        h1 { text-align: center; color: var(--admin-blue); font-size: 24px; margin-bottom: 30px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align:center; color:var(--admin-blue); font-size: 24px; margin-bottom: 30px;">ODIN MASTER CONTROL</h1>
+    <h1>ODIN MASTER CONTROL</h1>
 
     <div class="grid">
         <div class="card">
             <div class="card-title">● User Account Creation</div>
             <label>Legal Full Name</label>
-            <input type="text" id="regName" placeholder="Morris Thomas">
+            <input type="text" id="regName" placeholder="e.g. Morris Thomas">
             <label>Login Username</label>
             <input type="text" id="regUser" placeholder="morris">
             <label>Login Password</label>
-            <input type="text" id="regPass" placeholder="****">
+            <input type="text" id="regPass" placeholder="Password123">
             <label>Initial Vault Balance ($)</label>
             <input type="number" id="regVault" placeholder="500000">
             <button class="btn btn-green" onclick="deployAccount()">Deploy New Account</button>
         </div>
 
         <div class="card">
-            <div class="card-title">● Wealth & Debit Control</div>
+            <div class="card-title">● Wealth, Credit & Debit Control</div>
             <label>Set Main Account Balance ($)</label>
-            <input type="number" id="admBal" placeholder="700000000">
-            <label>Amount to Debit (-)</label>
-            <input type="number" id="debitAmt" placeholder="0">
+            <input type="number" id="admBal" placeholder="Current Balance">
+            
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div style="flex:1;">
+                    <label>Credit Account (+)</label>
+                    <input type="number" id="creditAmt" placeholder="0">
+                </div>
+                <div style="flex:1;">
+                    <label>Debit Account (-)</label>
+                    <input type="number" id="debitAmt" placeholder="0">
+                </div>
+            </div>
+
             <label>Global Transaction Status</label>
             <select id="globalStatus">
                 <option value="Success">Transfer Successful ✅</option>
                 <option value="Pending">Pending Verification ⏳</option>
                 <option value="Branch">Action Required: Visit Nearest Branch 🏦</option>
+                <option value="Hold">Under Technical Hold 🚫</option>
             </select>
-            <button class="btn btn-red" onclick="applyDebit()">Debit Account & Sync</button>
+            <button class="btn btn-blue" onclick="processWealth()">Process & Sync Wealth</button>
         </div>
 
         <div class="card">
-            <div class="card-title">● Transaction Ledger (History Injector)</div>
+            <div class="card-title">● Transaction Ledger (Manual Injection)</div>
             <div style="display:flex; gap:10px;">
-                <div style="flex:1;"><label>Date</label><input type="text" id="txDate" placeholder="April 20, 2026"></div>
-                <div style="flex:1;"><label>Time</label><input type="text" id="txTime" placeholder="17:15"></div>
+                <div style="flex:1;"><label>Set Date</label><input type="text" id="txDate" placeholder="April 20, 2026"></div>
+                <div style="flex:1;"><label>Set Time</label><input type="text" id="txTime" placeholder="17:15"></div>
             </div>
-            <label>Description</label>
+            <label>Transaction Description</label>
             <input type="text" id="txDesc" placeholder="International Wire Transfer">
-            <label>Amount (+/-)</label>
-            <input type="text" id="txAmt" placeholder="-25000">
+            <label>Amount (+ or -)</label>
+            <input type="text" id="txAmt" placeholder="-25,000.00">
             <div style="display: flex; gap: 10px;">
                 <button class="btn btn-blue" onclick="addTx()">Inject to Dashboard</button>
-                <button class="btn btn-red" onclick="clearTx()">Purge History</button>
+                <button class="btn btn-red" onclick="clearTx()">Purge All History</button>
             </div>
         </div>
 
         <div class="card">
             <div class="card-title">● Live Concierge Inbox</div>
-            <div id="inbox" style="background:#020617; padding:15px; border-radius:6px; color:#f1c40f; font-family:monospace; font-size:12px; min-height:40px; border:1px solid #d4af37;">Waiting for secure upload...</div>
+            <div id="inbox" style="background:#020617; padding:15px; border-radius:6px; color:#f1c40f; font-family:monospace; font-size:12px; min-height:40px; border:1px solid #d4af37;">WAITING FOR SECURE MESSAGE...</div>
             <label>Official Manager Reply</label>
-            <textarea id="admReply" rows="3" placeholder="Enter instructions for the client..."></textarea>
+            <textarea id="admReply" rows="3" placeholder="Enter instructions or status updates for the client..."></textarea>
             <button class="btn btn-green" onclick="sendReply()">Broadcast Secure Reply</button>
         </div>
     </div>
 
     <script>
-        // Account Deployment
+        // 1. Account Deployment
         function deployAccount() {
             localStorage.setItem('userName', document.getElementById('regName').value);
             localStorage.setItem('userPass', document.getElementById('regPass').value);
-            alert("Account Deployed.");
+            localStorage.setItem('balChk', document.getElementById('regVault').value);
+            alert("Account Deployed Successfully.");
         }
 
-        // Debit and Wealth Logic
-        function applyDebit() {
-            const currentBal = Number(document.getElementById('admBal').value);
+        // 2. Wealth Processing (Credit/Debit Logic)
+        function processWealth() {
+            let currentBal = Number(document.getElementById('admBal').value);
+            const credit = Number(document.getElementById('creditAmt').value);
             const debit = Number(document.getElementById('debitAmt').value);
-            const newBal = currentBal - debit;
-
+            
+            let newBal = currentBal + credit - debit;
+            
             localStorage.setItem('balChk', newBal);
             localStorage.setItem('global_tx_status', document.getElementById('globalStatus').value);
             
-            // Log the debit as a transaction automatically
-            if(debit > 0) {
-                let history = JSON.parse(localStorage.getItem('user_history') || "[]");
-                history.unshift({
-                    date: new Date().toLocaleDateString(),
-                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                    desc: "Account Debit - Wire",
-                    amt: "-" + debit.toLocaleString()
-                });
-                localStorage.setItem('user_history', JSON.stringify(history));
+            let history = JSON.parse(localStorage.getItem('user_history') || "[]");
+            const dateStr = new Date().toLocaleDateString();
+            const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            if(credit > 0) {
+                history.unshift({ date: dateStr, time: timeStr, desc: "Account Credit - Incoming", amt: "+" + credit.toLocaleString() });
             }
+            if(debit > 0) {
+                history.unshift({ date: dateStr, time: timeStr, desc: "Account Debit - Transfer", amt: "-" + debit.toLocaleString() });
+            }
+
+            localStorage.setItem('user_history', JSON.stringify(history));
+            alert("Wealth Synced. New Balance: $" + newBal.toLocaleString());
             
-            alert("Debit Applied. New Balance: $" + newBal.toLocaleString());
+            document.getElementById('creditAmt').value = 0;
+            document.getElementById('debitAmt').value = 0;
+            document.getElementById('admBal').value = newBal;
         }
 
-        // Transaction Ledger
+        // 3. Manual Ledger Injection
         function addTx() {
             let history = JSON.parse(localStorage.getItem('user_history') || "[]");
             history.unshift({
@@ -118,23 +137,25 @@
                 amt: document.getElementById('txAmt').value
             });
             localStorage.setItem('user_history', JSON.stringify(history));
-            alert("History Updated.");
+            alert("Manual Entry Injected.");
         }
 
         function clearTx() {
             localStorage.removeItem('user_history');
-            alert("Ledger Cleared.");
+            alert("All History Purged.");
         }
 
-        // Concierge System
+        // 4. Concierge Monitoring
         function sendReply() {
             localStorage.setItem('admin_reply', document.getElementById('admReply').value);
-            alert("Reply Broadcasted.");
+            alert("Manager Reply Broadcasted.");
         }
 
         setInterval(() => {
             const msg = localStorage.getItem('last_odin_msg');
-            if(msg) document.getElementById('inbox').innerText = "INCOMING: " + msg;
+            if(msg) {
+                document.getElementById('inbox').innerText = "INCOMING: " + msg;
+            }
         }, 2000);
     </script>
 </body>
