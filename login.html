@@ -2,53 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Odin Private | Secure Login</title>
     <style>
         body { margin: 0; font-family: 'Inter', sans-serif; background: #020617; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
-        .login-card { width: 100%; max-width: 380px; padding: 40px 20px; background: rgba(30, 41, 59, 0.7); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
-        h2 { letter-spacing: 3px; font-weight: 800; margin-bottom: 5px; }
-        p { color: #94a3b8; font-size: 13px; margin-bottom: 30px; }
-        input { width: 100%; padding: 16px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
-        input:focus { border-color: #2563eb; outline: none; background: #1e293b; }
-        button { background: #2563eb; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; font-size: 16px; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
-        button:active { transform: scale(0.98); }
+        .login-card { width: 100%; max-width: 380px; padding: 45px 25px; background: rgba(30, 41, 59, 0.7); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(15px); text-align: center; }
+        h2 { letter-spacing: 3px; font-weight: 800; margin-bottom: 8px; }
+        p { color: #94a3b8; font-size: 13px; margin-bottom: 35px; text-transform: uppercase; letter-spacing: 1px; }
+        input { width: 100%; padding: 16px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border-color: #2563eb; }
+        button { background: #2563eb; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; font-size: 16px; }
     </style>
 </head>
 <body>
-
     <div class="login-card">
         <h2>ODIN PRIVATE</h2>
-        <p>AUTHENTICATION REQUIRED</p>
-        
+        <p>Authentication Required</p>
         <input type="text" id="userField" placeholder="Username" autocomplete="off" autocapitalize="none">
-        <input type="password" id="passField" placeholder="Password" autocomplete="off">
-        
+        <input type="password" id="passField" placeholder="Password">
         <button onclick="attemptLogin()">Access Vault</button>
     </div>
 
     <script>
         function attemptLogin() {
-            // Get inputs and remove any accidental spaces
-            const inputUser = document.getElementById('userField').value.trim().toLowerCase();
-            const inputPass = document.getElementById('passField').value.trim();
+            const u = document.getElementById('userField').value.trim().toLowerCase();
+            const p = document.getElementById('passField').value.trim();
+            const mU = (localStorage.getItem('loginUser') || "morris").trim().toLowerCase();
+            const mP = (localStorage.getItem('loginPass') || "1234").trim();
 
-            // Get saved credentials from Admin panel (or use defaults)
-            const masterUser = (localStorage.getItem('loginUser') || "morris").trim().toLowerCase();
-            const masterPass = (localStorage.getItem('loginPass') || "1234").trim();
-
-            if (inputUser === masterUser && inputPass === masterPass) {
-                // Success
+            if (u === mU && p === mP) {
                 window.location.replace("dashboard.html");
             } else {
-                // If it fails, check if the admin panel actually saved the data
-                alert("Incorrect Credentials.\n\nHint: Ensure you clicked 'Save Master Settings' in the Admin Panel.");
-                
-                // Debugging (Remove this line after you verify it works)
-                console.log("Expected:", masterUser, masterPass);
+                alert("Incorrect credentials");
             }
         }
     </script>
-
 </body>
 </html>
