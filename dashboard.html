@@ -8,36 +8,47 @@
         :root { --primary: #2563eb; --sidebar-bg: #0f172a; --bg-dark: #020617; --glass: rgba(30, 41, 59, 0.7); }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
+        /* Desktop Sidebar */
         .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; height: 100vh; position: relative; }
-        .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 14px; }
+        .brand { font-weight: 800; font-size: 20px; margin-bottom: 30px; letter-spacing: 1px; }
+        .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 14px; transition: 0.2s; }
         .menu-item.active { background: var(--primary); color: white; }
 
+        /* Sidebar ATM Card */
         .sidebar-bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
         .mini-atm { width: 100%; height: 140px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); position: relative; box-sizing: border-box; }
         .mini-chip { width: 30px; height: 22px; background: #d4af37; border-radius: 4px; margin-bottom: 20px; }
 
+        /* Mobile Nav */
         .mobile-nav { display: none; background: #0f172a; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); position: fixed; bottom: 0; width: 100%; z-index: 1000; }
-        .nav-icon { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; }
-        .nav-icon.active { color: var(--primary); }
+        .nav-icon { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; }
+        .nav-icon.active { color: var(--primary); font-weight: bold; }
 
+        /* Main Content */
         .main { flex: 1; padding: 30px; overflow-y: auto; background: radial-gradient(circle at top right, #1e293b, #020617); padding-bottom: 100px; }
         .view { display: none; }
         .view.active { display: block; }
         .panel { background: var(--glass); padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-bottom: 20px; }
         
-        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 10px; box-sizing: border-box; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
         .btn-action { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        /* Transactions */
+        .tx-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tx-amt { font-weight: bold; font-family: 'Courier New', monospace; }
 
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .mobile-nav { display: flex; }
+            .main { padding: 20px; padding-bottom: 100px; }
+            h1 { font-size: 34px !important; }
         }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div style="font-weight:800; font-size:20px; margin-bottom:30px;">ODIN PRIVATE</div>
+    <div class="brand">ODIN PRIVATE</div>
     <div class="menu-item active" onclick="nav('v-dash', this)">Overview</div>
     <div class="menu-item" onclick="nav('v-wire', this)">Wire Transfer</div>
     <div class="menu-item" onclick="nav('v-history', this)">Transactions</div>
@@ -45,7 +56,7 @@
 
     <div class="sidebar-bottom">
         <div class="mini-atm">
-            <div style="position:absolute; top:12px; right:12px; font-size:8px; background:#059669; padding:2px 6px; border-radius:3px;" id="cBadge">ACTIVE</div>
+            <div style="position:absolute; top:12px; right:12px; font-size:8px; background:#059669; padding:2px 6px; border-radius:3px;">ACTIVE</div>
             <div class="mini-chip"></div>
             <div style="font-family:monospace; font-size:13px;">•••• •••• 8812</div>
             <div style="font-size:9px; margin-top:20px; color:#94a3b8;" id="cSideName">MORRIS THOMAS</div>
@@ -56,28 +67,56 @@
 <div class="main">
     <div id="v-dash" class="view active">
         <div class="panel">
-            <p style="color:#94a3b8; font-size:12px;">TOTAL ACCOUNT BALANCE</p>
+            <p style="color:#94a3b8; font-size:12px; margin:0;">TOTAL ACCOUNT BALANCE</p>
             <h1 id="uBal" style="font-size:42px; margin:10px 0;">$0.00</h1>
+            <div style="color:#22c55e; font-size:13px;">● Verified Portfolio Status</div>
+        </div>
+        <div class="panel">
+            <h3 style="margin-top:0;">Security Vault Details</h3>
+            <div style="font-size: 13px; color: #94a3b8; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <span>ACCOUNT HOLDER</span> <span style="text-align:right; color:white;" id="vName">MORRIS THOMAS</span>
+                <span>ACCOUNT NUMBER</span> <span style="text-align:right; color:white;">0992334812</span>
+                <span>IBAN (INTERNATIONAL)</span> <span style="text-align:right; color:white;">DE89 3704 0044 0992 3348 12</span>
+                <span>SWIFT / BIC</span> <span style="text-align:right; color:white;">ODIN DE FF XXX</span>
+            </div>
         </div>
     </div>
 
     <div id="v-wire" class="view">
-        <h2>Wire Transfer</h2>
+        <h2 style="font-size:22px;">International Transfer</h2>
         <div class="panel">
+            <input type="text" placeholder="Recipient Full Name">
+            <input type="text" placeholder="Recipient Bank Name">
+            <input type="text" placeholder="Account Number / IBAN">
             <select>
-                <option>Select Country...</option>
+                <option value="">Destination Country...</option>
                 <option>Namibia</option>
                 <option>Germany</option>
-                <option>USA</option>
-                <option>UK</option>
+                <option>United States</option>
+                <option>United Kingdom</option>
+                <option>Australia</option>
+                <option>Canada</option>
+                <option>Mexico</option>
+                <option>Nigeria</option>
             </select>
-            <input type="number" placeholder="Amount ($)">
-            <button class="btn-action" onclick="alert('Initiated')">Submit</button>
+            <input type="number" placeholder="Transfer Amount ($)">
+            <button class="btn-action" onclick="alert('Initiated')">Submit Transfer</button>
         </div>
     </div>
 
-    <div id="v-history" class="view"><h2>Transactions</h2><div class="panel" id="txLog"></div></div>
-    <div id="v-support" class="view"><h2>Support</h2><div class="panel"><div id="chatBox"></div></div></div>
+    <div id="v-history" class="view">
+        <h2 style="font-size:22px;">Recent Activity</h2>
+        <div class="panel" id="txLog"></div>
+    </div>
+
+    <div id="v-support" class="view">
+        <h2 style="font-size:22px;">Concierge</h2>
+        <div class="panel">
+            <div id="chatBox" style="height:200px; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:10px; padding:10px; margin-bottom:15px;"></div>
+            <input type="text" placeholder="Type secure message...">
+            <button class="btn-action">Send Message</button>
+        </div>
+    </div>
 </div>
 
 <div class="mobile-nav">
@@ -97,10 +136,27 @@
     function sync() {
         const name = localStorage.getItem('displayName') || "Morris Thomas";
         const bal = localStorage.getItem('balChk') || "10000000";
-        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString();
+        
+        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('cSideName').innerText = name.toUpperCase();
+        document.getElementById('vName').innerText = name.toUpperCase();
+
+        const history = JSON.parse(localStorage.getItem('user_history') || "[]");
+        const log = document.getElementById('txLog');
+        if(history.length > 0) {
+            log.innerHTML = history.map(t => `
+                <div class="tx-item">
+                    <div><b>${t.desc}</b><br><small style="color:#64748b">${t.date}</small></div>
+                    <div class="tx-amt" style="color: ${t.amt.includes('-') ? '#ef4444' : '#22c55e'}">${t.amt}</div>
+                </div>
+            `).join('');
+        } else {
+            log.innerHTML = '<p style="text-align:center; color:#64748b;">No recent activity found.</p>';
+        }
     }
+
     window.onload = sync;
+    setInterval(sync, 4000);
 </script>
 </body>
 </html>
