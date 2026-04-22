@@ -3,39 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin Private Banking | Secure Portal</title>
+    <title>Odin Private | Wealth Management</title>
     <style>
         :root { --primary-blue: #2563eb; --sidebar-bg: #0f172a; --bg-dark: #020617; --glass: rgba(30, 41, 59, 0.7); }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; min-height: 100vh; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; min-height: 100vh; overflow: hidden; }
 
-        /* Sidebar */
-        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; transition: 0.3s; }
+        /* Sidebar Navigation */
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; }
         .brand { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 30px; letter-spacing: 1px; }
         .user-meta { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        
         .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; transition: 0.2s; font-size: 14px; }
         .menu-item:hover, .menu-item.active { background: var(--primary-blue); color: white; }
 
-        /* ATM Card Area */
+        /* Virtual Card Styling */
         .atm-card { background: linear-gradient(135deg, #1e293b, #000); padding: 20px; border-radius: 15px; border: 1px solid #444; margin-top: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .chip { width: 40px; height: 30px; background: linear-gradient(135deg, #d4af37, #f1c40f); border-radius: 5px; margin-bottom: 15px; }
         .card-num { font-size: 17px; letter-spacing: 2px; font-family: 'Courier New', monospace; margin-bottom: 10px; }
+        .card-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #cbd5e1; }
 
-        /* Main Content Area */
+        /* Content Area */
         .main { flex: 1; padding: 40px; background: radial-gradient(circle at top right, #1e293b, #020617); overflow-y: auto; }
         .view { display: none; animation: fadeIn 0.4s ease; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* UI Cards */
+        /* Panels & UI */
         .panel { background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-bottom: 25px; }
         .status-alert { padding: 15px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; text-align: center; display: none; }
+        .btn-action { background: var(--primary-blue); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
         
-        /* Forms */
-        input, select, textarea { width: 100%; padding: 15px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
-        .btn-action { background: var(--primary-blue); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
-
-        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; padding: 15px; } .main { padding: 20px; } }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -44,20 +41,20 @@
     <div class="brand">ODIN PRIVATE</div>
     <div class="user-meta">
         <h3 id="uName">Morris Thomas</h3>
-        <p id="uJob" style="font-size:11px; color:#64748b; margin:0; text-transform: uppercase;">Oil Rig Engineer</p>
+        <p style="font-size:11px; color:#64748b; margin:0; text-transform: uppercase;">Oil Rig Offshore Engineering</p>
     </div>
     
-    <div class="menu-item active" onclick="nav('v-dash', this)">Dashboard</div>
-    <div class="menu-item" onclick="nav('v-send', this)">Send Money</div>
-    <div class="menu-item" onclick="nav('v-cross', this)">Cross-border Transfer</div>
-    <div class="menu-item" onclick="nav('v-cards', this)">Virtual Cards</div>
-    <div class="menu-item" onclick="nav('v-contact', this)">Secure Concierge</div>
-    <div class="menu-item" onclick="location.reload()">Logout</div>
+    <div class="menu-item active" onclick="nav('v-dash', this)">Overview</div>
+    <div class="menu-item" onclick="nav('v-wire', this)">Wire Transfer</div>
+    <div class="menu-item" onclick="nav('v-withdraw', this)">Withdrawal</div>
+    <div class="menu-item" onclick="nav('v-cards', this)">Digital Cards</div>
+    <div class="menu-item" onclick="nav('v-support', this)">Secure Support</div>
+    <div class="menu-item" onclick="location.href='login.html'">Logout</div>
     
     <div class="atm-card">
         <div class="chip"></div>
         <div class="card-num">**** **** **** 8892</div>
-        <div style="font-size:10px; opacity:0.8;" id="cName">MORRIS THOMAS</div>
+        <div class="card-name" id="cName">MORRIS THOMAS</div>
     </div>
 </div>
 
@@ -66,109 +63,101 @@
 
     <div id="v-dash" class="view active">
         <div class="panel">
-            <p style="color:#94a3b8; font-size:12px; margin:0;">TOTAL VALUATION</p>
+            <p style="color:#94a3b8; font-size:12px; margin:0;">TOTAL ACCOUNT BALANCE</p>
             <h1 style="font-size:48px; margin:10px 0;" id="uBal">$0.00</h1>
-            <div style="color:#22c55e; font-size:13px;">● Portfolio Status: Verified</div>
+            <div style="color:#22c55e; font-size:13px;">● Verified Portfolio</div>
         </div>
-        <h3>Transaction History</h3>
-        <div id="txLog" class="panel" style="padding:15px;">No activity found.</div>
+        <h3>Recent Activity</h3>
+        <div id="txLog" class="panel" style="padding:15px;">No recent transactions found.</div>
     </div>
 
-    <div id="v-send" class="view">
-        <h2>Local Bank Transfer</h2>
-        <div class="panel">
-            <label>Recipient Full Name</label>
-            <input type="text" placeholder="Enter name">
-            <label>Account Number</label>
-            <input type="text" placeholder="0000000000">
-            <label>Amount ($)</label>
-            <input type="number" id="sendAmt" placeholder="0.00">
-            <button class="btn-action" onclick="showProcess()">Initiate Transfer</button>
-        </div>
-    </div>
-
-    <div id="v-cross" class="view">
+    <div id="v-wire" class="view">
         <h2>International Wire</h2>
         <div class="panel">
-            <select><option>Select Country</option><option>United Kingdom</option><option>Germany</option></select>
-            <input type="text" placeholder="SWIFT / BIC Code">
-            <input type="text" placeholder="IBAN Number">
-            <input type="number" placeholder="Amount">
-            <button class="btn-action" onclick="showProcess()">Submit Wire Request</button>
+            <label>Recipient Bank</label>
+            <input type="text" placeholder="Bank Name">
+            <label>SWIFT/BIC</label>
+            <input type="text" placeholder="BIC CODE">
+            <label>Amount ($)</label>
+            <input type="number" placeholder="0.00">
+            <button class="btn-action" onclick="alert('Processing Transaction...')">Submit Transfer</button>
+        </div>
+    </div>
+
+    <div id="v-withdraw" class="view">
+        <h2>Account Withdrawal</h2>
+        <div class="panel" style="text-align: center;">
+            <p style="color: #94a3b8;">This secure portal is currently under active review. Please contact your private concierge for immediate assistance.</p>
+            <button class="btn-action" onclick="nav('v-support', this)" style="max-width: 200px;">Contact Support</button>
         </div>
     </div>
 
     <div id="v-cards" class="view">
-        <h2>Card Management</h2>
-        <div class="panel" style="background: linear-gradient(45deg, #0f172a, #1e293b);">
-            <div class="chip"></div>
-            <h3>Odin Platinum Debit</h3>
-            <p>Status: <span style="color:#22c55e;">Active</span></p>
-            <p>Limit: <span style="color:#94a3b8;">Unlimited</span></p>
+        <h2>Digital Card Management</h2>
+        <div class="panel">
+            <p>Active Cards: 1</p>
+            <div class="atm-card" style="max-width: 350px;">
+                <div class="chip"></div>
+                <div class="card-num">**** **** **** 8892</div>
+                <div class="card-name" id="cNameDisp">MORRIS THOMAS</div>
+            </div>
         </div>
     </div>
 
-    <div id="v-contact" class="view">
+    <div id="v-support" class="view">
         <h2>Secure Concierge</h2>
         <div class="panel">
-            <div id="chatBox" style="height:200px; overflow-y:auto; margin-bottom:15px; font-size:14px;">
-                <div style="background:#1e293b; padding:10px; border-radius:8px;">Welcome back, how can I assist you?</div>
+            <div id="chatBox" style="height:150px; overflow-y:auto; margin-bottom:10px; border-bottom:1px solid #334155;">
+                <div style="color:#94a3b8; font-size:13px;">System: Secured connection established.</div>
             </div>
-            <textarea id="msgIn" placeholder="Type your message..."></textarea>
+            <input type="text" id="msgIn" placeholder="Type message to concierge...">
             <button class="btn-action" onclick="sendMsg()">Send Message</button>
         </div>
     </div>
 </div>
 
 <script>
-    // NAVIGATION LOGIC
     function nav(id, el) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-    }
-
-    function showProcess() {
-        alert("Processing with Global Clearing House... Please wait.");
+        if(typeof el === 'object') el.classList.add('active');
     }
 
     function sendMsg() {
         const val = document.getElementById('msgIn').value;
         if(val) {
             localStorage.setItem('last_odin_msg', val);
-            document.getElementById('chatBox').innerHTML += `<div style="background:var(--primary-blue); padding:10px; border-radius:8px; margin-top:10px; text-align:right;">${val}</div>`;
+            document.getElementById('chatBox').innerHTML += `<div style="margin-top:10px; text-align:right;">${val}</div>`;
             document.getElementById('msgIn').value = "";
         }
     }
 
-    // DATA SYNC WITH ADMIN PANEL
     function sync() {
-        const name = localStorage.getItem('userName') || "Morris Thomas";
+        const fullName = localStorage.getItem('displayName') || "MORRIS THOMAS";
         const bal = localStorage.getItem('balChk') || "1000000";
         const status = localStorage.getItem('global_tx_status') || "";
         const history = JSON.parse(localStorage.getItem('user_history') || "[]");
 
-        document.getElementById('uName').innerText = name;
-        document.getElementById('cName').innerText = name.toUpperCase();
+        document.getElementById('uName').innerText = fullName;
+        document.getElementById('cName').innerText = fullName.toUpperCase();
+        document.getElementById('cNameDisp').innerText = fullName.toUpperCase();
         document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
 
-        // Handle Status Alerts
         const sBox = document.getElementById('statusBox');
-        if(status === "Success") {
+        if(status.includes("Successful")) {
             sBox.style.display = "block"; sBox.style.background = "#065f46"; sBox.innerText = "✅ TRANSFER SUCCESSFUL";
-        } else if(status === "Pending") {
+        } else if(status.includes("Pending")) {
             sBox.style.display = "block"; sBox.style.background = "#92400e"; sBox.innerText = "⏳ PENDING VERIFICATION";
-        } else if(status === "Branch") {
+        } else if(status.includes("Branch")) {
             sBox.style.display = "block"; sBox.style.background = "#991b1b"; sBox.innerText = "🏦 ACTION REQUIRED: VISIT NEAREST BRANCH";
         } else {
             sBox.style.display = "none";
         }
 
-        // Transaction History
         if(history.length > 0) {
             document.getElementById('txLog').innerHTML = history.map(t => `
-                <div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #334155;">
+                <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #334155;">
                     <div><b>${t.desc}</b><br><small style="color:#94a3b8;">${t.date} | ${t.time}</small></div>
                     <div style="color:${t.amt.includes('-') ? '#ef4444' : '#22c55e'}; font-weight:bold;">${t.amt}</div>
                 </div>
@@ -177,7 +166,7 @@
     }
 
     window.onload = sync;
-    setInterval(sync, 2500);
+    setInterval(sync, 2000);
 </script>
 </body>
 </html>
