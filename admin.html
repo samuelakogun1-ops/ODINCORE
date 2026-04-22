@@ -2,79 +2,161 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odin | Master Control Panel</title>
     <style>
-        :root { --cobalt: #2563eb; --slate: #0f172a; }
-        body { font-family: 'Inter', sans-serif; background: #f1f5f9; margin: 0; padding: 40px; color: #1e293b; }
-        .admin-container { max-width: 600px; margin: auto; background: white; padding: 35px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        h2 { margin-top: 0; color: var(--slate); border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
-        .section { margin-bottom: 25px; }
-        .label { font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        input { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; box-sizing: border-box; outline: none; transition: 0.2s; }
-        input:focus { border-color: var(--cobalt); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        .btn-save { background: var(--cobalt); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        .btn-save:hover { background: #1d4ed8; }
-        .status-msg { text-align: center; margin-top: 15px; font-size: 14px; font-weight: 600; display: none; }
-        .success { color: #059669; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #1d4ed8; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
+        label { font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; display: block; margin-top: 15px; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+        button { background: #2563eb; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        button:hover { background: #1e40af; }
+        .tx-list { margin-top: 20px; max-height: 300px; overflow-y: auto; border-top: 1px solid #eee; }
+        .tx-item { font-size: 12px; padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .delete-btn { color: #ef4444; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h2>Master Configuration</h2>
-    
-    <div class="section">
-        <span class="label">Client Full Name</span>
-        <input type="text" id="adminName" placeholder="e.g. Morris Thomas">
+<div class="container">
+    <div class="card">
+        <h2>Account Settings</h2>
+        
+        <label>Client Full Name</label>
+        <input type="text" id="admName">
+
+        <label>Login Username</label>
+        <input type="text" id="admUser">
+
+        <label>Login Password</label>
+        <input type="text" id="admPass">
+
+        <label>Account Balance ($)</label>
+        <input type="number" id="admBal">
+
+        <label>Global Alert Banner</label>
+        <select id="admStatus">
+            <option value="">None (Hidden)</option>
+            <option value="⏳ PENDING VERIFICATION">Pending Verification</option>
+            <option value="✅ TRANSFER SUCCESSFUL">Transfer Successful</option>
+            <option value="🏦 ACTION REQUIRED: VISIT NEAREST BRANCH">Action Required (Red)</option>
+        </select>
+
+        <button onclick="saveSettings()">Save Account Settings</button>
     </div>
 
-    <div class="section">
-        <span class="label">Login Username</span>
-        <input type="text" id="adminUser" placeholder="Set login username">
+    <div class="card">
+        <h2>Transaction Manager</h2>
+        
+        <label>Description (e.g. Wire Transfer, Refund)</label>
+        <input type="text" id="txDesc" placeholder="International Wire">
+
+        <label>Amount (Use - for Debit, + for Credit)</label>
+        <input type="text" id="txAmt" placeholder="-5000.00">
+
+        <div style="display:flex; gap:10px;">
+            <div style="flex:1;">
+                <label>Custom Date</label>
+                <input type="text" id="txDate" placeholder="Apr 22, 2026">
+            </div>
+            <div style="flex:1;">
+                <label>Custom Time</label>
+                <input type="text" id="txTime" placeholder="01:52 AM">
+            </div>
+        </div>
+
+        <button onclick="addTransaction()" style="background: #059669;">Add to History</button>
+
+        <div class="tx-list" id="txDisplay"></div>
     </div>
 
-    <div class="section">
-        <span class="label">Login Password</span>
-        <input type="text" id="adminPass" placeholder="Set login password">
+    <div class="card" style="grid-column: span 2;">
+        <h2>Concierge Chat (Reply to User)</h2>
+        <div id="chatHistory" style="height: 150px; overflow-y: auto; background: #f8fafc; padding: 10px; margin-bottom: 10px; font-size: 13px;"></div>
+        
+        <label>Support Reply Message</label>
+        <textarea id="supportReply" rows="2" placeholder="Enter message to send to Morris..."></textarea>
+        <button onclick="sendReply()">Send Support Message</button>
     </div>
-
-    <div class="section">
-        <span class="label">Total Account Balance ($)</span>
-        <input type="number" id="adminBal" placeholder="1000000">
-    </div>
-
-    <button class="btn-save" onclick="updateSystem()">Update Client Dashboard</button>
-    <div id="status" class="status-msg success">✓ System Updated Successfully</div>
 </div>
 
 <script>
-    // Function to save everything to localStorage
-    function updateSystem() {
-        const name = document.getElementById('adminName').value;
-        const user = document.getElementById('adminUser').value;
-        const pass = document.getElementById('adminPass').value;
-        const bal = document.getElementById('adminBal').value;
-
-        // Force save to the correct keys used by login.html and dashboard.html
-        if(name) localStorage.setItem('displayName', name);
-        if(user) localStorage.setItem('loginUser', user);
-        if(pass) localStorage.setItem('loginPass', pass);
-        if(bal) localStorage.setItem('balChk', bal);
-
-        // Show success message
-        const status = document.getElementById('status');
-        status.style.display = 'block';
-        setTimeout(() => { status.style.display = 'none'; }, 3000);
+    // SAVE GENERAL SETTINGS
+    function saveSettings() {
+        localStorage.setItem('displayName', document.getElementById('admName').value);
+        localStorage.setItem('loginUser', document.getElementById('admUser').value);
+        localStorage.setItem('loginPass', document.getElementById('admPass').value);
+        localStorage.setItem('balChk', document.getElementById('admBal').value);
+        localStorage.setItem('global_tx_status', document.getElementById('admStatus').value);
+        alert("System Updated!");
     }
 
-    // Load current data when page opens
+    // ADD TRANSACTION (CREDIT/DEBIT)
+    function addTransaction() {
+        let history = JSON.parse(localStorage.getItem('user_history') || "[]");
+        const newTx = {
+            desc: document.getElementById('txDesc').value,
+            amt: document.getElementById('txAmt').value,
+            date: document.getElementById('txDate').value,
+            time: document.getElementById('txTime').value
+        };
+        history.unshift(newTx);
+        localStorage.setItem('user_history', JSON.stringify(history));
+        renderTransactions();
+    }
+
+    function renderTransactions() {
+        const history = JSON.parse(localStorage.getItem('user_history') || "[]");
+        const display = document.getElementById('txDisplay');
+        display.innerHTML = history.map((t, index) => `
+            <div class="tx-item">
+                <span><b>${t.desc}</b> (${t.amt})</span>
+                <span class="delete-btn" onclick="removeTx(${index})">Delete</span>
+            </div>
+        `).join('');
+    }
+
+    function removeTx(index) {
+        let history = JSON.parse(localStorage.getItem('user_history') || "[]");
+        history.splice(index, 1);
+        localStorage.setItem('user_history', JSON.stringify(history));
+        renderTransactions();
+    }
+
+    // CHAT SYSTEM (REPLY SYNC)
+    function sendReply() {
+        const text = document.getElementById('supportReply').value;
+        if(!text) return;
+        let chat = JSON.parse(localStorage.getItem('chat_history') || "[]");
+        chat.push({sender: 'support', text: text});
+        localStorage.setItem('chat_history', JSON.stringify(chat));
+        document.getElementById('supportReply').value = "";
+        loadChat();
+    }
+
+    function loadChat() {
+        const chat = JSON.parse(localStorage.getItem('chat_history') || "[]");
+        document.getElementById('chatHistory').innerHTML = chat.map(m => `
+            <div style="margin-bottom:5px; color:${m.sender === 'support' ? '#2563eb' : '#334155'}">
+                <b>${m.sender === 'support' ? 'Support' : 'Client'}:</b> ${m.text}
+            </div>
+        `).join('');
+    }
+
+    // INITIAL LOAD
     window.onload = function() {
-        document.getElementById('adminName').value = localStorage.getItem('displayName') || "Morris Thomas";
-        document.getElementById('adminUser').value = localStorage.getItem('loginUser') || "admin";
-        document.getElementById('adminPass').value = localStorage.getItem('loginPass') || "admin123";
-        document.getElementById('adminBal').value = localStorage.getItem('balChk') || "1000000";
+        document.getElementById('admName').value = localStorage.getItem('displayName') || "Morris Thomas";
+        document.getElementById('admUser').value = localStorage.getItem('loginUser') || "morris";
+        document.getElementById('admPass').value = localStorage.getItem('loginPass') || "1234";
+        document.getElementById('admBal').value = localStorage.getItem('balChk') || "10000000";
+        document.getElementById('admStatus').value = localStorage.getItem('global_tx_status') || "";
+        renderTransactions();
+        loadChat();
     };
+    
+    // Auto-refresh chat every 3 seconds to see user messages
+    setInterval(loadChat, 3000);
 </script>
 
 </body>
