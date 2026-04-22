@@ -84,21 +84,19 @@
         const error = document.getElementById('err');
         const card = document.getElementById('card');
 
-        // This syncs with your Admin Panel settings
+        // These keys must match the ones used in your admin panel
         const savedPass = localStorage.getItem('loginPass') || "admin123"; 
         const savedUser = localStorage.getItem('loginUser') || "admin";
 
         if (uInput === savedUser && pInput === savedPass) {
             window.location.href = "dashboard.html";
         } else {
-            // Show error and trigger shake animation
             error.style.display = "block";
             card.style.animation = "shake 0.4s ease";
             setTimeout(() => { card.style.animation = ""; }, 400);
         }
     }
 
-    // Allow login by pressing the Enter key
     document.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             attemptLogin();
