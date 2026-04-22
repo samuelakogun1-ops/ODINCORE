@@ -9,34 +9,33 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; min-height: 100vh; overflow: hidden; }
 
         /* Sidebar Navigation */
-        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; z-index: 100; }
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; z-index: 100; position: relative; }
         .brand { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 30px; letter-spacing: 1px; }
-        .user-meta { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; transition: 0.2s; font-size: 14px; }
         .menu-item:hover, .menu-item.active { background: var(--primary); color: white; }
 
-        /* Content Area */
-        .main { flex: 1; padding: 40px; background: radial-gradient(circle at top right, #1e293b, #020617); overflow-y: auto; }
-        .view { display: none; animation: fadeIn 0.4s ease; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* ATM CARD POSITIONED BOTTOM LEFT */
+        .sidebar-bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .mini-atm { width: 100%; height: 130px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 12px; padding: 15px; position: relative; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.3); box-sizing: border-box; cursor: pointer; transition: 0.3s; }
+        .mini-atm:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .mini-chip { width: 25px; height: 20px; background: #d4af37; border-radius: 4px; margin-bottom: 15px; }
+        .mini-num { font-size: 12px; letter-spacing: 2px; font-family: 'Courier New', monospace; }
+        .mini-status { position: absolute; top: 10px; right: 10px; font-size: 8px; font-weight: bold; padding: 2px 6px; border-radius: 3px; }
 
-        /* Panels & UI */
+        /* Main Content */
+        .main { flex: 1; padding: 40px; background: radial-gradient(circle at top right, #1e293b, #020617); overflow-y: auto; }
+        .view { display: none; }
+        .view.active { display: block; }
         .panel { background: var(--glass); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-bottom: 25px; }
+        
         input, select { width: 100%; padding: 15px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
         .btn-action { background: var(--primary); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px; }
 
-        /* ATM Card Visual */
-        .atm-card { width: 340px; height: 210px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; padding: 25px; position: relative; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin: 20px auto; text-align: left; }
-        .chip { width: 45px; height: 35px; background: #d4af37; border-radius: 6px; margin-bottom: 30px; }
-        .card-num { font-size: 18px; letter-spacing: 3px; font-family: 'Courier New', monospace; }
-        .card-status-badge { position: absolute; top: 20px; right: 20px; font-size: 10px; font-weight: bold; padding: 4px 10px; border-radius: 4px; }
-
-        /* Transaction Log */
+        /* Transactions */
         .tx-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .tx-amt { font-weight: bold; font-family: 'Courier New', monospace; }
 
-        /* Chat Styling */
+        /* Chat */
         #chatBox { height: 250px; overflow-y: auto; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px; }
         .msg { padding: 10px 14px; border-radius: 12px; max-width: 80%; font-size: 14px; }
         .msg.client { background: var(--primary); align-self: flex-end; }
@@ -47,17 +46,22 @@
 
 <div class="sidebar">
     <div class="brand">ODIN PRIVATE</div>
-    <div class="user-meta">
-        <h3 id="uNameSide">Morris Thomas</h3>
-        <p style="font-size:11px; color:#64748b; margin:0; text-transform: uppercase;">Wealth Management</p>
-    </div>
     
     <div class="menu-item active" onclick="nav('v-dash', this)">Overview</div>
-    <div class="menu-item" onclick="nav('v-atm', this)">ATM Card</div>
     <div class="menu-item" onclick="nav('v-wire', this)">Wire Transfer</div>
     <div class="menu-item" onclick="nav('v-history', this)">Transactions</div>
     <div class="menu-item" onclick="nav('v-support', this)">Concierge</div>
-    <div class="menu-item" onclick="location.href='login.html'">Logout</div>
+    <div class="menu-item" onclick="location.href='login.html'" style="margin-top:10px; color:#ef4444;">Logout</div>
+
+    <div class="sidebar-bottom">
+        <p style="font-size:10px; color:#64748b; margin-bottom:10px; font-weight:bold;">MANAGED ASSET</p>
+        <div class="mini-atm" onclick="nav('v-atm', this)">
+            <div id="cBadge" class="mini-status">ACTIVE</div>
+            <div class="mini-chip"></div>
+            <div class="mini-num">•••• •••• 8812</div>
+            <div style="font-size:9px; margin-top:15px; color:#94a3b8;" id="cSideName">MORRIS THOMAS</div>
+        </div>
+    </div>
 </div>
 
 <div class="main">
@@ -67,7 +71,6 @@
             <h1 style="font-size:48px; margin:10px 0;" id="uBal">$0.00</h1>
             <div style="color:#22c55e; font-size:13px;">● Verified Portfolio Status</div>
         </div>
-
         <div class="panel">
             <h3 style="margin-top:0;">Security Vault Details</h3>
             <div style="font-size: 13px; color: #94a3b8; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
@@ -80,19 +83,10 @@
     </div>
 
     <div id="v-atm" class="view">
-        <h2>Managed Debit Card</h2>
+        <h2>Card Management</h2>
         <div class="panel" style="text-align:center;">
-            <div class="atm-card">
-                <div id="cBadge" class="card-status-badge">ACTIVE</div>
-                <div class="chip"></div>
-                <div class="card-num">4492 •••• •••• 8812</div>
-                <div style="margin-top:40px; display:flex; justify-content:space-between; font-size:12px;">
-                    <span id="cName">MORRIS THOMAS</span>
-                    <span>EXP: 09/29</span>
-                </div>
-            </div>
-            <p style="color:#94a3b8; font-size:13px; margin-top:20px;">Use your physical card for international withdrawals.</p>
-            <button class="btn-action" style="max-width:300px;" onclick="requestCard()">Request Replacement Card</button>
+            <p>Your physical debit card is currently active and authorized for international use.</p>
+            <button class="btn-action" style="max-width:300px;" onclick="alert('Request sent to support.')">Lock Card</button>
         </div>
     </div>
 
@@ -102,14 +96,20 @@
             <input type="text" placeholder="Recipient Bank Name">
             <input type="text" placeholder="Recipient Account Number / IBAN">
             <select>
-                <option>United States</option>
-                <option>United Kingdom</option>
+                <option value="">Select Destination Country...</option>
+                <option>Australia</option>
+                <option>Canada</option>
                 <option>Germany</option>
                 <option>Italy</option>
-                <option>Australia</option>
+                <option>Mexico</option>
+                <option>Nigeria</option>
+                <option>Portugal</option>
+                <option>South Africa</option>
+                <option>United Kingdom</option>
+                <option>United States</option>
             </select>
             <input type="number" placeholder="Amount ($)">
-            <button class="btn-action" onclick="alert('Transaction processing...')">Submit Transfer</button>
+            <button class="btn-action" onclick="alert('Processing...')">Submit Transfer</button>
         </div>
     </div>
 
@@ -119,7 +119,7 @@
     </div>
 
     <div id="v-support" class="view">
-        <h2>Wealth Concierge</h2>
+        <h2>Secure Concierge</h2>
         <div class="panel">
             <div id="chatBox"></div>
             <div style="display:flex; gap:10px;">
@@ -135,14 +135,7 @@
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-    }
-
-    function requestCard() {
-        let chat = JSON.parse(localStorage.getItem('chat_history') || "[]");
-        chat.push({sender: 'client', text: "SYSTEM: User requested a replacement ATM card."});
-        localStorage.setItem('chat_history', JSON.stringify(chat));
-        alert("Replacement request submitted to Concierge.");
+        if(el.classList.contains('menu-item')) el.classList.add('active');
     }
 
     function sendChat() {
@@ -160,9 +153,8 @@
         const bal = localStorage.getItem('balChk') || "10000000";
         const cStatus = localStorage.getItem('cardStatus') || "Active";
 
-        document.getElementById('uNameSide').innerText = name;
+        document.getElementById('cSideName').innerText = name.toUpperCase();
         document.getElementById('vName').innerText = name.toUpperCase();
-        document.getElementById('cName').innerText = name.toUpperCase();
         document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
 
         const badge = document.getElementById('cBadge');
