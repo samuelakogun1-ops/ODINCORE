@@ -76,23 +76,17 @@
         <h2>International Wire Transfer</h2>
         <div class="panel">
             <label>Recipient Bank Name</label>
-            <input type="text" placeholder="e.g. Chase Bank, Barclays">
+            <input type="text" placeholder="e.g. JPMorgan Chase, HSBC">
             
             <label>Recipient Account Number</label>
-            <input type="text" placeholder="Enter Account Number">
+            <input type="text" placeholder="Enter Full Account Number">
             
             <label>Destination Country</label>
-            <select>
-                <option value="">Select Country...</option>
-                <option value="USA">United States</option>
-                <option value="UK">United Kingdom</option>
-                <option value="Mexico">Mexico</option>
-                <option value="Germany">Germany</option>
-                <option value="Canada">Canada</option>
-                <option value="Nigeria">Nigeria</option>
+            <select id="countrySelect">
+                <option value="Namibia">Namibia</option>
             </select>
             
-            <label>Amount ($)</label>
+            <label>Amount to Transfer ($)</label>
             <input type="number" placeholder="0.00">
             
             <button class="btn-action" onclick="alert('Wire transfer request received. Your concierge will contact you to verify security credentials.')">Submit Transfer</button>
