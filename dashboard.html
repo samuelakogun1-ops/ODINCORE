@@ -8,109 +8,76 @@
         :root { --primary: #2563eb; --sidebar-bg: #0f172a; --bg-dark: #020617; --glass: rgba(30, 41, 59, 0.7); }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* Sidebar - Desktop */
-        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; height: 100vh; }
-        .brand { font-size: 20px; font-weight: 800; margin-bottom: 30px; letter-spacing: 1px; }
-        .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 14px; transition: 0.2s; }
+        .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; height: 100vh; position: relative; }
+        .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 14px; }
         .menu-item.active { background: var(--primary); color: white; }
 
-        /* Mobile Nav - Bottom */
-        .mobile-nav { display: none; background: #0f172a; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); position: fixed; bottom: 0; width: 100%; z-index: 1000; }
-        .nav-icon { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; }
-        .nav-icon.active { color: var(--primary); font-weight: bold; }
+        .sidebar-bottom { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .mini-atm { width: 100%; height: 140px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 12px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); position: relative; box-sizing: border-box; }
+        .mini-chip { width: 30px; height: 22px; background: #d4af37; border-radius: 4px; margin-bottom: 20px; }
 
-        /* Content Area */
+        .mobile-nav { display: none; background: #0f172a; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); position: fixed; bottom: 0; width: 100%; z-index: 1000; }
+        .nav-icon { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; }
+        .nav-icon.active { color: var(--primary); }
+
         .main { flex: 1; padding: 30px; overflow-y: auto; background: radial-gradient(circle at top right, #1e293b, #020617); padding-bottom: 100px; }
         .view { display: none; }
         .view.active { display: block; }
-
-        /* Panels */
         .panel { background: var(--glass); padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-bottom: 20px; }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
-        .btn-action { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        
+        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 10px; box-sizing: border-box; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-        /* ATM Card Visual */
-        .mini-atm { width: 100%; max-width: 320px; height: 180px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; padding: 25px; position: relative; border: 1px solid rgba(255,255,255,0.1); margin: 15px auto; box-shadow: 0 15px 30px rgba(0,0,0,0.4); text-align: left; }
-        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 5px; margin-bottom: 25px; }
-        .card-num { font-size: 16px; letter-spacing: 2px; font-family: 'Courier New', monospace; }
-        .status-badge { position: absolute; top: 20px; right: 20px; font-size: 9px; font-weight: bold; padding: 4px 10px; border-radius: 4px; }
-
-        /* Mobile Breakpoints */
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .mobile-nav { display: flex; }
-            .main { padding: 20px; padding-bottom: 100px; }
-            h1 { font-size: 36px !important; }
         }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div class="brand">ODIN PRIVATE</div>
+    <div style="font-weight:800; font-size:20px; margin-bottom:30px;">ODIN PRIVATE</div>
     <div class="menu-item active" onclick="nav('v-dash', this)">Overview</div>
     <div class="menu-item" onclick="nav('v-wire', this)">Wire Transfer</div>
     <div class="menu-item" onclick="nav('v-history', this)">Transactions</div>
     <div class="menu-item" onclick="nav('v-support', this)">Concierge</div>
-    <div class="menu-item" onclick="location.href='login.html'" style="color:#ef4444; margin-top:20px;">Logout</div>
+
+    <div class="sidebar-bottom">
+        <div class="mini-atm">
+            <div style="position:absolute; top:12px; right:12px; font-size:8px; background:#059669; padding:2px 6px; border-radius:3px;" id="cBadge">ACTIVE</div>
+            <div class="mini-chip"></div>
+            <div style="font-family:monospace; font-size:13px;">•••• •••• 8812</div>
+            <div style="font-size:9px; margin-top:20px; color:#94a3b8;" id="cSideName">MORRIS THOMAS</div>
+        </div>
+    </div>
 </div>
 
 <div class="main">
     <div id="v-dash" class="view active">
         <div class="panel">
-            <p style="color:#94a3b8; font-size:12px; margin:0;">TOTAL BALANCE</p>
-            <h1 style="font-size:44px; margin:10px 0;" id="uBal">$0.00</h1>
-            <div style="color:#22c55e; font-size:13px;">● Secure Portfolio Status</div>
-        </div>
-
-        <div class="panel" style="text-align:center;">
-            <p style="font-size:11px; color:#64748b; font-weight:bold; margin-bottom:10px;">MANAGED DEBIT ASSET</p>
-            <div class="mini-atm">
-                <div id="cBadge" class="status-badge">ACTIVE</div>
-                <div class="chip"></div>
-                <div class="card-num">•••• •••• •••• 8812</div>
-                <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:11px;">
-                    <span id="cName">MORRIS THOMAS</span>
-                    <span>EXP 09/29</span>
-                </div>
-            </div>
+            <p style="color:#94a3b8; font-size:12px;">TOTAL ACCOUNT BALANCE</p>
+            <h1 id="uBal" style="font-size:42px; margin:10px 0;">$0.00</h1>
         </div>
     </div>
 
     <div id="v-wire" class="view">
-        <h2 style="font-size:22px;">International Transfer</h2>
+        <h2>Wire Transfer</h2>
         <div class="panel">
-            <input type="text" placeholder="Recipient Bank Name">
-            <input type="text" placeholder="Account Number / IBAN">
             <select>
-                <option value="">Destination Country...</option>
+                <option>Select Country...</option>
                 <option>Namibia</option>
                 <option>Germany</option>
-                <option>United States</option>
-                <option>United Kingdom</option>
-                <option>Australia</option>
-                <option>Canada</option>
-                <option>Mexico</option>
-                <option>Nigeria</option>
+                <option>USA</option>
+                <option>UK</option>
             </select>
-            <input type="number" placeholder="Transfer Amount ($)">
-            <button class="btn-action" onclick="alert('Wire Request Initiated.')">Submit Transfer</button>
+            <input type="number" placeholder="Amount ($)">
+            <button class="btn-action" onclick="alert('Initiated')">Submit</button>
         </div>
     </div>
 
-    <div id="v-history" class="view">
-        <h2 style="font-size:22px;">Recent Activity</h2>
-        <div class="panel" id="txLog"></div>
-    </div>
-
-    <div id="v-support" class="view">
-        <h2 style="font-size:22px;">Secure Support</h2>
-        <div class="panel">
-            <div id="chatBox" style="height:220px; overflow-y:auto; margin-bottom:15px; font-size:14px; background:rgba(0,0,0,0.2); border-radius:10px; padding:10px;"></div>
-            <input type="text" id="msgIn" placeholder="Type secure message...">
-            <button class="btn-action" onclick="sendChat()">Send Message</button>
-        </div>
-    </div>
+    <div id="v-history" class="view"><h2>Transactions</h2><div class="panel" id="txLog"></div></div>
+    <div id="v-support" class="view"><h2>Support</h2><div class="panel"><div id="chatBox"></div></div></div>
 </div>
 
 <div class="mobile-nav">
@@ -121,51 +88,19 @@
 </div>
 
 <script>
-    // FIXED NAVIGATION FUNCTION
-    function nav(viewId, element) {
-        // Hide all views
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        // Show selected view
-        document.getElementById(viewId).classList.add('active');
-
-        // Reset all navigation markers
-        document.querySelectorAll('.menu-item, .nav-icon').forEach(n => n.classList.remove('active'));
-        
-        // Find all elements that match the click and mark them active
-        // This ensures BOTH the desktop and mobile buttons stay in sync
-        if(viewId === 'v-dash') {
-            document.querySelectorAll("[onclick*='v-dash']").forEach(e => e.classList.add('active'));
-        } else if(viewId === 'v-wire') {
-            document.querySelectorAll("[onclick*='v-wire']").forEach(e => e.classList.add('active'));
-        } else if(viewId === 'v-history') {
-            document.querySelectorAll("[onclick*='v-history']").forEach(e => e.classList.add('active'));
-        } else if(viewId === 'v-support') {
-            document.querySelectorAll("[onclick*='v-support']").forEach(e => e.classList.add('active'));
-        }
+    function nav(id, el) {
+        document.querySelectorAll('.view, .menu-item, .nav-icon').forEach(x => x.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll("[onclick*='"+id+"']").forEach(btn => btn.classList.add('active'));
     }
 
     function sync() {
         const name = localStorage.getItem('displayName') || "Morris Thomas";
         const bal = localStorage.getItem('balChk') || "10000000";
-        const cStatus = localStorage.getItem('cardStatus') || "Active";
-
-        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
-        document.getElementById('cName').innerText = name.toUpperCase();
-        
-        const badge = document.getElementById('cBadge');
-        badge.innerText = cStatus.toUpperCase();
-        badge.style.background = cStatus === "Active" ? "#059669" : "#d97706";
-
-        const tx = JSON.parse(localStorage.getItem('user_history') || "[]");
-        document.getElementById('txLog').innerHTML = tx.map(t => `
-            <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #334155;">
-                <div><b>${t.desc}</b><br><small style="color:#64748b">${t.date}</small></div>
-                <div style="color:${t.amt.includes('-')?'#ef4444':'#22c55e'}; font-weight:bold;">${t.amt}</div>
-            </div>`).join('') || '<p style="text-align:center; color:#64748b;">No recent activity.</p>';
+        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString();
+        document.getElementById('cSideName').innerText = name.toUpperCase();
     }
-
     window.onload = sync;
-    setInterval(sync, 4000);
 </script>
 </body>
 </html>
