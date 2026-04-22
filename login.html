@@ -84,7 +84,7 @@
         const error = document.getElementById('err');
         const card = document.getElementById('card');
 
-        // These keys must match the ones used in your admin panel
+        // This pulls the data saved by your admin.html
         const savedPass = localStorage.getItem('loginPass') || "admin123"; 
         const savedUser = localStorage.getItem('loginUser') || "admin";
 
@@ -97,6 +97,7 @@
         }
     }
 
+    // Allow login by pressing Enter
     document.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             attemptLogin();
