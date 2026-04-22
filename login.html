@@ -5,105 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odin Private | Secure Login</title>
     <style>
-        :root { --primary: #2563eb; --bg: #020617; }
-        body { 
-            margin: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            color: white; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            overflow: hidden;
-        }
-        .login-card { 
-            background: rgba(30, 41, 59, 0.7); 
-            padding: 40px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px); 
-            width: 100%; 
-            max-width: 400px; 
-            text-align: center; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        .brand { font-size: 24px; font-weight: 800; margin-bottom: 30px; letter-spacing: 2px; }
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            margin: 10px 0; 
-            background: #0f172a; 
-            border: 1px solid #334155; 
-            color: white; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            outline: none;
-        }
-        input:focus { border-color: var(--primary); }
-        .btn-login { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            width: 100%; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            transition: 0.3s;
-        }
-        .btn-login:hover { background: #1d4ed8; }
-        .error-msg { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            50% { transform: translateX(8px); }
-            75% { transform: translateX(-8px); }
-        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #020617; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-card { width: 90%; max-width: 400px; padding: 40px; background: rgba(30, 41, 59, 0.7); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); text-align: center; }
+        input { width: 100%; padding: 15px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
+        button { background: #2563eb; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
+    <div class="login-card">
+        <h2>ODIN PRIVATE</h2>
+        <p style="color:#94a3b8; font-size:14px;">Secure Client Access</p>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="checkLogin()">Access Vault</button>
+    </div>
 
-<div class="login-card" id="card">
-    <div class="brand">ODIN PRIVATE</div>
-    <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;">Secure Client Access</p>
-    
-    <input type="text" id="userIn" placeholder="Username">
-    <input type="password" id="passIn" placeholder="Password">
-    
-    <button class="btn-login" onclick="attemptLogin()">Access Account</button>
-    <div id="err" class="error-msg">Invalid credentials. Access denied.</div>
-</div>
+    <script>
+        function checkLogin() {
+            const u = document.getElementById('user').value.toLowerCase().trim();
+            const p = document.getElementById('pass').value.trim();
+            
+            // Pulls from Admin, defaults if empty
+            const savedU = (localStorage.getItem('loginUser') || "morris").toLowerCase().trim();
+            const savedP = (localStorage.getItem('loginPass') || "1234").trim();
 
-<script>
-    function attemptLogin() {
-        const uInput = document.getElementById('userIn').value;
-        const pInput = document.getElementById('passIn').value;
-        const error = document.getElementById('err');
-        const card = document.getElementById('card');
-
-        // This pulls the data saved by your admin.html
-        const savedPass = localStorage.getItem('loginPass') || "admin123"; 
-        const savedUser = localStorage.getItem('loginUser') || "admin";
-
-        if (uInput === savedUser && pInput === savedPass) {
-            window.location.href = "dashboard.html";
-        } else {
-            error.style.display = "block";
-            card.style.animation = "shake 0.4s ease";
-            setTimeout(() => { card.style.animation = ""; }, 400);
+            if(u === savedU && p === savedP) {
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Authentication Failed. Please verify credentials.");
+            }
         }
-    }
-
-    // Allow login by pressing Enter
-    document.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            attemptLogin();
-        }
-    });
-</script>
-
+    </script>
 </body>
 </html>
