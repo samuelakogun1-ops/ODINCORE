@@ -2,75 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Odin Private | Wealth Management</title>
     <style>
         :root { --primary: #2563eb; --sidebar-bg: #0f172a; --bg-dark: #020617; --glass: rgba(30, 41, 59, 0.7); }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: white; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* Sidebar - Desktop Only */
+        /* Sidebar - Desktop */
         .sidebar { width: 280px; background: var(--sidebar-bg); padding: 25px; border-right: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; height: 100vh; }
-        
-        /* Mobile Navigation Bar */
-        .mobile-nav { display: none; background: var(--sidebar-bg); padding: 10px; justify-content: space-around; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-icon { font-size: 10px; color: #94a3b8; text-align: center; cursor: pointer; }
+        .brand { font-size: 20px; font-weight: 800; margin-bottom: 30px; letter-spacing: 1px; }
+        .menu-item { padding: 14px; border-radius: 8px; cursor: pointer; color: #94a3b8; display: flex; align-items: center; gap: 12px; margin-bottom: 5px; font-size: 14px; transition: 0.2s; }
+        .menu-item.active { background: var(--primary); color: white; }
+
+        /* Mobile Nav - Bottom */
+        .mobile-nav { display: none; background: #0f172a; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); position: fixed; bottom: 0; width: 100%; z-index: 1000; }
+        .nav-icon { flex: 1; text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; }
         .nav-icon.active { color: var(--primary); font-weight: bold; }
 
-        /* Main Content */
-        .main { flex: 1; padding: 20px; background: radial-gradient(circle at top right, #1e293b, #020617); overflow-y: auto; padding-bottom: 80px; }
-        .view { display: none; animation: fadeIn 0.3s ease; }
+        /* Content Area */
+        .main { flex: 1; padding: 30px; overflow-y: auto; background: radial-gradient(circle at top right, #1e293b, #020617); padding-bottom: 100px; }
+        .view { display: none; }
         .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Panels & UI */
-        .panel { background: var(--glass); padding: 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-bottom: 20px; }
-        .btn-action { background: var(--primary); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
+        /* Panels */
+        .panel { background: var(--glass); padding: 25px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); margin-bottom: 20px; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 10px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
 
-        /* ATM Card Visual (Scales for Mobile) */
-        .mini-atm { width: 100%; max-width: 300px; height: 160px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 12px; padding: 20px; position: relative; border: 1px solid rgba(255,255,255,0.1); margin: 10px auto; }
-        .chip { width: 35px; height: 25px; background: #d4af37; border-radius: 4px; margin-bottom: 20px; }
-        .card-num { font-size: 14px; letter-spacing: 2px; font-family: 'Courier New', monospace; }
-        .status-badge { position: absolute; top: 15px; right: 15px; font-size: 9px; padding: 3px 8px; border-radius: 4px; }
+        /* ATM Card Visual */
+        .mini-atm { width: 100%; max-width: 320px; height: 180px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 15px; padding: 25px; position: relative; border: 1px solid rgba(255,255,255,0.1); margin: 15px auto; box-shadow: 0 15px 30px rgba(0,0,0,0.4); text-align: left; }
+        .chip { width: 40px; height: 30px; background: #d4af37; border-radius: 5px; margin-bottom: 25px; }
+        .card-num { font-size: 16px; letter-spacing: 2px; font-family: 'Courier New', monospace; }
+        .status-badge { position: absolute; top: 20px; right: 20px; font-size: 9px; font-weight: bold; padding: 4px 10px; border-radius: 4px; }
 
-        /* Responsive Breakpoints */
+        /* Mobile Breakpoints */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
             .sidebar { display: none; }
-            .mobile-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; }
-            .main { padding: 15px; }
-            h1 { font-size: 32px !important; }
+            .mobile-nav { display: flex; }
+            .main { padding: 20px; padding-bottom: 100px; }
+            h1 { font-size: 36px !important; }
         }
-
-        /* Transaction Log */
-        .tx-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <div style="font-size: 20px; font-weight: 800; margin-bottom: 30px;">ODIN PRIVATE</div>
+    <div class="brand">ODIN PRIVATE</div>
     <div class="menu-item active" onclick="nav('v-dash', this)">Overview</div>
     <div class="menu-item" onclick="nav('v-wire', this)">Wire Transfer</div>
     <div class="menu-item" onclick="nav('v-history', this)">Transactions</div>
     <div class="menu-item" onclick="nav('v-support', this)">Concierge</div>
+    <div class="menu-item" onclick="location.href='login.html'" style="color:#ef4444; margin-top:20px;">Logout</div>
 </div>
 
 <div class="main">
     <div id="v-dash" class="view active">
         <div class="panel">
-            <p style="color:#94a3b8; font-size:11px; margin:0;">TOTAL BALANCE</p>
-            <h1 style="font-size:40px; margin:10px 0;" id="uBal">$0.00</h1>
-            <div style="color:#22c55e; font-size:12px;">● Verified Portfolio</div>
+            <p style="color:#94a3b8; font-size:12px; margin:0;">TOTAL BALANCE</p>
+            <h1 style="font-size:44px; margin:10px 0;" id="uBal">$0.00</h1>
+            <div style="color:#22c55e; font-size:13px;">● Secure Portfolio Status</div>
         </div>
-        
+
         <div class="panel" style="text-align:center;">
-            <p style="font-size:10px; color:#64748b; font-weight:bold; margin-bottom:10px;">VIRTUAL ASSET CARD</p>
+            <p style="font-size:11px; color:#64748b; font-weight:bold; margin-bottom:10px;">MANAGED DEBIT ASSET</p>
             <div class="mini-atm">
                 <div id="cBadge" class="status-badge">ACTIVE</div>
                 <div class="chip"></div>
                 <div class="card-num">•••• •••• •••• 8812</div>
-                <div style="margin-top:30px; display:flex; justify-content:space-between; font-size:10px;">
+                <div style="margin-top:35px; display:flex; justify-content:space-between; font-size:11px;">
                     <span id="cName">MORRIS THOMAS</span>
                     <span>EXP 09/29</span>
                 </div>
@@ -79,52 +78,70 @@
     </div>
 
     <div id="v-wire" class="view">
-        <h2 style="font-size:18px;">International Wire</h2>
+        <h2 style="font-size:22px;">International Transfer</h2>
         <div class="panel">
-            <input type="text" placeholder="Bank Name">
-            <input type="text" placeholder="IBAN / Account Number">
+            <input type="text" placeholder="Recipient Bank Name">
+            <input type="text" placeholder="Account Number / IBAN">
             <select>
-                <option>Select Country...</option>
+                <option value="">Destination Country...</option>
                 <option>Namibia</option>
                 <option>Germany</option>
                 <option>United States</option>
                 <option>United Kingdom</option>
                 <option>Australia</option>
-                <option>Portugal</option>
+                <option>Canada</option>
+                <option>Mexico</option>
+                <option>Nigeria</option>
             </select>
-            <input type="number" placeholder="Amount ($)">
-            <button class="btn-action">Submit Transfer</button>
+            <input type="number" placeholder="Transfer Amount ($)">
+            <button class="btn-action" onclick="alert('Wire Request Initiated.')">Submit Transfer</button>
         </div>
     </div>
 
     <div id="v-history" class="view">
-        <h2 style="font-size:18px;">Transactions</h2>
+        <h2 style="font-size:22px;">Recent Activity</h2>
         <div class="panel" id="txLog"></div>
     </div>
 
     <div id="v-support" class="view">
-        <h2 style="font-size:18px;">Concierge</h2>
+        <h2 style="font-size:22px;">Secure Support</h2>
         <div class="panel">
-            <div id="chatBox" style="height:200px; overflow-y:auto; font-size:13px; margin-bottom:10px;"></div>
-            <input type="text" id="msgIn" placeholder="Type message...">
-            <button class="btn-action" onclick="sendChat()">Send</button>
+            <div id="chatBox" style="height:220px; overflow-y:auto; margin-bottom:15px; font-size:14px; background:rgba(0,0,0,0.2); border-radius:10px; padding:10px;"></div>
+            <input type="text" id="msgIn" placeholder="Type secure message...">
+            <button class="btn-action" onclick="sendChat()">Send Message</button>
         </div>
     </div>
 </div>
 
 <div class="mobile-nav">
     <div class="nav-icon active" onclick="nav('v-dash', this)">🏠<br>Home</div>
-    <div class="nav-icon" onclick="nav('v-wire', this)">💸<br>Transfer</div>
+    <div class="nav-icon" onclick="nav('v-wire', this)">💸<br>Wire</div>
     <div class="nav-icon" onclick="nav('v-history', this)">📜<br>History</div>
     <div class="nav-icon" onclick="nav('v-support', this)">💬<br>Support</div>
 </div>
 
 <script>
-    function nav(id, el) {
+    // FIXED NAVIGATION FUNCTION
+    function nav(viewId, element) {
+        // Hide all views
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-icon, .menu-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
+        // Show selected view
+        document.getElementById(viewId).classList.add('active');
+
+        // Reset all navigation markers
+        document.querySelectorAll('.menu-item, .nav-icon').forEach(n => n.classList.remove('active'));
+        
+        // Find all elements that match the click and mark them active
+        // This ensures BOTH the desktop and mobile buttons stay in sync
+        if(viewId === 'v-dash') {
+            document.querySelectorAll("[onclick*='v-dash']").forEach(e => e.classList.add('active'));
+        } else if(viewId === 'v-wire') {
+            document.querySelectorAll("[onclick*='v-wire']").forEach(e => e.classList.add('active'));
+        } else if(viewId === 'v-history') {
+            document.querySelectorAll("[onclick*='v-history']").forEach(e => e.classList.add('active'));
+        } else if(viewId === 'v-support') {
+            document.querySelectorAll("[onclick*='v-support']").forEach(e => e.classList.add('active'));
+        }
     }
 
     function sync() {
@@ -132,7 +149,7 @@
         const bal = localStorage.getItem('balChk') || "10000000";
         const cStatus = localStorage.getItem('cardStatus') || "Active";
 
-        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString();
+        document.getElementById('uBal').innerText = "$" + Number(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
         document.getElementById('cName').innerText = name.toUpperCase();
         
         const badge = document.getElementById('cBadge');
@@ -141,14 +158,14 @@
 
         const tx = JSON.parse(localStorage.getItem('user_history') || "[]");
         document.getElementById('txLog').innerHTML = tx.map(t => `
-            <div class="tx-item">
-                <div><b>${t.desc}</b><br><small>${t.date}</small></div>
-                <div style="color:${t.amt.includes('-')?'#ef4444':'#22c55e'}">${t.amt}</div>
-            </div>`).join('') || "No activity.";
+            <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #334155;">
+                <div><b>${t.desc}</b><br><small style="color:#64748b">${t.date}</small></div>
+                <div style="color:${t.amt.includes('-')?'#ef4444':'#22c55e'}; font-weight:bold;">${t.amt}</div>
+            </div>`).join('') || '<p style="text-align:center; color:#64748b;">No recent activity.</p>';
     }
 
     window.onload = sync;
-    setInterval(sync, 3000);
+    setInterval(sync, 4000);
 </script>
 </body>
 </html>
