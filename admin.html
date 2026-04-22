@@ -27,11 +27,11 @@
         <div class="card">
             <div class="card-title">● User Account Creation</div>
             <label>Legal Full Name</label>
-            <input type="text" id="regName" placeholder="e.g. Morris Thomas">
+            <input type="text" id="regName" placeholder="Morris Thomas">
             <label>Login Username</label>
-            <input type="text" id="regUser" placeholder="morris">
+            <input type="text" id="regUser" placeholder="morris245">
             <label>Login Password</label>
-            <input type="text" id="regPass" placeholder="Password123">
+            <input type="text" id="regPass" placeholder="morris2019">
             <label>Initial Vault Balance ($)</label>
             <input type="number" id="regVault" placeholder="500000">
             <button class="btn btn-green" onclick="deployAccount()">Deploy New Account</button>
@@ -58,7 +58,6 @@
                 <option value="Success">Transfer Successful ✅</option>
                 <option value="Pending">Pending Verification ⏳</option>
                 <option value="Branch">Action Required: Visit Nearest Branch 🏦</option>
-                <option value="Hold">Under Technical Hold 🚫</option>
             </select>
             <button class="btn btn-blue" onclick="processWealth()">Process & Sync Wealth</button>
         </div>
@@ -66,8 +65,8 @@
         <div class="card">
             <div class="card-title">● Transaction Ledger (Manual Injection)</div>
             <div style="display:flex; gap:10px;">
-                <div style="flex:1;"><label>Set Date</label><input type="text" id="txDate" placeholder="April 20, 2026"></div>
-                <div style="flex:1;"><label>Set Time</label><input type="text" id="txTime" placeholder="17:15"></div>
+                <div style="flex:1;"><label>Set Date</label><input type="text" id="txDate" placeholder="December 8, 2025"></div>
+                <div style="flex:1;"><label>Set Time</label><input type="text" id="txTime" placeholder="12:10"></div>
             </div>
             <label>Transaction Description</label>
             <input type="text" id="txDesc" placeholder="International Wire Transfer">
@@ -89,17 +88,17 @@
     </div>
 
     <script>
-        // 1. Account Deployment
+        // Use EXACT keys to match login.html
         function deployAccount() {
-            localStorage.setItem('userName', document.getElementById('regName').value);
+            localStorage.setItem('userName', document.getElementById('regUser').value);
             localStorage.setItem('userPass', document.getElementById('regPass').value);
+            localStorage.setItem('displayName', document.getElementById('regName').value);
             localStorage.setItem('balChk', document.getElementById('regVault').value);
-            alert("Account Deployed Successfully.");
+            alert("Account Deployed: " + document.getElementById('regUser').value);
         }
 
-        // 2. Wealth Processing (Credit/Debit Logic)
         function processWealth() {
-            let currentBal = Number(document.getElementById('admBal').value);
+            let currentBal = Number(document.getElementById('admBal').value) || 0;
             const credit = Number(document.getElementById('creditAmt').value);
             const debit = Number(document.getElementById('debitAmt').value);
             
@@ -120,14 +119,10 @@
             }
 
             localStorage.setItem('user_history', JSON.stringify(history));
-            alert("Wealth Synced. New Balance: $" + newBal.toLocaleString());
-            
-            document.getElementById('creditAmt').value = 0;
-            document.getElementById('debitAmt').value = 0;
+            alert("Sync Complete. New Balance: $" + newBal.toLocaleString());
             document.getElementById('admBal').value = newBal;
         }
 
-        // 3. Manual Ledger Injection
         function addTx() {
             let history = JSON.parse(localStorage.getItem('user_history') || "[]");
             history.unshift({
@@ -137,25 +132,22 @@
                 amt: document.getElementById('txAmt').value
             });
             localStorage.setItem('user_history', JSON.stringify(history));
-            alert("Manual Entry Injected.");
+            alert("History Entry Injected.");
         }
 
         function clearTx() {
             localStorage.removeItem('user_history');
-            alert("All History Purged.");
+            alert("History Cleared.");
         }
 
-        // 4. Concierge Monitoring
         function sendReply() {
             localStorage.setItem('admin_reply', document.getElementById('admReply').value);
-            alert("Manager Reply Broadcasted.");
+            alert("Reply Sent to Dashboard.");
         }
 
         setInterval(() => {
             const msg = localStorage.getItem('last_odin_msg');
-            if(msg) {
-                document.getElementById('inbox').innerText = "INCOMING: " + msg;
-            }
+            if(msg) document.getElementById('inbox').innerText = "INCOMING: " + msg;
         }, 2000);
     </script>
 </body>
