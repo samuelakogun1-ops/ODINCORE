@@ -3,91 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin | Global Controller</title>
+    <title>Odin | Super Admin Control</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; padding: 20px; color: #1e293b; }
-        .admin-box { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        h2 { color: #2563eb; margin-bottom: 25px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #1d4ed8; }
-        .status { margin-top: 15px; font-size: 13px; text-align: center; color: #64748b; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; padding: 20px; display: flex; gap: 20px; }
+        .panel { background: #1e293b; padding: 25px; border-radius: 15px; flex: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { color: #3b82f6; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+        label { display: block; margin: 15px 0 5px; font-size: 13px; color: #94a3b8; }
+        input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        
+        /* Chat Section */
+        #chatBox { height: 300px; background: #0f172a; border-radius: 10px; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .msg { padding: 10px; border-radius: 8px; max-width: 80%; font-size: 14px; }
+        .user-msg { background: #334155; align-self: flex-start; }
+        .admin-msg { background: #2563eb; align-self: flex-end; }
     </style>
 </head>
 <body>
 
-<div class="admin-box">
-    <h2>Global Control Panel</h2>
+<div class="panel">
+    <h2>Account & Profile</h2>
+    <label>Profile Picture URL</label>
+    <input type="text" id="pfpUrl" placeholder="Paste image link here">
     
-    <label>Account Holder Name</label>
-    <input type="text" id="accName" value="Morris Thomas">
+    <label>Account Balance ($)</label>
+    <input type="number" id="accBal">
+    
+    <button onclick="updateProfile()">SAVE SETTINGS</button>
+    <p id="status" style="font-size:12px; color:#10b981; text-align:center;"></p>
+</div>
 
-    <label>Current Balance ($)</label>
-    <input type="number" id="accBal" placeholder="e.g. 1250000">
-
-    <label>Last Transaction Description</label>
-    <input type="text" id="txDesc" placeholder="e.g. Wire Transfer Received">
-
-    <label>Transaction Amount ($)</label>
-    <input type="number" id="txAmt" placeholder="e.g. 5000">
-
-    <button onclick="sendToCloud()">UPDATE WORLDWIDE</button>
-    <div class="status" id="statusMsg">Connected to: odin-private</div>
+<div class="panel">
+    <h2>Customer Support Chat</h2>
+    <div id="chatBox"></div>
+    <input type="text" id="replyMsg" placeholder="Type your response..." style="margin-top:15px;">
+    <button onclick="sendReply()" style="background: #10b981;">SEND TO USER</button>
 </div>
 
 <script>
-    // YOUR PERSONAL FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyCDVHNccAM1jv5WppHFxygIfuCDDL1eIcc",
       authDomain: "odin-private.firebaseapp.com",
       projectId: "odin-private",
       storageBucket: "odin-private.firebasestorage.app",
       messagingSenderId: "1023424168524",
-      appId: "1:1023424168524:web:d5d3354cf3ba5433f7aae9",
-      measurementId: "G-PQ20C96ZK2"
+      appId: "1:1023424168524:web:d5d3354cf3ba5433f7aae9"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const docRef = db.collection("accounts").doc("morris_thomas");
 
-    function sendToCloud() {
-        const name = document.getElementById('accName').value;
-        const balance = document.getElementById('accBal').value;
-        const txDesc = document.getElementById('txDesc').value;
-        const txAmt = document.getElementById('txAmt').value;
-        const btn = document.querySelector('button');
+    // Load Data in Real-time
+    docRef.onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            document.getElementById('accBal').value = data.balance;
+            document.getElementById('pfpUrl').value = data.pfpUrl || "";
+            
+            // Show Chat
+            let chatHtml = "";
+            if (data.support_chat) {
+                data.support_chat.forEach(m => {
+                    chatHtml += `<div class="msg ${m.role}-msg"><b>${m.role.toUpperCase()}:</b><br>${m.text}</div>`;
+                });
+            }
+            const box = document.getElementById('chatBox');
+            box.innerHTML = chatHtml;
+            box.scrollTop = box.scrollHeight;
+        }
+    });
 
-        btn.innerText = "UPDATING...";
-        btn.disabled = true;
+    function updateProfile() {
+        const bal = document.getElementById('accBal').value;
+        const pfp = document.getElementById('pfpUrl').value;
+        docRef.update({
+            balance: Number(bal),
+            pfpUrl: pfp
+        }).then(() => { document.getElementById('status').innerText = "✅ Updated Successfully!"; });
+    }
 
-        // This writes to the 'morris_thomas' document we set up
-        db.collection("accounts").doc("morris_thomas").set({
-            name: name,
-            balance: Number(balance),
-            transactions: [
-                { 
-                    desc: txDesc || "Account Opening Balance", 
-                    date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), 
-                    amount: txAmt || balance, 
-                    type: "plus" 
-                }
-            ]
-        }).then(() => {
-            document.getElementById('statusMsg').innerText = "✅ Successfully updated globally!";
-            document.getElementById('statusMsg').style.color = "#10b981";
-            btn.innerText = "UPDATE WORLDWIDE";
-            btn.disabled = false;
-        }).catch((error) => {
-            console.error("Error: ", error);
-            document.getElementById('statusMsg').innerText = "❌ Error: " + error.message;
-            document.getElementById('statusMsg').style.color = "#ef4444";
-            btn.disabled = false;
-        });
+    function sendReply() {
+        const text = document.getElementById('replyMsg').value;
+        if (!text) return;
+        
+        docRef.update({
+            support_chat: firebase.firestore.FieldValue.arrayUnion({
+                role: "admin",
+                text: text,
+                time: new Date().toLocaleTimeString()
+            })
+        }).then(() => { document.getElementById('replyMsg').value = ""; });
     }
 </script>
-
 </body>
 </html>
