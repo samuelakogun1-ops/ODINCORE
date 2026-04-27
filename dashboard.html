@@ -17,7 +17,11 @@
         .sidebar { width: 280px; height: 100vh; background: white; border-right: 1px solid #e2e8f0; position: sticky; top: 0; padding: 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; }
         .brand { font-weight: 800; font-size: 22px; color: var(--primary); margin-bottom: 40px; text-align: center; letter-spacing: -1px; }
         .user-profile { text-align: center; margin-bottom: 40px; }
-        .pfp-box { width: 90px; height: 90px; border-radius: 50%; background: #e2e8f0; margin: 0 auto 15px; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 30px; }
+        
+        /* Dynamic Profile Picture */
+        .pfp-box { width: 90px; height: 90px; border-radius: 50%; background: #e2e8f0; margin: 0 auto 15px; border: 3px solid var(--primary); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .pfp-box img { width: 100%; height: 100%; object-fit: cover; }
+
         .nav-link { padding: 15px 25px; border-radius: 12px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 500; margin-bottom: 8px; transition: 0.3s; }
         .nav-link.active { background: #eff6ff; color: var(--primary); }
         .nav-link:hover { background: #f1f5f9; }
@@ -26,6 +30,9 @@
         .main { flex: 1; padding: 40px; max-width: 1000px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 
+        /* Status Alert Box */
+        #statusAlert { padding: 15px; border-radius: 15px; margin-bottom: 25px; display: none; font-weight: 600; font-size: 14px; border: 1px solid rgba(0,0,0,0.05); }
+
         /* Premium Balance Card */
         .balance-card { 
             background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
@@ -33,7 +40,6 @@
             box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
             position: relative; overflow: hidden;
         }
-        .balance-card::after { content: ""; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255,255,255,0.05); border-radius: 50%; }
         .balance-label { opacity: 0.8; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
         .balance-amt { font-size: 48px; font-weight: 700; margin: 10px 0; }
 
@@ -61,8 +67,12 @@
         .tx-info p { margin: 4px 0 0; font-size: 12px; color: #94a3b8; }
         .tx-amt { font-weight: 700; font-size: 15px; }
 
-        /* Customer Service Floating Button */
-        .chat-btn { position: fixed; bottom: 30px; right: 30px; background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); cursor: pointer; text-decoration: none; font-size: 24px; z-index: 1000; }
+        /* Support Chat Box */
+        .chat-container { margin-top: 40px; background: white; border-radius: 24px; padding: 25px; border: 1px solid #e2e8f0; }
+        #userChatBox { height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; padding: 10px; background: #f8fafc; border-radius: 12px; }
+        .msg { padding: 8px 12px; border-radius: 10px; font-size: 13px; max-width: 80%; }
+        .admin-msg { background: #eff6ff; color: #1e40af; align-self: flex-start; }
+        .user-msg { background: #2563eb; color: white; align-self: flex-end; }
 
         @media (max-width: 850px) {
             body { flex-direction: column; }
@@ -73,19 +83,19 @@
 </head>
 <body>
 
-<a href="mailto:support@odin-private.com" class="chat-btn" title="Contact Support">💬</a>
-
 <div class="sidebar">
     <div class="brand">ODIN PRIVATE</div>
     <div class="user-profile">
-        <div class="pfp-box">👤</div>
+        <div class="pfp-box">
+            <img id="userImg" src="https://via.placeholder.com/150">
+        </div>
         <h4 id="sideName" style="margin:0;">Morris Thomas</h4>
         <p style="font-size:11px; color:#94a3b8; font-weight:bold; letter-spacing:1px;">GOLD MEMBER</p>
     </div>
     <a href="#" class="nav-link active"><span>📊</span> Dashboard</a>
     <a href="transfer.html" class="nav-link"><span>🌐</span> International Wire</a>
     <a href="#" class="nav-link"><span>💳</span> Card Services</a>
-    <a href="#" class="nav-link"><span>🎧</span> Help Center</a>
+    <a href="#" class="nav-link"><span>⚙️</span> Settings</a>
     <a href="#" class="nav-link" style="margin-top: auto; color: #ef4444;"><span>🚪</span> Logout</a>
 </div>
 
@@ -94,6 +104,8 @@
         <h2 style="margin:0; font-weight:700;">Account Overview</h2>
         <div style="background: #ef4444; color:white; padding:6px 14px; border-radius:20px; font-size:11px; font-weight:bold;">LIVE: USA-UK NETWORK</div>
     </div>
+
+    <div id="statusAlert"></div>
 
     <div class="balance-card">
         <div class="balance-label">Total Portfolio Value</div>
@@ -107,7 +119,7 @@
     <div class="btn-grid">
         <a href="#" class="action-btn"><span>📥</span><b>Deposit</b></a>
         <a href="transfer.html" class="action-btn"><span>✈️</span><b>Int'l Wire</b></a>
-        <a href="mailto:support@odin-private.com" class="action-btn"><span>🛠</span><b>Support</b></a>
+        <a href="#support" class="action-btn"><span>🛠</span><b>Support</b></a>
     </div>
 
     <h3 style="margin-bottom:20px;">Private Elite Debit</h3>
@@ -119,13 +131,16 @@
         <div style="position:absolute; bottom:30px; right:30px; font-size:11px; color:#94a3b8; font-family:monospace;">EXP: 04/29</div>
     </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h3 style="margin:0;">Recent Activity</h3>
-        <button style="background:transparent; border:none; color:var(--primary); font-weight:600; cursor:pointer;">View Statements</button>
-    </div>
+    <h3>Recent Activity</h3>
+    <div class="tx-section" id="txList"></div>
 
-    <div class="tx-section" id="txList">
-        <p style="text-align:center; color:#94a3b8; padding:20px;">Establishing secure connection...</p>
+    <h3 id="support" style="margin-top:40px;">Customer Support</h3>
+    <div class="chat-container">
+        <div id="userChatBox"></div>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="userReply" placeholder="Type a message..." style="flex:1; padding:12px; border-radius:10px; border:1px solid #e2e8f0;">
+            <button onclick="sendMessage()" style="background:var(--primary); color:white; border:none; padding:0 20px; border-radius:10px; cursor:pointer;">Send</button>
+        </div>
     </div>
 </div>
 
@@ -141,36 +156,61 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const docRef = db.collection("accounts").doc("morris_thomas");
 
-    db.collection("accounts").doc("morris_thomas").onSnapshot((doc) => {
+    docRef.onSnapshot((doc) => {
         if (doc.exists) {
             const data = doc.data();
+            
+            // 1. Update Balance & Profile
             document.getElementById('mainBal').innerText = "$" + Number(data.balance).toLocaleString(undefined, {minimumFractionDigits: 2});
             document.getElementById('sideName').innerText = data.name;
             document.getElementById('cardName').innerText = data.name;
-            
+            document.getElementById('userImg').src = data.pfpUrl || "https://via.placeholder.com/150";
+
+            // 2. Update Status Alert from Admin
+            const alert = document.getElementById('statusAlert');
+            const status = data.transfer_status;
+            if (status && status !== "Successful") {
+                alert.style.display = "block";
+                if(status === "Declined") { alert.style.background = "#fee2e2"; alert.style.color = "#991b1b"; alert.innerText = "❌ Security Alert: Transaction Declined. Contact Support."; }
+                else if(status === "Pending") { alert.style.background = "#eff6ff"; alert.style.color = "#1e40af"; alert.innerText = "⏳ Transfer Status: Pending Global Verification."; }
+                else if(status === "Branch") { alert.style.background = "#fef3c7"; alert.style.color = "#92400e"; alert.innerText = "🏦 Action Required: Please visit your nearest branch for verification."; }
+            } else { alert.style.display = "none"; }
+
+            // 3. Update Transactions
             let txHtml = "";
-            if (data.transactions && data.transactions.length > 0) {
+            if (data.transactions) {
                 data.transactions.forEach(tx => {
-                    txHtml += `
-                        <div class="tx-row">
-                            <div class="tx-info">
-                                <h5>${tx.desc}</h5>
-                                <p>${tx.date}</p>
-                            </div>
-                            <div class="tx-amt" style="color: ${tx.type === 'plus' ? '#10b981' : '#ef4444'}">
-                                ${tx.type === 'plus' ? '+' : '-'}$${Number(tx.amount).toLocaleString()}
-                            </div>
-                        </div>`;
+                    txHtml += `<div class="tx-row"><div class="tx-info"><h5>${tx.desc}</h5><p>${tx.date}</p></div><div class="tx-amt" style="color: ${tx.type === 'plus' ? '#10b981' : '#ef4444'}">${tx.type === 'plus' ? '+' : '-'}$${Number(tx.amount).toLocaleString()}</div></div>`;
                 });
-            } else {
-                txHtml = '<p style="text-align:center; color:#94a3b8; padding:20px;">No recent transactions.</p>';
             }
-            document.getElementById('txList').innerHTML = txHtml;
-        } else {
-            document.getElementById('txList').innerHTML = '<p style="color:red; text-align:center; padding:20px;">Security Alert: Account Record Not Found.</p>';
+            document.getElementById('txList').innerHTML = txHtml || '<p style="text-align:center; color:#94a3b8; padding:20px;">No recent activity.</p>';
+
+            // 4. Update Live Chat
+            let chatHtml = "";
+            if (data.support_chat) {
+                data.support_chat.forEach(m => {
+                    chatHtml += `<div class="msg ${m.role}-msg"><b>${m.role.toUpperCase()}:</b><br>${m.text}</div>`;
+                });
+            }
+            const box = document.getElementById('userChatBox');
+            box.innerHTML = chatHtml;
+            box.scrollTop = box.scrollHeight;
         }
     });
+
+    function sendMessage() {
+        const text = document.getElementById('userReply').value;
+        if (!text) return;
+        docRef.update({
+            support_chat: firebase.firestore.FieldValue.arrayUnion({
+                role: "user",
+                text: text,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            })
+        }).then(() => { document.getElementById('userReply').value = ""; });
+    }
 </script>
 </body>
 </html>
