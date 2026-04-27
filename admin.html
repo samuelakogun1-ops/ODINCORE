@@ -1,42 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Odin | Remote Control</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odin | Global Controller</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; padding: 20px; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: none; }
-        button { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; padding: 20px; color: #1e293b; }
+        .admin-box { max-width: 500px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h2 { color: #2563eb; margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #1d4ed8; }
+        .status { margin-top: 15px; font-size: 13px; text-align: center; color: #64748b; }
     </style>
 </head>
 <body>
-    <h2>Global Remote Control</h2>
-    <input type="text" id="newName" placeholder="Account Name (e.g. Morris Thomas)">
-    <input type="number" id="newBal" placeholder="New Balance (e.g. 50000)">
-    <button onclick="updateGlobal()">UPDATE WORLDWIDE</button>
 
-    <script>
-        // PASTE THE SAME KEYS HERE
-        const firebaseConfig = {
-            // [PASTE YOUR KEYS HERE FROM FIREBASE SETTINGS]
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+<div class="admin-box">
+    <h2>Global Control Panel</h2>
+    
+    <label>Account Holder Name</label>
+    <input type="text" id="accName" value="Morris Thomas">
 
-        function updateGlobal() {
-            const name = document.getElementById('newName').value;
-            const bal = document.getElementById('newBal').value;
+    <label>Current Balance ($)</label>
+    <input type="number" id="accBal" placeholder="e.g. 1250000">
 
-            db.collection("accounts").doc("morris_thomas").set({
-                name: name,
-                balance: bal,
-                transactions: [
-                    { desc: "Initial Deposit", date: "April 2026", amount: bal, type: "plus" },
-                    { desc: "Server Maintenance", date: "April 2026", amount: "150.00", type: "minus" }
-                ]
-            }).then(() => alert("Data Sent to Cloud! Check your USA browser."));
-        }
-    </script>
+    <label>Last Transaction Description</label>
+    <input type="text" id="txDesc" placeholder="e.g. Wire Transfer Received">
+
+    <label>Transaction Amount ($)</label>
+    <input type="number" id="txAmt" placeholder="e.g. 5000">
+
+    <button onclick="sendToCloud()">UPDATE WORLDWIDE</button>
+    <div class="status" id="statusMsg">Connected to: odin-private</div>
+</div>
+
+<script>
+    // YOUR PERSONAL FIREBASE CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyCDVHNccAM1jv5WppHFxygIfuCDDL1eIcc",
+      authDomain: "odin-private.firebaseapp.com",
+      projectId: "odin-private",
+      storageBucket: "odin-private.firebasestorage.app",
+      messagingSenderId: "1023424168524",
+      appId: "1:1023424168524:web:d5d3354cf3ba5433f7aae9",
+      measurementId: "G-PQ20C96ZK2"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function sendToCloud() {
+        const name = document.getElementById('accName').value;
+        const balance = document.getElementById('accBal').value;
+        const txDesc = document.getElementById('txDesc').value;
+        const txAmt = document.getElementById('txAmt').value;
+        const btn = document.querySelector('button');
+
+        btn.innerText = "UPDATING...";
+        btn.disabled = true;
+
+        // This writes to the 'morris_thomas' document we set up
+        db.collection("accounts").doc("morris_thomas").set({
+            name: name,
+            balance: Number(balance),
+            transactions: [
+                { 
+                    desc: txDesc || "Account Opening Balance", 
+                    date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }), 
+                    amount: txAmt || balance, 
+                    type: "plus" 
+                }
+            ]
+        }).then(() => {
+            document.getElementById('statusMsg').innerText = "✅ Successfully updated globally!";
+            document.getElementById('statusMsg').style.color = "#10b981";
+            btn.innerText = "UPDATE WORLDWIDE";
+            btn.disabled = false;
+        }).catch((error) => {
+            console.error("Error: ", error);
+            document.getElementById('statusMsg').innerText = "❌ Error: " + error.message;
+            document.getElementById('statusMsg').style.color = "#ef4444";
+            btn.disabled = false;
+        });
+    }
+</script>
+
 </body>
 </html>
