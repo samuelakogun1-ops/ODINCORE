@@ -1,184 +1,38 @@
-/* --- GLOBAL VARIABLES & THEME --- */
-:root {
-    --accent: #3b82f6;      /* Modern Blue */
-    --bg-dark: #0b0f19;     /* Deep Background */
-    --panel: #161e2e;       /* Card/Panel Color */
-    --text-main: #ffffff;
-    --text-dim: #94a3b8;
-    --border: rgba(255, 255, 255, 0.1);
-    --success: #22c55e;
-    --danger: #ef4444;
-}
+<style>
+    :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; --success: #10b981; }
+    body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); display: flex; min-height: 100vh; }
 
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-}
+    /* Desktop Sidebar */
+    .sidebar { width: 280px; background: white; border-right: 1px solid #e2e8f0; padding: 40px 20px; box-sizing: border-box; display: flex; flex-direction: column; }
+    
+    /* Main Content Area */
+    .main { flex: 1; padding: 20px; width: 100%; box-sizing: border-box; max-width: 100%; overflow-x: hidden; }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
-    background-color: var(--bg-dark);
-    color: var(--text-main);
-    display: flex;
-    min-height: 100vh;
-}
+    /* Fix for Profile Image showing as a [?] */
+    .pfp-box { width: 90px; height: 90px; border-radius: 50%; background: #e2e8f0; margin: 0 auto 15px; border: 3px solid var(--primary); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .pfp-box img { width: 100%; height: 100%; object-fit: cover; }
 
-/* --- SIDEBAR NAVIGATION --- */
-.sidebar {
-    width: 280px;
-    background: #020617;
-    padding: 30px 20px;
-    display: flex;
-    flex-direction: column;
-    border-right: 1px solid var(--border);
-    transition: all 0.3s ease;
-}
-
-.brand-logo {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: 1px;
-    margin-bottom: 40px;
-}
-
-.user-profile {
-    padding-bottom: 25px;
-    margin-bottom: 25px;
-    border-bottom: 1px solid var(--border);
-}
-
-.user-profile h3 { margin: 0; font-size: 16px; }
-.user-profile p { margin: 4px 0 0; font-size: 11px; color: var(--text-dim); text-transform: uppercase; }
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    padding: 14px 15px;
-    color: var(--text-dim);
-    text-decoration: none;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.nav-item:hover, .nav-item.active {
-    background: var(--panel);
-    color: white;
-}
-
-/* --- MAIN CONTENT AREA --- */
-.main-content {
-    flex: 1;
-    padding: 40px;
-    background: radial-gradient(circle at top right, #1e1b4b, #0b0f19);
-    overflow-y: auto;
-}
-
-.glass-card {
-    background: rgba(22, 30, 46, 0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 30px;
-    margin-bottom: 30px;
-}
-
-.balance-value {
-    font-size: 48px;
-    font-weight: 800;
-    margin: 15px 0;
-    letter-spacing: -1px;
-}
-
-/* --- TRANSACTIONS --- */
-.tx-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.tx-desc { font-weight: 500; font-size: 14px; }
-.tx-date { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
-.tx-amt { font-weight: 700; font-size: 15px; }
-
-/* --- FORMS & BUTTONS --- */
-input, select {
-    width: 100%;
-    padding: 15px;
-    background: #0f172a;
-    border: 1px solid #334155;
-    color: white;
-    border-radius: 10px;
-    margin: 10px 0 20px;
-    font-size: 14px;
-}
-
-.btn-action {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 16px;
-    width: 100%;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.2s;
-}
-
-.btn-action:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-}
-
-/* --- MOBILE RESPONSIVE FIXES --- */
-@media (max-width: 768px) {
-    body {
-        flex-direction: column; /* Stacks sidebar on top of content */
+    /* MOBILE RESPONSIVE RULES */
+    @media (max-width: 768px) {
+        body { flex-direction: column; } /* Stack sidebar and main content */
+        .sidebar { 
+            width: 100%; 
+            height: auto; 
+            padding: 20px; 
+            border-right: none; 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+        .main { padding: 15px; }
+        .balance-amt { font-size: 32px; } /* Shrink text so it fits */
+        .btn-grid { grid-template-columns: 1fr 1fr; } /* 2 columns on phone instead of 3 */
+        .atm-card { width: 100%; height: auto; aspect-ratio: 1.6 / 1; padding: 20px; }
     }
 
-    .sidebar {
-        width: 100%;
-        height: auto;
-        padding: 20px;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .nav-group {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* Two columns for menu items on mobile */
-        gap: 10px;
-    }
-
-    .nav-item {
-        margin-bottom: 0;
-        justify-content: center;
-        font-size: 12px;
-        padding: 10px;
-    }
-
-    .main-content {
-        padding: 20px;
-    }
-
-    .balance-value {
-        font-size: 32px;
-    }
-
-    .glass-card {
-        padding: 20px;
-    }
-}
-
-/* Scrollbar Styling */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-dark); }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    /* Existing styles for buttons and cards */
+    .brand { font-weight: 800; font-size: 22px; color: var(--primary); margin-bottom: 20px; text-align: center; }
+    .nav-link { padding: 12px 20px; border-radius: 10px; color: #64748b; text-decoration: none; display: flex; align-items: center; gap: 10px; font-weight: 500; margin-bottom: 5px; }
+    .nav-link.active { background: #eff6ff; color: var(--primary); }
+    .balance-card { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 20px; padding: 30px; color: white; margin-bottom: 25px; box-shadow: 0 15px 30px rgba(37, 99, 235, 0.2); }
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+    .action-btn { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; text-align: center; text-decoration: none; color: var(--text); display: flex; flex-direction: column; align-items: center; font-size: 14px; }
+</style>
