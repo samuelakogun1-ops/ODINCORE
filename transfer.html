@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odin | International Wire Transfer</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f8fafc; padding: 40px; display: flex; justify-content: center; }
+        .wire-box { background: white; max-width: 500px; width: 100%; padding: 40px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        h2 { color: #1e3a8a; margin-bottom: 10px; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 8px; }
+        input, select { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; }
+        .btn-send { width: 100%; padding: 16px; background: #2563eb; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-send:hover { background: #1d4ed8; }
+        .notice { font-size: 11px; color: #94a3b8; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="wire-box">
+        <a href="dashboard.html" style="text-decoration:none; color:#2563eb; font-size:14px;">← Back to Dashboard</a>
+        <h2>International Wire</h2>
+        <p style="color:#64748b; font-size:14px; margin-bottom:30px;">Swift/BIC Global Money Transfer</p>
+        
+        <div class="form-group">
+            <label>RECEIVING BANK (USA/UK/GLOBAL)</label>
+            <input type="text" placeholder="e.g. JPMorgan Chase or Barclays">
+        </div>
+        <div class="form-group">
+            <label>SWIFT / BIC CODE</label>
+            <input type="text" placeholder="8 or 11 Characters">
+        </div>
+        <div class="form-group">
+            <label>ACCOUNT NUMBER / IBAN</label>
+            <input type="text" placeholder="Enter Full Number">
+        </div>
+        <div class="form-group">
+            <label>AMOUNT TO SEND (USD)</label>
+            <input type="number" placeholder="0.00">
+        </div>
+        <div class="form-group">
+            <label>TRANSFER REASON</label>
+            <select>
+                <option>Family Support</option>
+                <option>Real Estate Investment</option>
+                <option>Business Payment</option>
+            </select>
+        </div>
+        
+        <button class="btn-send" onclick="alert('Wire Request Received. Verifying Security Protocols...')">AUTHORIZE WIRE TRANSFER</button>
+        <p class="notice">Note: Wire transfers may take 24-48 hours to reflect in the beneficiary's account.</p>
+    </div>
+</body>
+</html>
