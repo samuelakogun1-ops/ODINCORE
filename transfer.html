@@ -1,54 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin | International Wire Transfer</title>
-    <style>
-        body { font-family: 'Poppins', sans-serif; background: #f8fafc; padding: 40px; display: flex; justify-content: center; }
-        .wire-box { background: white; max-width: 500px; width: 100%; padding: 40px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        h2 { color: #1e3a8a; margin-bottom: 10px; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 8px; }
-        input, select { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; }
-        .btn-send { width: 100%; padding: 16px; background: #2563eb; color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s; }
-        .btn-send:hover { background: #1d4ed8; }
-        .notice { font-size: 11px; color: #94a3b8; margin-top: 15px; }
-    </style>
-</head>
-<body>
-    <div class="wire-box">
-        <a href="dashboard.html" style="text-decoration:none; color:#2563eb; font-size:14px;">← Back to Dashboard</a>
-        <h2>International Wire</h2>
-        <p style="color:#64748b; font-size:14px; margin-bottom:30px;">Swift/BIC Global Money Transfer</p>
-        
-        <div class="form-group">
-            <label>RECEIVING BANK (USA/UK/GLOBAL)</label>
-            <input type="text" placeholder="e.g. JPMorgan Chase or Barclays">
+<div class="card transaction-card p-4 shadow-sm">
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary text-white rounded-circle p-3 me-3">
+            <i class="fas fa-globe-americas fa-lg"></i>
         </div>
-        <div class="form-group">
-            <label>SWIFT / BIC CODE</label>
-            <input type="text" placeholder="8 or 11 Characters">
+        <div>
+            <h5 class="mb-0 fw-bold">International Wire Transfer</h5>
+            <small class="text-muted">Secure Global Fund Transmission</small>
         </div>
-        <div class="form-group">
-            <label>ACCOUNT NUMBER / IBAN</label>
-            <input type="text" placeholder="Enter Full Number">
-        </div>
-        <div class="form-group">
-            <label>AMOUNT TO SEND (USD)</label>
-            <input type="number" placeholder="0.00">
-        </div>
-        <div class="form-group">
-            <label>TRANSFER REASON</label>
-            <select>
-                <option>Family Support</option>
-                <option>Real Estate Investment</option>
-                <option>Business Payment</option>
-            </select>
-        </div>
-        
-        <button class="btn-send" onclick="alert('Wire Request Received. Verifying Security Protocols...')">AUTHORIZE WIRE TRANSFER</button>
-        <p class="notice">Note: Wire transfers may take 24-48 hours to reflect in the beneficiary's account.</p>
     </div>
-</body>
-</html>
+
+    <form id="globalTransferForm">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-uppercase">Beneficiary Full Name</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" id="ben-name" placeholder="John Doe" required>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-uppercase">Beneficiary Bank Name</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="fas fa-university"></i></span>
+                    <input type="text" class="form-control" id="ben-bank" placeholder="e.g. Chase Bank" required>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-uppercase">SWIFT / BIC Code</label>
+                <input type="text" class="form-control" id="ben-swift" placeholder="AAAA BB CC 123" required style="text-transform: uppercase;">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-bold small text-uppercase">IBAN / Account Number</label>
+                <input type="text" class="form-control" id="ben-iban" placeholder="US00 0000 0000 0000" required>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label fw-bold small text-uppercase">Transfer Amount (USD)</label>
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-primary text-white">$</span>
+                    <input type="number" class="form-control fw-bold" id="ben-amount" placeholder="0.00" required>
+                </div>
+                <div class="form-text text-end">Available Balance: <span class="fw-bold text-dark" id="form-balance-check">$45,250.00</span></div>
+            </div>
+
+            <div class="col-12 mt-4">
+                <button type="button" class="btn btn-primary w-100 py-3 fw-bold shadow-sm" onclick="initiateTransfer()">
+                    PROCEED TO TRANSFER <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="transfer-overlay" class="d-none" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 10000; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+    <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
+    <h4 class="fw-bold">Securing Connection...</h4>
+    <p class="text-muted">Encrypting transaction data</p>
+</div>
+
+<script>
+function initiateTransfer() {
+    const name = document.getElementById('ben-name').value;
+    const amount = document.getElementById('ben-amount').value;
+    
+    if(!name || !amount) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    // Show Loading Animation
+    const overlay = document.getElementById('transfer-overlay');
+    overlay.classList.remove('d-none');
+
+    // Simulate Network Delay
+    setTimeout(() => {
+        overlay.innerHTML = `
+            <div class="text-center">
+                <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+                <h2 class="fw-bold">Transfer Initiated</h2>
+                <p class="text-muted">Reference: #TRX-${Math.floor(Math.random() * 900000 + 100000)}</p>
+                <button class="btn btn-dark px-5" onclick="window.location.reload()">Back to Home</button>
+            </div>
+        `;
+        
+        // This is where you would call your updateSystem function from the dashboard
+        if(typeof updateSystem === "function") {
+            updateSystem('Debit', parseFloat(amount), 'Wire Transfer to ' + name);
+        }
+    }, 2500);
+}
+</script>
