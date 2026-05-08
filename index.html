@@ -3,210 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odin Central Bank | Private, Commercial & Offshore Banking</title>
+    <title>Transglobal Bank | Secure Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --odin-red: #d63031;
-            --navy: #002244;
-            --light-gray: #f8f9fa;
-        }
-        
-        body {
-            margin: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Navigation */
-        nav {
-            background: white;
-            padding: 15px 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid var(--odin-red);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--navy);
-            letter-spacing: -1px;
-        }
-
-        .logo span {
-            color: var(--odin-red);
-        }
-
-        .nav-links a {
-            margin-left: 25px;
-            text-decoration: none;
-            color: var(--navy);
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .btn-login {
-            background: var(--odin-red);
-            color: white !important;
-            padding: 10px 25px;
-            border-radius: 4px;
-            transition: 0.3s;
-        }
-
-        .btn-login:hover {
-            background: #b32626;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0,34,68,0.75), rgba(0,34,68,0.75)), 
-                        url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1500&q=80');
-            height: 600px;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 0 20px;
-        }
-
-        .hero h1 {
-            font-size: 52px;
-            margin-bottom: 20px;
-            max-width: 900px;
-        }
-
-        .hero p {
-            font-size: 20px;
-            margin-bottom: 35px;
-            max-width: 700px;
-            opacity: 0.9;
-        }
-
-        /* Features Section */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            padding: 80px 60px;
-            background: white;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .feature-card h3 {
-            color: var(--navy);
-            margin-bottom: 15px;
-        }
-
-        /* Footer / Contact */
-        footer {
-            background: #001529;
-            color: white;
-            padding: 60px;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1.5fr;
-            gap: 50px;
-        }
-
-        .footer-col h4 {
-            color: var(--odin-red);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-        }
-
-        .footer-col p, .footer-col li {
-            font-size: 14px;
-            color: #bdc3c7;
-            margin-bottom: 10px;
-        }
-
-        .footer-bottom {
-            background: #000b14;
-            color: #7f8c8d;
-            text-align: center;
-            padding: 20px;
-            font-size: 12px;
-            border-top: 1px solid #1a2a3a;
-        }
-
-        ul { list-style: none; padding: 0; }
+        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; padding-bottom: 50px; }
+        .navbar { background: #1a237e !important; }
+        .card-balance { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: white; border-radius: 15px; border: none; }
+        .transaction-card { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .status-success { color: #2e7d32; font-weight: 600; }
+        .status-pending { color: #f57c00; font-weight: 600; }
+        .status-declined { color: #d32f2f; font-weight: 600; }
+        .scroll-table { max-height: 400px; overflow-y: auto; }
+        #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">ODIN <span>CENTRAL</span></div>
-        <div class="nav-links">
-            <a href="#">Personal</a>
-            <a href="#">Commercial</a>
-            <a href="#">Wealth Management</a>
-            <a href="login.html" class="btn-login">Online Banking</a>
+<nav class="navbar navbar-dark shadow-sm mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-university me-2"></i>TRANSGLOBAL</a>
+        <div class="d-flex align-items-center">
+            <img id="display-profile-pic" src="https://via.placeholder.com/40" class="rounded-circle me-2" width="35" height="35" style="object-fit: cover;">
+            <span class="text-white d-none d-md-block">Morris Thomas</span>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <section class="hero">
-        <h1>Global Finance Without Borders</h1>
-        <p>Access premier private banking services, international wire transfers, and offshore asset protection from anywhere in the world.</p>
-        <a href="login.html" class="btn-login" style="padding: 18px 45px; font-size: 18px;">Open Your Account</a>
-    </section>
+<div class="container">
+    
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-5">
+            <div class="card card-balance p-4 shadow">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <small class="opacity-75">Available Balance</small>
+                        <h1 class="fw-bold mt-1" id="main-balance">$45,250.00</h1>
+                    </div>
+                    <i class="fas fa-shield-alt fa-2x opacity-50"></i>
+                </div>
+                <div class="mt-4 d-flex justify-content-between align-items-center">
+                    <span class="letter-spacing">**** **** **** 8829</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" width="50" style="filter: brightness(0) invert(1);">
+                </div>
+            </div>
+        </div>
 
-    <section class="features">
-        <div class="feature-card">
-            <h3>Elite Asset Protection</h3>
-            <p>Our secure vaults and digital encryption ensure your wealth is protected by the highest US and International standards.</p>
+        <div class="col-12 col-md-7">
+            <div class="card h-100 p-3 transaction-card">
+                <h6 class="fw-bold mb-3">Quick Transfers</h6>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <button class="btn btn-outline-primary w-100 py-3" data-bs-toggle="modal" data-bs-target="#wireModal">
+                            <i class="fas fa-globe d-block mb-1"></i> International
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-outline-dark w-100 py-3">
+                            <i class="fas fa-exchange-alt d-block mb-1"></i> Internal
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="feature-card">
-            <h3>Swift Global Transfers</h3>
-            <p>Move funds across 150+ countries with real-time tracking and dedicated account manager oversight.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Private Concierge</h3>
-            <p>Every private client is assigned a dedicated wealth manager available 24/7 for priority assistance.</p>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-col">
-            <h4>Global Headquarters</h4>
-            <p><b>United States Office:</b><br>
-            1201 Avenue of the Americas, 18th Floor<br>
-            New York, NY 10020, USA</p>
-            <p><b>Customer Service:</b> +1 (212) 555-0198<br>
-            <b>Priority Support:</b> +1 (800) ODIN-CORP</p>
-        </div>
-        <div class="footer-col">
-            <h4>Quick Links</h4>
-            <ul>
-                <li>Security Center</li>
-                <li>Fraud Protection</li>
-                <li>Rates & Fees</li>
-                <li>Global Locations</li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Regulatory Information</h4>
-            <p>Odin Central Bank is a member of the FDIC and an Equal Housing Lender. Wealth management products are not FDIC insured, are not bank guaranteed, and may lose value.</p>
-            <p>© 2026 Odin Central Financial Group. All Rights Reserved.</p>
-        </div>
-    </footer>
-
-    <div class="footer-bottom">
-        This site uses 256-bit SSL encryption to protect your data. Unauthorized access is strictly prohibited.
     </div>
 
+    <div class="card transaction-card">
+        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">Recent Transactions</h5>
+            <span class="badge bg-light text-dark border">Live Updates</span>
+        </div>
+        <div class="table-responsive scroll-table">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Details</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="history-rows">
+                    <tr>
+                        <td>
+                            <div class="fw-bold">Initial Deposit</div>
+                            <small class="text-muted">May 01, 2026</small>
+                        </td>
+                        <td class="text-success fw-bold">+$45,250.00</td>
+                        <td><span class="status-success">Success</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <div class="card border-primary mb-5">
+        <div class="card-header bg-primary text-white fw-bold">Admin Management Panel</div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">1. Upload Profile Photo</label>
+                    <input type="file" class="form-control" id="photoInput" onchange="updatePhoto(event)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">2. Top-up Account (Credit)</label>
+                    <div class="input-group">
+                        <input type="number" id="topup-amount" class="form-control" placeholder="0.00">
+                        <button class="btn btn-success" onclick="adminProcess('Credit')">Add Funds</button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">3. Manual Debit</label>
+                    <div class="input-group">
+                        <input type="number" id="debit-amount" class="form-control" placeholder="0.00">
+                        <button class="btn btn-danger" onclick="adminProcess('Debit')">Remove Funds</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="wireModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">International Wire Transfer</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Beneficiary Name</label>
+                    <input type="text" id="wire-name" class="form-control" placeholder="Full Name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Amount (USD)</label>
+                    <input type="number" id="wire-amount" class="form-control" placeholder="0.00">
+                </div>
+                <button class="btn btn-primary w-100 py-2 fw-bold" onclick="executeWire()">Confirm & Send Payment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="chat-widget">
+    <button class="btn btn-primary rounded-circle shadow-lg p-3" onclick="toggleChat()">
+        <i class="fas fa-headset fa-lg"></i>
+    </button>
+    <div id="chat-window" class="card shadow-lg d-none" style="width: 300px; position: absolute; bottom: 75px; right: 0;">
+        <div class="card-header bg-primary text-white">Live Support</div>
+        <div id="chat-body" class="card-body bg-light" style="height: 200px; overflow-y: auto; font-size: 0.9rem;">
+            <p class="bg-white p-2 rounded shadow-sm">Welcome to Transglobal Support. How can we help?</p>
+        </div>
+        <div class="card-footer p-2">
+            <div class="input-group">
+                <input type="text" id="chat-msg" class="form-control form-control-sm" placeholder="Message...">
+                <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let balance = 45250.00;
+
+    // Handle Profile Photo
+    function updatePhoto(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('display-profile-pic').src = reader.result;
+            localStorage.setItem('userPhoto', reader.result);
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    // Process Admin Credit/Debit
+    function adminProcess(type) {
+        let amountInput = type === 'Credit' ? 'topup-amount' : 'debit-amount';
+        let amount = parseFloat(document.getElementById(amountInput).value);
+        if(!amount) return alert("Enter valid amount");
+        
+        updateSystem(type, amount, type === 'Credit' ? 'Account Top-up' : 'Admin Adjustment');
+        document.getElementById(amountInput).value = '';
+    }
+
+    // Process Wire Transfer
+    function executeWire() {
+        let name = document.getElementById('wire-name').value;
+        let amount = parseFloat(document.getElementById('wire-amount').value);
+        
+        if(!name || !amount) return alert("Please fill all fields");
+        if(amount > balance) return alert("Insufficient balance for this wire.");
+
+        updateSystem('Debit', amount, "Wire to: " + name);
+        
+        // Close Modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('wireModal'));
+        modal.hide();
+    }
+
+    // Core Update Engine
+    function updateSystem(type, amount, note) {
+        if(type === 'Debit') balance -= amount;
+        else balance += amount;
+
+        // Update Balance Display
+        document.getElementById('main-balance').innerText = `$${balance.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+
+        // Add to History
+        const row = `<tr>
+            <td>
+                <div class="fw-bold">${note}</div>
+                <small class="text-muted">${new Date().toLocaleDateString()}</small>
+            </td>
+            <td class="${type === 'Debit' ? 'text-danger' : 'text-success'} fw-bold">
+                ${type === 'Debit' ? '-' : '+'}$${amount.toLocaleString()}
+            </td>
+            <td><span class="status-success">Success</span></td>
+        </tr>`;
+        
+        document.getElementById('history-rows').insertAdjacentHTML('afterbegin', row);
+    }
+
+    // Chat Functions
+    function toggleChat() { document.getElementById('chat-window').classList.toggle('d-none'); }
+    function sendChat() {
+        let msg = document.getElementById('chat-msg').value;
+        if(!msg) return;
+        document.getElementById('chat-body').innerHTML += `<p class="text-end text-primary fw-bold">You: ${msg}</p>`;
+        document.getElementById('chat-msg').value = '';
+    }
+
+    // Load saved photo on boot
+    window.onload = () => {
+        if(localStorage.getItem('userPhoto')) document.getElementById('display-profile-pic').src = localStorage.getItem('userPhoto');
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
