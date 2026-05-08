@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internal Transfer | Odinscafe Online</title>
+    <title>International Transfer | Odinscafe Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
     </style>
 </head>
 <body class="bg-[#f8fafc] flex min-h-screen">
@@ -38,22 +39,46 @@
 
     <main class="flex-grow">
         <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-8 py-6 border-b border-slate-200 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800">New Transfer</h1>
+            <h1 class="text-xl font-bold text-slate-800">Funds Transfer</h1>
             <div class="flex items-center gap-4">
                 <div class="text-right">
                     <p class="text-xs font-bold text-slate-800 uppercase">Morris Thomas</p>
-                    <p class="text-[10px] text-slate-400 italic">Senior Engineer Access</p>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Verified Senior Engineer</p>
                 </div>
-                <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">MT</div>
+                <div class="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold">MT</div>
             </div>
         </header>
 
-        <div class="p-8 max-w-2xl mx-auto">
+        <div class="p-8 max-w-3xl mx-auto space-y-8">
+            
+            <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <p class="text-blue-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Source Account (Debit)</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-slate-500 text-[9px] font-bold uppercase tracking-widest mb-1">SWIFT / BIC</p>
+                            <p class="mono text-sm font-bold tracking-widest">ODINBANKXXX</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-[9px] font-bold uppercase tracking-widest mb-1">IBAN</p>
+                            <p class="mono text-sm font-bold tracking-tighter">ODIN 8842 0001 1688 4200 99</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-center">
+                        <div>
+                            <p class="text-slate-500 text-[9px] font-bold uppercase">Available Balance</p>
+                            <p class="text-2xl font-bold mono">$94,250.00</p>
+                        </div>
+                        <i class="fas fa-globe-americas text-blue-500/50 text-3xl"></i>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-white rounded-[2.5rem] border border-slate-200 p-10 shadow-sm">
                 <div class="space-y-8">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Recipient Account Number</label>
-                        <input type="text" id="accountNumber" placeholder="Enter 10-digit account number" 
+                        <input type="text" id="accountNumber" placeholder="Enter beneficiary account number" 
                         class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-slate-700 focus:outline-none focus:border-blue-500 font-medium">
                     </div>
 
@@ -64,13 +89,14 @@
                             <input type="number" id="transferAmount" placeholder="0.00" 
                             class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 pl-10 text-slate-700 focus:outline-none focus:border-blue-500 font-bold text-xl">
                         </div>
-                        <p class="mt-3 text-[10px] text-slate-400">Available Balance: <span class="text-blue-600 font-bold">$94,250.00</span></p>
                     </div>
 
-                    <div class="bg-blue-50/50 border border-blue-100 p-4 rounded-2xl flex gap-4">
-                        <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                    <div class="bg-blue-50/50 border border-blue-100 p-5 rounded-2xl flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                            <i class="fas fa-shield-check"></i>
+                        </div>
                         <p class="text-[11px] text-blue-800 leading-relaxed">
-                            International transfers are processed through secured nodes. Verified accounts like <strong>Morris Thomas</strong> enjoy $0.00 promotional fees.
+                            <strong>Security Protocol Active:</strong> This transfer will be routed through the Odinscafe secure clearing house. No international wire fees apply for <strong>Morris Thomas</strong>.
                         </p>
                     </div>
 
@@ -79,9 +105,6 @@
                     </button>
                 </div>
             </div>
-            <p class="text-center mt-8 text-[10px] text-slate-400 uppercase tracking-widest">
-                <i class="fas fa-lock mr-2"></i> Secured by Odinscafe Multi-Layer Encryption
-            </p>
         </div>
     </main>
 
@@ -90,24 +113,17 @@
             const acc = document.getElementById('accountNumber').value;
             const amt = document.getElementById('transferAmount').value;
 
-            // 1. Validation check
             if (acc.length < 5 || amt <= 0) {
-                alert("INVALID DATA: Please enter a valid recipient account and amount.");
+                alert("ERROR: Please provide a valid recipient and amount.");
                 return;
             }
 
-            // 2. Change button to loading state
             this.disabled = true;
-            this.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Securing Connection...';
-            this.classList.add('opacity-80', 'cursor-not-allowed');
-
-            // 3. Fake delay for "Legit" banking feel
+            this.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Initializing Secure Link...';
+            
             setTimeout(() => {
-                // Save values to sessionStorage so the next page can show them
                 sessionStorage.setItem('transferAcc', acc);
                 sessionStorage.setItem('transferAmt', amt);
-                
-                // Redirect to the review page
                 window.location.href = 'review-transfer.html';
             }, 1800);
         });
