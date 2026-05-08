@@ -3,131 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Transfer | Odinscafe Online</title>
+    <title>International Transfer | Odinscafe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
     </style>
 </head>
-<body class="bg-[#f8fafc] flex min-h-screen">
+<body class="bg-[#f8fafc] min-h-screen">
 
-    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen">
-        <div class="p-8 border-b border-slate-50">
-            <div class="flex items-center gap-3">
-                <div class="bg-blue-600 p-2 rounded-xl text-white"><i class="fas fa-shield-halved"></i></div>
-                <span class="text-xl font-bold tracking-tight text-slate-800 uppercase">Odinscafe</span>
+    <div class="max-w-2xl mx-auto p-8">
+        <div class="flex items-center justify-between mb-10">
+            <h1 class="text-2xl font-bold text-slate-800">New Transfer</h1>
+            <div class="text-right">
+                <p class="text-sm font-bold text-slate-900">MORRIS THOMAS</p>
+                <p class="text-[10px] text-blue-600 font-bold uppercase">Senior Engineer Access</p>
             </div>
         </div>
-        <nav class="flex-grow px-4 mt-6 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
-                <i class="fas fa-house"></i> Dashboard
-            </a>
-            <a href="transfer.html" class="bg-blue-600 text-white flex items-center gap-3 p-4 rounded-2xl transition font-bold shadow-lg shadow-blue-200">
-                <i class="fas fa-paper-plane"></i> Transfers
-            </a>
-            <a href="card.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
-                <i class="fas fa-credit-card"></i> Virtual Cards
-            </a>
-            <a href="support.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
-                <i class="fas fa-headset"></i> Support
-            </a>
-        </nav>
-    </aside>
 
-    <main class="flex-grow">
-        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-8 py-6 border-b border-slate-200 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800">Funds Dispatch</h1>
-            <div class="flex items-center gap-4 text-right">
+        <div class="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
+            <div class="space-y-6">
+                
                 <div>
-                    <p class="text-xs font-bold text-slate-800 uppercase">Morris Thomas</p>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Verified Senior Engineer</p>
-                </div>
-                <div class="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold">MT</div>
-            </div>
-        </header>
-
-        <div class="p-8 max-w-3xl mx-auto">
-            <div class="bg-white rounded-[2.5rem] border border-slate-200 p-10 shadow-sm">
-                <div class="mb-8 pb-8 border-b border-slate-100 flex items-center justify-between">
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-800">Beneficiary Details</h2>
-                        <p class="text-xs text-slate-400">Ensure the recipient's global wire data is accurate.</p>
-                    </div>
-                    <i class="fas fa-globe-americas text-blue-100 text-4xl"></i>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Recipient Full Name</label>
+                    <input type="text" id="recName" placeholder="Enter legal name" 
+                    class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-medium">
                 </div>
 
-                <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Full Legal Name</label>
-                        <input type="text" id="recipientName" placeholder="Enter recipient's full name" 
-                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-slate-700 focus:outline-none focus:border-blue-500 font-medium">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account Number / IBAN</label>
+                        <input type="text" id="recIban" placeholder="Enter number" 
+                        class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-bold text-sm">
                     </div>
-
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">IBAN Number</label>
-                            <input type="text" id="recipientIban" placeholder="Bank IBAN" 
-                            class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-slate-700 focus:outline-none focus:border-blue-500 font-bold mono text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">SWIFT / BIC Code</label>
-                            <input type="text" id="recipientSwift" placeholder="SWIFT Code" 
-                            class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-slate-700 focus:outline-none focus:border-blue-500 font-bold mono text-sm">
-                        </div>
-                    </div>
-
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Amount to Send (USD)</label>
-                        <div class="relative">
-                            <span class="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
-                            <input type="number" id="transferAmount" placeholder="0.00" 
-                            class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 pl-10 text-slate-700 focus:outline-none focus:border-blue-500 font-bold text-xl">
-                        </div>
-                        <p class="mt-3 text-[10px] text-slate-400">Maximum available: <span class="text-blue-600 font-bold">$94,250.00</span></p>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">SWIFT / BIC Code</label>
+                        <input type="text" id="recSwift" placeholder="Enter SWIFT" 
+                        class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-bold text-sm">
                     </div>
-
-                    <div class="bg-slate-900 rounded-3xl p-6 text-white flex gap-5">
-                        <i class="fas fa-lock text-blue-400 mt-1"></i>
-                        <div>
-                            <p class="text-[11px] font-bold text-slate-300">SECURE DISPATCH PROTOCOL</p>
-                            <p class="text-[10px] text-slate-500 mt-1">Transfer authorized from <strong>Morris Thomas</strong> account node. Funds are protected by end-to-end multi-layer encryption.</p>
-                        </div>
-                    </div>
-
-                    <button id="proceedBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-bold transition shadow-lg shadow-blue-100 flex items-center justify-center gap-2">
-                        Proceed to Review <i class="fas fa-arrow-right text-xs"></i>
-                    </button>
                 </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Amount to Send (USD)</label>
+                    <div class="relative">
+                        <span class="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
+                        <input type="number" id="transferAmt" placeholder="0.00" 
+                        class="w-full p-5 pl-10 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-bold text-xl">
+                    </div>
+                    <p class="mt-2 text-[10px] text-slate-400 font-medium">Available Balance: <span class="text-blue-600 font-bold">$94,250.00</span></p>
+                </div>
+
+                <div class="bg-blue-50/50 rounded-2xl p-5 border border-blue-100 flex gap-4">
+                    <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                    <p class="text-[11px] text-slate-500 leading-relaxed">
+                        International transfers are processed through secured nodes. Verified accounts like <strong>Morris Thomas</strong> enjoy $0.00 promotional fees.
+                    </p>
+                </div>
+
+                <button id="proceedBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-bold transition shadow-lg shadow-blue-100">
+                    Proceed to Review →
+                </button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        document.getElementById('proceedBtn').addEventListener('click', function() {
-            const name = document.getElementById('recipientName').value;
-            const iban = document.getElementById('recipientIban').value;
-            const swift = document.getElementById('recipientSwift').value;
-            const amt = document.getElementById('transferAmount').value;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // Your verified configuration from the console
+        const firebaseConfig = {
+            apiKey: "AIzaSyCDVHNccAM1jv5WppHFxygIfuCDDL1eIcc",
+            authDomain: "odin-private.firebaseapp.com",
+            projectId: "odin-private",
+            databaseURL: "https://odin-private-default-rtdb.firebaseio.com", 
+            storageBucket: "odin-private.appspot.com",
+            messagingSenderId: "1023424168524",
+            appId: "1:1023424168524:web:d5d3354cf3ba5433f7aae9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('proceedBtn').onclick = function() {
+            const name = document.getElementById('recName').value;
+            const iban = document.getElementById('recIban').value;
+            const swift = document.getElementById('recSwift').value;
+            const amt = document.getElementById('transferAmt').value;
+
+            // Protocol Check: Ensure all boxes are filled
             if (!name || !iban || !swift || amt <= 0) {
                 alert("PROTOCOL ERROR: Please fill in all beneficiary wire details to proceed.");
                 return;
             }
 
             this.disabled = true;
-            this.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Authorizing Node...';
-            
-            setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Connecting to Secure Node...';
+
+            // Push data to your fresh Realtime Database
+            const transferId = Date.now();
+            set(ref(db, 'transfers/' + transferId), {
+                sender: "Morris Thomas",
+                beneficiary: name,
+                account: iban,
+                swiftCode: swift,
+                amount: amt,
+                status: "Pending Verification",
+                timestamp: new Date().toISOString()
+            }).then(() => {
+                // Save to local session for the review page display
                 sessionStorage.setItem('recName', name);
                 sessionStorage.setItem('recIban', iban);
-                sessionStorage.setItem('recSwift', swift);
                 sessionStorage.setItem('transferAmt', amt);
                 window.location.href = 'review-transfer.html';
-            }, 1800);
-        });
+            }).catch((error) => {
+                alert("Firebase Error: " + error.message);
+                this.disabled = false;
+                this.innerText = "Proceed to Review →";
+            });
+        };
     </script>
 </body>
 </html>
