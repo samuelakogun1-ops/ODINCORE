@@ -3,109 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODIN PRIVATE | Elite Banking</title>
+    <title>ODIN PRIVATE | Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --dark-blue: #0a0e1a; --card-bg: #161b22; }
-        body { background-color: var(--dark-blue); color: white; font-family: 'Inter', sans-serif; }
-        
-        .sidebar { background: #0d1117; min-height: 100vh; border-right: 1px solid #30363d; padding: 30px 15px; }
-        .nav-link { color: #8b949e; padding: 12px; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; }
-        .nav-link:hover, .nav-link.active { background: #21262d; color: var(--gold) !important; border-left: 3px solid var(--gold); }
-        
-        .premium-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 20px; padding: 30px; }
-        .balance-text { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; color: var(--gold); }
-        
-        .profile-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); margin-bottom: 15px; }
-        .status-dot { height: 10px; width: 10px; background-color: #238636; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        
-        .btn-gold { background: var(--gold); color: black; font-weight: 700; border-radius: 10px; padding: 12px; }
-        .btn-gold:hover { background: #b8962d; }
+        body { background: #050a14; color: white; font-family: sans-serif; }
+        .sidebar { background: #080e1b; min-height: 100vh; padding: 25px; border-right: 1px solid #1a2236; }
+        .nav-link { color: #a0a8b1; padding: 12px; margin-bottom: 10px; border-radius: 8px; text-decoration: none; display: block; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: rgba(212, 175, 55, 0.1); color: #d4af37; border-left: 3px solid #d4af37; }
+        .main-card { background: #0d1526; border: 1px solid #1c263d; border-radius: 15px; padding: 30px; }
+        .balance { font-size: 2.5rem; color: #d4af37; font-weight: bold; }
     </style>
 </head>
 <body>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-lg-2 sidebar shadow-lg">
-            <div class="text-center">
-                <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-img">
-                <h6 class="fw-bold mb-0">Morris Thomas</h6>
-                <p class="small text-muted"><span class="status-dot"></span> Private Client</p>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 sidebar text-center">
+                <img id="user-pfp" src="https://via.placeholder.com/80" class="rounded-circle mb-3" style="border: 2px solid #d4af37; width: 80px; height: 80px; object-fit: cover;">
+                <h6 class="fw-bold">Morris Thomas</h6>
+                <hr class="border-secondary">
+                <nav class="text-start mt-4">
+                    <a href="index.html" class="nav-link active"><i class="fas fa-home me-2"></i> Dashboard</a>
+                    <a href="transfer.html" class="nav-link"><i class="fas fa-university me-2"></i> Transfer</a>
+                    <a href="card.html" class="nav-link"><i class="fas fa-credit-card me-2"></i> Card Settings</a>
+                </nav>
             </div>
-            <hr class="text-muted">
-            <nav class="nav flex-column mt-4">
-                <a class="nav-link active" href="index.html"><i class="fas fa-th-large me-2"></i> Dashboard</a>
-                <a class="nav-link" href="transfer.html"><i class="fas fa-exchange-alt me-2"></i> Wire Transfer</a>
-                <a class="nav-link" href="card.html"><i class="fas fa-credit-card me-2"></i> Card Services</a>
-                <a class="nav-link" href="admin.html"><i class="fas fa-user-shield me-2"></i> Settings</a>
-                <a class="nav-link text-danger mt-5" href="#"><i class="fas fa-power-off me-2"></i> Logout</a>
-            </nav>
-        </div>
-
-        <div class="col-md-9 col-lg-10 p-5">
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <h2 class="fw-bold">Wealth Overview</h2>
-                    <p class="text-muted">Welcome back, Mr. Thomas. Your portfolio is performing well.</p>
-                </div>
-            </div>
-
-            <div class="premium-card mb-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <small class="text-uppercase text-muted fw-bold">Total Liquid Assets</small>
-                        <h1 class="balance-text" id="main-bal">$10,000,000.00</h1>
-                    </div>
-                    <div class="col-md-6 text-md-end">
-                        <p class="mb-0 text-muted small">Account Type</p>
-                        <p class="fw-bold text-white">Offshore Private Savings</p>
-                        <p class="mb-0 text-muted small">Account Number</p>
-                        <p class="fw-bold text-white">**** **** 0992</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="premium-card">
-                        <h5 class="fw-bold mb-4">Transaction Ledger</h5>
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover border-0">
-                                <tbody id="ledger-body">
-                                    <tr>
-                                        <td><i class="fas fa-arrow-down text-success me-3"></i> <strong>Salary Deposit</strong><br><small class="text-muted">April 27, 2026</small></td>
-                                        <td class="text-end text-success fw-bold">+$10,000,000.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+            <div class="col-md-9 p-5">
+                <div class="main-card shadow-lg">
+                    <small class="text-muted text-uppercase fw-bold">Current Balance</small>
+                    <div class="balance mt-2">$10,000,000.00</div>
+                    <div class="mt-4 small text-muted">Account: **** **** 0992</div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<script>
-    window.onload = function() {
-        // Load data from storage
-        const bal = localStorage.getItem('total_balance') || "10000000";
-        document.getElementById('main-bal').innerText = "$" + parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
-        
+    <script>
         const photo = localStorage.getItem('saved_photo');
-        if(photo) document.getElementById('user-avatar').src = photo;
-
-        const history = JSON.parse(localStorage.getItem('transaction_history')) || [];
-        history.forEach(item => {
-            const row = `<tr>
-                <td><i class="fas fa-arrow-up text-danger me-3"></i> <strong>${item.note}</strong><br><small class="text-muted">${item.date}</small></td>
-                <td class="text-end text-danger fw-bold">-$${parseFloat(item.amount).toLocaleString()}</td>
-            </tr>`;
-            document.getElementById('ledger-body').insertAdjacentHTML('afterbegin', row);
-        });
-    };
-</script>
+        if(photo) document.getElementById('user-pfp').src = photo;
+    </script>
 </body>
 </html>
