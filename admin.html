@@ -11,7 +11,6 @@
         body { font-family: 'Inter', sans-serif; }
         .mono { font-family: 'JetBrains Mono', monospace; }
         .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        /* Modal Overlay */
         #topupModal { display: none; }
     </style>
 </head>
@@ -31,14 +30,21 @@
         </div>
 
         <nav class="flex-grow p-4 space-y-1">
-            <a href="#" onclick="alert('Analytics Active')" class="flex items-center gap-3 p-3 text-white bg-slate-900 rounded-xl">
+            <div class="px-4 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Main Engine</div>
+            <a href="#" onclick="alert('Analytics Dashboard Loading...')" class="flex items-center gap-3 p-3 text-white bg-slate-900 rounded-xl transition">
                 <i class="fas fa-chart-line text-blue-400"></i> Analytics Overview
             </a>
-            <a href="#" onclick="alert('Loading User Database...')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition">
+            <a href="#" onclick="alert('User Management System active.')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition">
                 <i class="fas fa-users-gear text-slate-400"></i> User Management
             </a>
-            <a href="#" onclick="alert('Accessing Vaults...')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition">
-                <i class="fas fa-vault text-amber-500"></i> Bank Vaults
+            
+            <div class="px-4 py-3 mt-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Financial Control</div>
+            <a href="vault.html" class="flex items-center gap-3 p-3 hover:bg-amber-500/10 rounded-xl transition group">
+                <i class="fas fa-vault text-amber-500"></i> 
+                <span class="group-hover:text-amber-500">Bank Vaults</span>
+            </a>
+            <a href="#" onclick="alert('Wire Queue is empty.')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition">
+                <i class="fas fa-money-bill-transfer text-slate-400"></i> Wire Queue
             </a>
         </nav>
 
@@ -82,7 +88,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800">
-                        <tr class="hover:bg-slate-900/40">
+                        <tr class="hover:bg-slate-900/40 transition">
                             <td class="px-6 py-4">
                                 <p class="font-bold text-slate-200">Samuel Okogun</p>
                                 <p class="text-[10px] text-slate-500 mono">#ODIN-8842-X</p>
@@ -91,10 +97,10 @@
                                 <p class="text-green-500 font-bold mono" id="samuelBalance">$84,250.00</p>
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <button onclick="openTopup('Samuel Okogun')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition">
+                                <button onclick="openTopup('Samuel Okogun')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[10px] font-bold transition shadow-lg shadow-blue-900/20">
                                     TOP UP
                                 </button>
-                                <button onclick="alert('Account #ODIN-8842-X has been placed on HOLD.')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white px-3 py-1.5 rounded-lg text-[10px] font-bold border border-amber-500/20 transition">
+                                <button onclick="alert('Account #ODIN-8842-X: Status changed to HOLD.')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white px-4 py-2 rounded-lg text-[10px] font-bold border border-amber-500/20 transition">
                                     HOLD
                                 </button>
                             </td>
@@ -105,21 +111,25 @@
         </div>
     </main>
 
-    <div id="topupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div id="topupModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-6">
         <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl">
-            <h3 class="text-xl font-bold text-white mb-2">Manual Account Top-Up</h3>
-            <p class="text-slate-500 text-sm mb-6">User: <span id="targetUser" class="text-blue-400 font-bold"></span></p>
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Manual Credit</h3>
+                    <p class="text-slate-500 text-sm">Target: <span id="targetUser" class="text-blue-400 font-bold"></span></p>
+                </div>
+                <button onclick="closeModal()" class="text-slate-500 hover:text-white transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             
             <div class="space-y-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2">Credit Amount ($)</label>
-                    <input type="number" id="topupAmount" placeholder="5000.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 font-mono text-xl">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2">Amount to Credit ($)</label>
+                    <input type="number" id="topupAmount" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 font-mono text-2xl">
                 </div>
                 <button onclick="executeTopup()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold transition shadow-lg shadow-blue-900/20">
-                    Confirm Credit
-                </button>
-                <button onclick="closeModal()" class="w-full bg-transparent text-slate-500 py-2 text-sm font-bold hover:text-white transition">
-                    Cancel
+                    Confirm Transaction
                 </button>
             </div>
         </div>
@@ -137,20 +147,21 @@
 
         function executeTopup() {
             const amount = document.getElementById('topupAmount').value;
-            if (amount <= 0) {
-                alert("Please enter a valid amount.");
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid positive amount.");
                 return;
             }
             
-            // This is where the "Magic" happens visually
-            alert(`SUCCESS: Credited $${amount} to Samuel Okogun.`);
+            // Success Alert
+            alert(`TRANSACTION APPROVED: $${parseFloat(amount).toLocaleString()} credited to user account.`);
             
-            // Update the display balance temporarily (it resets on refresh)
-            const currentBal = 84250.00;
-            const newBal = currentBal + parseFloat(amount);
-            document.getElementById('samuelBalance').innerText = `$${newBal.toLocaleString()}.00`;
+            // Visual Balance Update
+            const currentBalance = 84250.00;
+            const newBalance = currentBalance + parseFloat(amount);
+            document.getElementById('samuelBalance').innerText = `$${newBalance.toLocaleString()}.00`;
             
             closeModal();
+            document.getElementById('topupAmount').value = '';
         }
     </script>
 </body>
