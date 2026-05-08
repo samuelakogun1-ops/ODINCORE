@@ -3,115 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Transfer | Odinscafe Online</title>
+    <title>Internal Transfer | Odinscafe Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        .form-input { 
-            background: rgba(248, 250, 252, 0.8);
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-        }
-        .form-input:focus {
-            border-color: #3b82f6;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-        }
     </style>
 </head>
-<body class="bg-[#f8fafc] min-h-screen">
+<body class="bg-[#f8fafc] flex min-h-screen">
 
-    <nav class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center sticky top-0 z-20">
-        <div class="flex items-center gap-3">
-            <a href="dashboard.html" class="text-slate-400 hover:text-blue-600 transition">
-                <i class="fas fa-arrow-left text-lg"></i>
+    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen">
+        <div class="p-8">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-shield-halved text-white text-lg"></i></div>
+                <span class="text-xl font-bold tracking-tight text-slate-800 uppercase">Odinscafe</span>
+            </div>
+        </div>
+        <nav class="flex-grow px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
+                <i class="fas fa-house"></i> Dashboard
             </a>
-            <span class="h-6 w-[1px] bg-slate-200 mx-2"></span>
-            <h1 class="text-lg font-bold text-slate-800">Secure Transfer</h1>
-        </div>
-        <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            Session ID: <span class="text-blue-600 font-mono">OD-8842X</span>
-        </div>
-    </nav>
+            <a href="transfer.html" class="bg-blue-600 text-white flex items-center gap-3 p-4 rounded-2xl transition font-bold shadow-lg shadow-blue-200">
+                <i class="fas fa-paper-plane"></i> Transfers
+            </a>
+            <a href="card.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
+                <i class="fas fa-credit-card"></i> Virtual Cards
+            </a>
+            <a href="support.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
+                <i class="fas fa-headset"></i> Support
+            </a>
+        </nav>
+    </aside>
 
-    <div class="max-w-3xl mx-auto px-6 py-12">
-        <div class="flex justify-between items-center mb-10 px-4">
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold shadow-lg shadow-blue-200">1</div>
-                <p class="text-[10px] font-bold text-blue-600 uppercase">Details</p>
-            </div>
-            <div class="h-[2px] flex-grow bg-blue-100 mx-4"></div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-10 h-10 bg-white border-2 border-slate-200 text-slate-400 rounded-full flex items-center justify-center font-bold">2</div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase">Review</p>
-            </div>
-            <div class="h-[2px] flex-grow bg-slate-100 mx-4"></div>
-            <div class="flex flex-col items-center gap-2">
-                <div class="w-10 h-10 bg-white border-2 border-slate-200 text-slate-400 rounded-full flex items-center justify-center font-bold">3</div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase">Confirm</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
-            <div class="bg-slate-900 p-8 text-white">
-                <h2 class="text-2xl font-bold">International Wire Transfer</h2>
-                <p class="text-slate-400 text-sm mt-1">Funds will be converted at the current mid-market rate.</p>
-            </div>
-
-            <div class="p-8 space-y-6">
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Recipient Name</label>
-                        <input type="text" placeholder="Full Legal Name" class="form-input w-full p-4 rounded-2xl outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-2">SWIFT / BIC Code</label>
-                        <input type="text" placeholder="ABCD US 33" class="form-input w-full p-4 rounded-2xl outline-none font-mono">
-                    </div>
+    <main class="flex-grow">
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-8 py-6 border-b border-slate-200 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-800">New Transfer</h1>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-slate-800 uppercase">Morris Thomas</p>
+                    <p class="text-[10px] text-slate-400 italic">Senior Engineer Access</p>
                 </div>
+                <div class="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">MT</div>
+            </div>
+        </header>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">IBAN / Account Number</label>
-                    <input type="text" placeholder="Enter recipient account number" class="form-input w-full p-4 rounded-2xl outline-none font-mono tracking-widest">
-                </div>
+        <div class="p-8 max-w-2xl mx-auto">
+            <div class="bg-white rounded-[2.5rem] border border-slate-200 p-10 shadow-sm">
+                <div class="space-y-8">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Recipient Account Number</label>
+                        <input type="text" id="accountNumber" placeholder="Enter 10-digit account number" 
+                        class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 text-slate-700 focus:outline-none focus:border-blue-500 font-medium">
+                    </div>
 
-                <div class="pt-4 border-t border-slate-50">
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Amount to Send</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-lg">$</span>
-                        <input type="number" placeholder="0.00" class="form-input w-full p-4 pl-10 rounded-2xl outline-none text-2xl font-bold text-slate-800">
-                        <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-slate-100 px-3 py-1 rounded-lg text-xs font-bold text-slate-500">
-                            USD
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Amount to Send (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
+                            <input type="number" id="transferAmount" placeholder="0.00" 
+                            class="w-full bg-slate-50 border border-slate-100 rounded-2xl p-5 pl-10 text-slate-700 focus:outline-none focus:border-blue-500 font-bold text-xl">
                         </div>
+                        <p class="mt-3 text-[10px] text-slate-400">Available Balance: <span class="text-blue-600 font-bold">$94,250.00</span></p>
                     </div>
-                    <div class="flex justify-between mt-3 px-1">
-                        <p class="text-[11px] text-slate-400">Available: <span class="font-bold text-slate-600">$84,250.00</span></p>
-                        <p class="text-[11px] text-blue-600 font-bold">Fee: $0.00 (Promo)</p>
+
+                    <div class="bg-blue-50/50 border border-blue-100 p-4 rounded-2xl flex gap-4">
+                        <i class="fas fa-info-circle text-blue-500 mt-1"></i>
+                        <p class="text-[11px] text-blue-800 leading-relaxed">
+                            International transfers are processed through secured nodes. Verified accounts like <strong>Morris Thomas</strong> enjoy $0.00 promotional fees.
+                        </p>
                     </div>
-                </div>
 
-                <div class="bg-blue-50 p-4 rounded-2xl flex gap-4 border border-blue-100">
-                    <i class="fas fa-info-circle text-blue-500 mt-1"></i>
-                    <p class="text-xs text-blue-700 leading-relaxed">
-                        International transfers typically arrive within 1-3 business days. Please verify the recipient's details as transactions cannot be reversed once initiated.
-                    </p>
+                    <button id="proceedBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-bold transition shadow-lg shadow-blue-100 flex items-center justify-center gap-2">
+                        Proceed to Review <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
                 </div>
-
-                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-bold text-lg shadow-lg shadow-blue-200 transition-all flex items-center justify-center gap-3">
-                    Proceed to Review
-                    <i class="fas fa-chevron-right text-sm"></i>
-                </button>
             </div>
-        </div>
-
-        <div class="text-center mt-8">
-            <p class="text-xs text-slate-400">
-                <i class="fas fa-lock mr-1"></i> Secured by Odinscafe Multi-Layer Encryption
+            <p class="text-center mt-8 text-[10px] text-slate-400 uppercase tracking-widest">
+                <i class="fas fa-lock mr-2"></i> Secured by Odinscafe Multi-Layer Encryption
             </p>
         </div>
-    </div>
+    </main>
 
+    <script>
+        document.getElementById('proceedBtn').addEventListener('click', function() {
+            const acc = document.getElementById('accountNumber').value;
+            const amt = document.getElementById('transferAmount').value;
+
+            // 1. Validation check
+            if (acc.length < 5 || amt <= 0) {
+                alert("INVALID DATA: Please enter a valid recipient account and amount.");
+                return;
+            }
+
+            // 2. Change button to loading state
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Securing Connection...';
+            this.classList.add('opacity-80', 'cursor-not-allowed');
+
+            // 3. Fake delay for "Legit" banking feel
+            setTimeout(() => {
+                // Save values to sessionStorage so the next page can show them
+                sessionStorage.setItem('transferAcc', acc);
+                sessionStorage.setItem('transferAmt', amt);
+                
+                // Redirect to the review page
+                window.location.href = 'review-transfer.html';
+            }, 1800);
+        });
+    </script>
 </body>
 </html>
