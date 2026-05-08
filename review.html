@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorize Transfer | Odinscafe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-[#f8fafc] min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white rounded-[2.5rem] border border-slate-200 p-10 shadow-2xl w-full max-w-md text-center">
+        <div class="mb-6">
+            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-shield-check text-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-slate-800">Final Authorization</h2>
+            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Morris Thomas Account Node</p>
+        </div>
+
+        <div class="bg-slate-50 rounded-3xl p-6 mb-8 text-left space-y-4 border border-slate-100">
+            <div class="flex justify-between border-b border-slate-200 pb-2">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Beneficiary</span>
+                <span id="dispName" class="text-sm font-bold text-slate-800">---</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-200 pb-2">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">Amount</span>
+                <span id="dispAmt" class="text-sm font-bold text-blue-600">$0.00</span>
+            </div>
+            <div class="text-center pt-2">
+                <p class="text-[9px] text-slate-400 uppercase font-bold">Transaction Status</p>
+                <p class="text-xs font-bold text-orange-500">Awaiting Secure Key</p>
+            </div>
+        </div>
+
+        <button onclick="completeTransfer()" id="finalBtn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold shadow-lg hover:bg-black transition">
+            Confirm & Dispatch
+        </button>
+    </div>
+
+    <script>
+        // Pull details from the temporary session memory
+        document.getElementById('dispName').innerText = sessionStorage.getItem('recName') || "Unknown";
+        document.getElementById('dispAmt').innerText = "$" + parseFloat(sessionStorage.getItem('transferAmt')).toLocaleString();
+
+        function completeTransfer() {
+            const btn = document.getElementById('finalBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+            
+            setTimeout(() => {
+                alert("SUCCESS: Funds have been dispatched globally.");
+                window.location.href = 'dashboard.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
