@@ -1,20 +1,62 @@
-<script>
-    // Listen for customer messages
-    setInterval(() => {
-        const incoming = localStorage.getItem('customer_msg');
-        if(incoming) {
-            const chatDisplay = document.getElementById('admin-chat-display');
-            chatDisplay.innerHTML = `<div class="mb-2"><span class="badge bg-primary">USER:</span> ${incoming}</div>`;
-            // Clear message once seen if desired, or keep it displayed
-        }
-    }, 1000);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Wire Transfer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f4f7f6; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .transfer-card { width: 100%; max-width: 500px; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        #loader { display: none; text-align: center; }
+    </style>
+</head>
+<body>
 
-    function sendAdminReply() {
-        const reply = document.getElementById('admin-reply-input').value;
-        if(!reply) return;
-        const chatDisplay = document.getElementById('admin-chat-display');
-        chatDisplay.innerHTML += `<div class="mb-2 text-success"><span class="badge bg-success">ADMIN:</span> ${reply}</div>`;
-        document.getElementById('admin-reply-input').value = '';
-        // In this local setup, user doesn't see "replies" unless you use a real database
-    }
+<div class="transfer-card">
+    <div id="form-content">
+        <h4 class="fw-bold mb-3 text-primary">International Wire</h4>
+        <p class="text-muted small mb-4">Secure Global Fund Transmission</p>
+        
+        <input type="text" id="ben-name" class="form-control mb-3" placeholder="Beneficiary Full Name">
+        <input type="text" id="ben-bank" class="form-control mb-3" placeholder="Beneficiary Bank Name">
+        <input type="number" id="ben-amt" class="form-control mb-4" placeholder="Amount (USD)">
+        
+        <button class="btn btn-primary w-100 py-3 fw-bold" onclick="startTransfer()">PROCEED TO TRANSFER</button>
+        <a href="index.html" class="btn btn-link w-100 mt-2 text-decoration-none">Cancel</a>
+    </div>
+
+    <div id="loader">
+        <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;"></div>
+        <h5 class="fw-bold">Securing Connection...</h5>
+        <p class="text-muted">Encrypting transaction data</p>
+    </div>
+</div>
+
+<script>
+function startTransfer() {
+    const name = document.getElementById('ben-name').value;
+    const amt = document.getElementById('ben-amt').value;
+    
+    if(!name || !amt) return alert("Please fill in all fields.");
+
+    document.getElementById('form-content').style.display = 'none';
+    document.getElementById('loader').style.display = 'block';
+
+    setTimeout(() => {
+        // Logic to update Balance
+        let currentBal = localStorage.getItem('total_balance') || 10000000;
+        localStorage.setItem('total_balance', currentBal - amt);
+
+        // Logic to Save History
+        let history = JSON.parse(localStorage.getItem('trans_history')) || [];
+        history.push({note: "Wire to " + name, amt: amt, date: "Today"});
+        localStorage.setItem('trans_history', JSON.stringify(history));
+
+        alert("Transfer Successful!");
+        window.location.href = "index.html";
+    }, 4000); // 4 seconds of loading
+}
 </script>
+</body>
+</html>
