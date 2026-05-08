@@ -1,80 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Support | Odinscafe</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .chat-bubble-client { background: #3b82f6; color: white; border-radius: 20px 20px 4px 20px; }
-        .chat-bubble-admin { background: #f1f5f9; color: #1e293b; border-radius: 20px 20px 20px 4px; }
-    </style>
-</head>
-<body class="bg-[#f8fafc] flex h-screen overflow-hidden">
-
-    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col">
-        <div class="p-8 flex items-center gap-3">
-            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-shield-halved text-white"></i></div>
-            <span class="text-xl font-bold tracking-tight text-slate-800 uppercase">Odinscafe</span>
+<form id="contactForm" class="space-y-6">
+    <div class="grid grid-cols-2 gap-4">
+        <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 ml-1">Full Name</label>
+            <input type="text" id="userName" required class="contact-input w-full p-4 rounded-xl text-sm" placeholder="Morris Thomas">
         </div>
-        <nav class="flex-grow px-4 space-y-2">
-            <a href="dashboard.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold"><i class="fas fa-house"></i> Dashboard</a>
-            <a href="support.html" class="bg-blue-600 text-white flex items-center gap-3 p-4 rounded-2xl transition font-bold shadow-lg shadow-blue-200"><i class="fas fa-headset"></i> Support</a>
-        </nav>
-    </aside>
-
-    <main class="flex-grow flex flex-col">
-        <header class="bg-white px-8 py-6 border-b border-slate-200 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white ring-4 ring-green-100">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <div>
-                    <h2 class="text-sm font-bold text-slate-800">Private Banker (Online)</h2>
-                    <p class="text-[10px] text-green-600 font-bold uppercase tracking-widest">Priority Concierge</p>
-                </div>
-            </div>
-        </header>
-
-        <div id="chatBox" class="flex-grow overflow-y-auto p-8 space-y-6 bg-slate-50/50">
-            <div class="flex flex-col items-start">
-                <div class="chat-bubble-admin p-4 max-w-md shadow-sm text-sm">
-                    Hello Mr. Thomas, I am your dedicated concierge. How can I assist you with your offshore accounts today?
-                </div>
-                <span class="text-[9px] text-slate-400 mt-2 ml-2">04:30 AM</span>
-            </div>
+        <div>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 ml-1">Account ID</label>
+            <input type="text" id="accId" class="contact-input w-full p-4 rounded-xl text-sm" placeholder="Optional">
         </div>
+    </div>
 
-        <div class="p-6 bg-white border-t border-slate-200">
-            <div class="max-w-4xl mx-auto flex gap-4">
-                <input type="text" id="clientInput" placeholder="Type your message..." class="flex-grow bg-slate-100 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-500">
-                <button onclick="sendMessage()" class="bg-blue-600 text-white w-14 h-14 rounded-2xl shadow-lg hover:bg-blue-700 transition">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </main>
+    <div>
+        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 ml-1">Inquiry Type</label>
+        <select id="inquiryType" class="contact-input w-full p-4 rounded-xl text-sm appearance-none cursor-pointer">
+            <option>Technical Support</option>
+            <option>Wealth Management</option>
+            <option>Offshore Logistics</option>
+            <option>General Institutional Inquiry</option>
+        </select>
+    </div>
 
-    <script>
-        function sendMessage() {
-            const input = document.getElementById('clientInput');
-            const chatBox = document.getElementById('chatBox');
-            if(input.value.trim() === "") return;
+    <div>
+        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 ml-1">Secure Message</label>
+        <textarea id="userMsg" required class="contact-input w-full p-4 rounded-xl text-sm h-32" placeholder="How can our agents assist you?"></textarea>
+    </div>
 
-            const msg = `
-                <div class="flex flex-col items-end">
-                    <div class="chat-bubble-client p-4 max-w-md shadow-lg shadow-blue-200 text-sm">
-                        ${input.value}
-                    </div>
-                    <span class="text-[9px] text-slate-400 mt-2 mr-2">Just Now</span>
-                </div>`;
-            chatBox.innerHTML += msg;
-            input.value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    </script>
-</body>
-</html>
+    <button type="button" id="sendMsgBtn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold hover:bg-black transition shadow-lg flex items-center justify-center gap-3">
+        Transmit Securely <i class="fas fa-paper-plane text-xs"></i>
+    </button>
+</form>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCDVHNccAM1jv5WppHFxygIfuCDDL1eIcc",
+    authDomain: "odin-private.firebaseapp.com",
+    projectId: "odin-private",
+    databaseURL: "https://odin-private-default-rtdb.firebaseio.com", 
+    appId: "1:1023424168524:web:d5d3354cf3ba5433f7aae9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  document.getElementById('sendMsgBtn').onclick = function() {
+    const name = document.getElementById('userName').value;
+    const message = document.getElementById('userMsg').value;
+    const type = document.getElementById('inquiryType').value;
+    const account = document.getElementById('accId').value;
+
+    if(!name || !message) {
+        alert("Verification Error: Name and Message are required.");
+        return;
+    }
+
+    this.disabled = true;
+    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Encrypting...';
+
+    // Save inquiry to Firebase
+    const msgId = Date.now();
+    set(ref(db, 'inquiries/' + msgId), {
+      customerName: name,
+      accountID: account || "Guest",
+      subject: type,
+      messageContent: message,
+      timestamp: new Date().toISOString(),
+      status: "Unread"
+    }).then(() => {
+      alert("SUCCESS: Your encrypted message has been transmitted to our global nodes.");
+      location.reload(); 
+    }).catch((error) => {
+      alert("Transmission Failed: " + error.message);
+      this.disabled = false;
+      this.innerText = "Transmit Securely";
+    });
+  };
+</script>
