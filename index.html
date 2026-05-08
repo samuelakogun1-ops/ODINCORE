@@ -3,112 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transglobal | Secure User Dashboard</title>
+    <title>ODIN PRIVATE | Elite Banking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary-blue: #1a237e; --bg-gray: #f4f7f6; }
-        body { background-color: var(--bg-gray); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        :root { --gold: #d4af37; --dark-blue: #0a0e1a; --card-bg: #161b22; }
+        body { background-color: var(--dark-blue); color: white; font-family: 'Inter', sans-serif; }
         
-        /* Sidebar Styling */
-        .sidebar { background: white; min-height: 100vh; border-right: 1px solid #dee2e6; padding: 20px; }
-        .nav-link { color: #444; padding: 12px 15px; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; }
-        .nav-link:hover, .nav-link.active { background: var(--primary-blue); color: white !important; shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .sidebar { background: #0d1117; min-height: 100vh; border-right: 1px solid #30363d; padding: 30px 15px; }
+        .nav-link { color: #8b949e; padding: 12px; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background: #21262d; color: var(--gold) !important; border-left: 3px solid var(--gold); }
         
-        /* Dashboard Cards */
-        .balance-card { 
-            background: linear-gradient(135deg, #000428 0%, #004e92 100%); 
-            color: white; border: none; border-radius: 20px; padding: 35px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .profile-header-img { 
-            width: 80px; height: 80px; border-radius: 50%; object-fit: cover; 
-            border: 3px solid var(--primary-blue); margin-bottom: 15px;
-        }
-        .activity-card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .premium-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 20px; padding: 30px; }
+        .balance-text { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; color: var(--gold); }
         
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .sidebar { min-height: auto; border-right: none; border-bottom: 1px solid #dee2e6; }
-            .balance-card { padding: 25px; }
-        }
+        .profile-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); margin-bottom: 15px; }
+        .status-dot { height: 10px; width: 10px; background-color: #238636; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        
+        .btn-gold { background: var(--gold); color: black; font-weight: 700; border-radius: 10px; padding: 12px; }
+        .btn-gold:hover { background: #b8962d; }
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3 col-lg-2 sidebar">
-            <div class="text-center mt-3">
-                <img src="https://via.placeholder.com/80" id="user-display-photo" class="profile-header-img">
+        <div class="col-md-3 col-lg-2 sidebar shadow-lg">
+            <div class="text-center">
+                <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-img">
                 <h6 class="fw-bold mb-0">Morris Thomas</h6>
-                <p class="text-muted small">ID: TG-44920</p>
+                <p class="small text-muted"><span class="status-dot"></span> Private Client</p>
             </div>
-            <hr>
+            <hr class="text-muted">
             <nav class="nav flex-column mt-4">
-                <a class="nav-link active" href="index.html"><i class="fas fa-home me-2"></i> Dashboard</a>
-                <a class="nav-link" href="transfer.html"><i class="fas fa-paper-plane me-2"></i> Transfer Funds</a>
-                <a class="nav-link" href="card.html"><i class="fas fa-credit-card me-2"></i> ATM Services</a>
-                <a class="nav-link" href="admin.html"><i class="fas fa-user-cog me-2"></i> Admin Panel</a>
-                <a class="nav-link text-danger mt-5" href="#"><i class="fas fa-sign-out-alt me-2"></i> Secure Logout</a>
+                <a class="nav-link active" href="index.html"><i class="fas fa-th-large me-2"></i> Dashboard</a>
+                <a class="nav-link" href="transfer.html"><i class="fas fa-exchange-alt me-2"></i> Wire Transfer</a>
+                <a class="nav-link" href="card.html"><i class="fas fa-credit-card me-2"></i> Card Services</a>
+                <a class="nav-link" href="admin.html"><i class="fas fa-user-shield me-2"></i> Settings</a>
+                <a class="nav-link text-danger mt-5" href="#"><i class="fas fa-power-off me-2"></i> Logout</a>
             </nav>
         </div>
 
-        <div class="col-md-9 col-lg-10 p-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold text-dark">Account Overview</h4>
-                <div class="text-end">
-                    <span class="badge bg-success">Online</span>
-                    <div class="small text-muted" id="current-date"></div>
+        <div class="col-md-9 col-lg-10 p-5">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h2 class="fw-bold">Wealth Overview</h2>
+                    <p class="text-muted">Welcome back, Mr. Thomas. Your portfolio is performing well.</p>
                 </div>
             </div>
 
-            <div class="card balance-card mb-4">
-                <div class="row align-items-center">
-                    <div class="col-8">
-                        <small class="opacity-75 text-uppercase fw-bold">Current Account Balance</small>
-                        <h1 class="display-5 fw-bold mt-2" id="display-balance">$10,000,000.00</h1>
+            <div class="premium-card mb-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-uppercase text-muted fw-bold">Total Liquid Assets</small>
+                        <h1 class="balance-text" id="main-bal">$10,000,000.00</h1>
                     </div>
-                    <div class="col-4 text-end">
-                        <i class="fas fa-university fa-3x opacity-25"></i>
-                    </div>
-                </div>
-                <div class="mt-4 d-flex justify-content-between">
-                    <div>
-                        <small class="d-block opacity-50">Account Number</small>
-                        <span class="fw-bold">449208821002</span>
-                    </div>
-                    <div class="text-end">
-                        <small class="d-block opacity-50">Account Type</small>
-                        <span class="fw-bold">Private Savings</span>
+                    <div class="col-md-6 text-md-end">
+                        <p class="mb-0 text-muted small">Account Type</p>
+                        <p class="fw-bold text-white">Offshore Private Savings</p>
+                        <p class="mb-0 text-muted small">Account Number</p>
+                        <p class="fw-bold text-white">**** **** 0992</p>
                     </div>
                 </div>
             </div>
 
-            <div class="card activity-card">
-                <div class="card-header bg-white py-3 border-0">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-history me-2 text-primary"></i>Recent Transactions</h5>
-                </div>
-                <div class="table-responsive p-3">
-                    <table class="table align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Transaction Details</th>
-                                <th>Category</th>
-                                <th class="text-end">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transaction-history-body">
-                            <tr>
-                                <td>
-                                    <div class="fw-bold">Initial Account Funding</div>
-                                    <small class="text-muted">May 01, 2026</small>
-                                </td>
-                                <td><span class="badge bg-light text-dark border">Deposit</span></td>
-                                <td class="text-end text-success fw-bold">+$10,000,000.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="premium-card">
+                        <h5 class="fw-bold mb-4">Transaction Ledger</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover border-0">
+                                <tbody id="ledger-body">
+                                    <tr>
+                                        <td><i class="fas fa-arrow-down text-success me-3"></i> <strong>Salary Deposit</strong><br><small class="text-muted">April 27, 2026</small></td>
+                                        <td class="text-end text-success fw-bold">+$10,000,000.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,45 +89,23 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Display Current Date
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString(undefined, options);
+    window.onload = function() {
+        // Load data from storage
+        const bal = localStorage.getItem('total_balance') || "10000000";
+        document.getElementById('main-bal').innerText = "$" + parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
+        
+        const photo = localStorage.getItem('saved_photo');
+        if(photo) document.getElementById('user-avatar').src = photo;
 
-        // 2. Load and Display Balance
-        let currentBalance = localStorage.getItem('total_balance');
-        if (!currentBalance) {
-            currentBalance = 10000000.00; // Starting Balance
-            localStorage.setItem('total_balance', currentBalance);
-        }
-        document.getElementById('display-balance').innerText = "$" + parseFloat(currentBalance).toLocaleString(undefined, {minimumFractionDigits: 2});
-
-        // 3. Load Profile Photo
-        const savedPhoto = localStorage.getItem('saved_photo');
-        if (savedPhoto) {
-            document.getElementById('user-display-photo').src = savedPhoto;
-        }
-
-        // 4. Load History from LocalStorage
         const history = JSON.parse(localStorage.getItem('transaction_history')) || [];
-        const historyContainer = document.getElementById('transaction-history-body');
-
-        history.reverse().forEach(item => {
-            const row = `
-                <tr>
-                    <td>
-                        <div class="fw-bold">${item.note}</div>
-                        <small class="text-muted">${item.date}</small>
-                    </td>
-                    <td><span class="badge bg-light text-dark border">${item.type}</span></td>
-                    <td class="text-end text-danger fw-bold">-$${parseFloat(item.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-                </tr>
-            `;
-            historyContainer.insertAdjacentHTML('afterbegin', row);
+        history.forEach(item => {
+            const row = `<tr>
+                <td><i class="fas fa-arrow-up text-danger me-3"></i> <strong>${item.note}</strong><br><small class="text-muted">${item.date}</small></td>
+                <td class="text-end text-danger fw-bold">-$${parseFloat(item.amount).toLocaleString()}</td>
+            </tr>`;
+            document.getElementById('ledger-body').insertAdjacentHTML('afterbegin', row);
         });
-    });
+    };
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
