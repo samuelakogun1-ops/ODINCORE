@@ -3,50 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transglobal | User Dashboard</title>
+    <title>Transglobal | Secure User Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .sidebar { background: white; min-height: 100vh; padding: 20px; border-right: 1px solid #ddd; }
-        .card-custom { border-radius: 15px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .balance-box { background: linear-gradient(45deg, #1a237e, #283593); color: white; padding: 30px; border-radius: 15px; }
-        .nav-link { color: #555; padding: 12px; border-radius: 8px; margin-bottom: 5px; display: block; text-decoration: none; }
-        .nav-link:hover, .nav-link.active { background: #e8eaf6; color: #1a237e; font-weight: bold; }
-        .profile-img { width: 100px; height: 100px; object-fit: cover; border: 3px solid #1a237e; border-radius: 50%; }
+        :root { --primary-blue: #1a237e; --bg-gray: #f4f7f6; }
+        body { background-color: var(--bg-gray); font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        
+        /* Sidebar Styling */
+        .sidebar { background: white; min-height: 100vh; border-right: 1px solid #dee2e6; padding: 20px; }
+        .nav-link { color: #444; padding: 12px 15px; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; }
+        .nav-link:hover, .nav-link.active { background: var(--primary-blue); color: white !important; shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        
+        /* Dashboard Cards */
+        .balance-card { 
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%); 
+            color: white; border: none; border-radius: 20px; padding: 35px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .profile-header-img { 
+            width: 80px; height: 80px; border-radius: 50%; object-fit: cover; 
+            border: 3px solid var(--primary-blue); margin-bottom: 15px;
+        }
+        .activity-card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .sidebar { min-height: auto; border-right: none; border-bottom: 1px solid #dee2e6; }
+            .balance-card { padding: 25px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-3 sidebar shadow-sm text-center">
-            <h4 class="text-primary fw-bold mb-4">ODIN PRIVATE</h4>
-            <img src="https://via.placeholder.com/100" id="user-photo" class="profile-img mb-3">
-            <h5 class="fw-bold mb-0">Morris Thomas</h5>
-            <p class="small text-muted mb-4">GOLD MEMBER</p>
-            
-            <nav class="text-start">
-                <a href="index.html" class="nav-link active"><i class="fas fa-chart-line me-2"></i> Dashboard</a>
-                <a href="transfer.html" class="nav-link"><i class="fas fa-globe me-2"></i> International Wire</a>
-                <a href="#" class="nav-link"><i class="fas fa-credit-card me-2"></i> Card Services</a>
-                <a href="#" class="nav-link text-danger mt-5"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
+        <div class="col-md-3 col-lg-2 sidebar">
+            <div class="text-center mt-3">
+                <img src="https://via.placeholder.com/80" id="user-display-photo" class="profile-header-img">
+                <h6 class="fw-bold mb-0">Morris Thomas</h6>
+                <p class="text-muted small">ID: TG-44920</p>
+            </div>
+            <hr>
+            <nav class="nav flex-column mt-4">
+                <a class="nav-link active" href="index.html"><i class="fas fa-home me-2"></i> Dashboard</a>
+                <a class="nav-link" href="transfer.html"><i class="fas fa-paper-plane me-2"></i> Transfer Funds</a>
+                <a class="nav-link" href="card.html"><i class="fas fa-credit-card me-2"></i> ATM Services</a>
+                <a class="nav-link" href="admin.html"><i class="fas fa-user-cog me-2"></i> Admin Panel</a>
+                <a class="nav-link text-danger mt-5" href="#"><i class="fas fa-sign-out-alt me-2"></i> Secure Logout</a>
             </nav>
         </div>
 
-        <div class="col-md-9 p-4">
-            <div class="balance-box shadow mb-4">
-                <small class="opacity-75">TOTAL PORTFOLIO VALUE</small>
-                <h1 class="fw-bold" id="main-balance">$10,000,000.00</h1>
+        <div class="col-md-9 col-lg-10 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold text-dark">Account Overview</h4>
+                <div class="text-end">
+                    <span class="badge bg-success">Online</span>
+                    <div class="small text-muted" id="current-date"></div>
+                </div>
             </div>
 
-            <div class="card card-custom p-4 mb-4">
-                <h5 class="fw-bold mb-4">Recent Activity</h5>
-                <div id="activity-log">
-                    <div class="d-flex justify-content-between border-bottom py-3">
-                        <div><strong>Account Opening Bonus</strong><br><small class="text-muted">May 01, 2026</small></div>
-                        <div class="text-success fw-bold">+$10,000,000.00</div>
+            <div class="card balance-card mb-4">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <small class="opacity-75 text-uppercase fw-bold">Current Account Balance</small>
+                        <h1 class="display-5 fw-bold mt-2" id="display-balance">$10,000,000.00</h1>
                     </div>
+                    <div class="col-4 text-end">
+                        <i class="fas fa-university fa-3x opacity-25"></i>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex justify-content-between">
+                    <div>
+                        <small class="d-block opacity-50">Account Number</small>
+                        <span class="fw-bold">449208821002</span>
+                    </div>
+                    <div class="text-end">
+                        <small class="d-block opacity-50">Account Type</small>
+                        <span class="fw-bold">Private Savings</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card activity-card">
+                <div class="card-header bg-white py-3 border-0">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-history me-2 text-primary"></i>Recent Transactions</h5>
+                </div>
+                <div class="table-responsive p-3">
+                    <table class="table align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Transaction Details</th>
+                                <th>Category</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaction-history-body">
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">Initial Account Funding</div>
+                                    <small class="text-muted">May 01, 2026</small>
+                                </td>
+                                <td><span class="badge bg-light text-dark border">Deposit</span></td>
+                                <td class="text-end text-success fw-bold">+$10,000,000.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -54,23 +116,45 @@
 </div>
 
 <script>
-    // Load Balance and Photo
-    window.onload = function() {
-        const bal = localStorage.getItem('total_balance') || "10000000";
-        document.getElementById('main-balance').innerText = "$" + parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
-        
-        const photo = localStorage.getItem('saved_photo');
-        if(photo) document.getElementById('user-photo').src = photo;
-        
-        const history = JSON.parse(localStorage.getItem('trans_history')) || [];
-        history.forEach(item => {
-            const row = `<div class="d-flex justify-content-between border-bottom py-3">
-                <div><strong>${item.note}</strong><br><small class="text-muted">${item.date}</small></div>
-                <div class="text-danger fw-bold">-$${parseFloat(item.amt).toLocaleString()}</div>
-            </div>`;
-            document.getElementById('activity-log').insertAdjacentHTML('afterbegin', row);
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Display Current Date
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString(undefined, options);
+
+        // 2. Load and Display Balance
+        let currentBalance = localStorage.getItem('total_balance');
+        if (!currentBalance) {
+            currentBalance = 10000000.00; // Starting Balance
+            localStorage.setItem('total_balance', currentBalance);
+        }
+        document.getElementById('display-balance').innerText = "$" + parseFloat(currentBalance).toLocaleString(undefined, {minimumFractionDigits: 2});
+
+        // 3. Load Profile Photo
+        const savedPhoto = localStorage.getItem('saved_photo');
+        if (savedPhoto) {
+            document.getElementById('user-display-photo').src = savedPhoto;
+        }
+
+        // 4. Load History from LocalStorage
+        const history = JSON.parse(localStorage.getItem('transaction_history')) || [];
+        const historyContainer = document.getElementById('transaction-history-body');
+
+        history.reverse().forEach(item => {
+            const row = `
+                <tr>
+                    <td>
+                        <div class="fw-bold">${item.note}</div>
+                        <small class="text-muted">${item.date}</small>
+                    </td>
+                    <td><span class="badge bg-light text-dark border">${item.type}</span></td>
+                    <td class="text-end text-danger fw-bold">-$${parseFloat(item.amount).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                </tr>
+            `;
+            historyContainer.insertAdjacentHTML('afterbegin', row);
         });
-    };
+    });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
