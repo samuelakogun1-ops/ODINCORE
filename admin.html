@@ -1,168 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Center | Odinscafe Internal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-        #topupModal { display: none; }
-    </style>
-</head>
-<body class="bg-[#020617] text-slate-300 flex min-h-screen">
-
-    <aside class="w-72 bg-slate-950 border-r border-slate-800 flex flex-col sticky top-0 h-screen">
-        <div class="p-8 border-b border-slate-800">
-            <div class="flex items-center gap-3">
-                <div class="bg-red-600 p-2 rounded-lg">
-                    <i class="fas fa-terminal text-white"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white tracking-tighter">ODIN<span class="text-red-500 text-sm">ROOT</span></h1>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Superuser Access</p>
-                </div>
+<tr class="hover:bg-slate-900/40 transition">
+    <td class="px-6 py-4">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded bg-blue-500/10 text-blue-500 flex items-center justify-center font-bold text-xs">MT</div>
+            <div>
+                <p class="font-bold text-slate-200">Morris Thomas</p>
+                <p class="text-[10px] text-slate-500 mono">#ODIN-8842-X</p>
             </div>
         </div>
-
-        <nav class="flex-grow p-4 space-y-1">
-            <div class="px-4 py-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Main Engine</div>
-            <a href="#" onclick="alert('Analytics Dashboard Loading...')" class="flex items-center gap-3 p-3 text-white bg-slate-900 rounded-xl transition">
-                <i class="fas fa-chart-line text-blue-400"></i> Analytics Overview
-            </a>
-            <a href="#" onclick="alert('User Management System active.')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition">
-                <i class="fas fa-users-gear text-slate-400"></i> User Management
-            </a>
-            
-            <div class="px-4 py-3 mt-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Financial Control</div>
-            <a href="vault.html" class="flex items-center gap-3 p-3 hover:bg-amber-500/10 rounded-xl transition group">
-                <i class="fas fa-vault text-amber-500"></i> 
-                <span class="group-hover:text-amber-500">Bank Vaults</span>
-            </a>
-            <a href="#" onclick="alert('Wire Queue is empty.')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl transition">
-                <i class="fas fa-money-bill-transfer text-slate-400"></i> Wire Queue
-            </a>
-        </nav>
-
-        <div class="p-6 border-t border-slate-800">
-            <a href="login.html" class="flex items-center gap-3 p-3 text-red-400 font-bold text-sm">
-                <i class="fas fa-power-off"></i> System Exit
-            </a>
-        </div>
-    </aside>
-
-    <main class="flex-grow">
-        <header class="bg-slate-950/50 backdrop-blur-md sticky top-0 z-10 px-8 py-6 border-b border-slate-800 flex justify-between items-center">
-            <span class="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-2">
-                <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> SERVER: ONLINE
-            </span>
-            <div class="text-right">
-                <p class="text-sm font-bold text-white">Administrator</p>
-                <p class="text-[10px] text-slate-500 font-mono">192.168.1.1</p>
-            </div>
-        </header>
-
-        <div class="p-8">
-            <div class="grid lg:grid-cols-4 gap-6 mb-8">
-                <div class="admin-gradient p-6 rounded-2xl border border-slate-800 shadow-xl">
-                    <p class="text-slate-500 text-xs font-bold uppercase mb-2">Total Reserve</p>
-                    <h3 class="text-2xl font-bold text-white mono" id="totalReserve">$14,250,800</h3>
-                </div>
-            </div>
-
-            <div class="bg-slate-950 rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-                <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
-                    <h3 class="text-lg font-bold text-white">User Control Directory</h3>
-                </div>
-                
-                <table class="w-full text-left">
-                    <thead class="text-slate-500 text-[10px] uppercase tracking-widest border-b border-slate-800 bg-slate-950">
-                        <tr>
-                            <th class="px-6 py-4">User</th>
-                            <th class="px-6 py-4">Balance</th>
-                            <th class="px-6 py-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800">
-                        <tr class="hover:bg-slate-900/40 transition">
-                            <td class="px-6 py-4">
-                                <p class="font-bold text-slate-200">Samuel Okogun</p>
-                                <p class="text-[10px] text-slate-500 mono">#ODIN-8842-X</p>
-                            </td>
-                            <td class="px-6 py-4">
-                                <p class="text-green-500 font-bold mono" id="samuelBalance">$84,250.00</p>
-                            </td>
-                            <td class="px-6 py-4 text-right space-x-2">
-                                <button onclick="openTopup('Samuel Okogun')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[10px] font-bold transition shadow-lg shadow-blue-900/20">
-                                    TOP UP
-                                </button>
-                                <button onclick="alert('Account #ODIN-8842-X: Status changed to HOLD.')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white px-4 py-2 rounded-lg text-[10px] font-bold border border-amber-500/20 transition">
-                                    HOLD
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-
-    <div id="topupModal" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-6">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h3 class="text-xl font-bold text-white">Manual Credit</h3>
-                    <p class="text-slate-500 text-sm">Target: <span id="targetUser" class="text-blue-400 font-bold"></span></p>
-                </div>
-                <button onclick="closeModal()" class="text-slate-500 hover:text-white transition">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2">Amount to Credit ($)</label>
-                    <input type="number" id="topupAmount" placeholder="0.00" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 font-mono text-2xl">
-                </div>
-                <button onclick="executeTopup()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold transition shadow-lg shadow-blue-900/20">
-                    Confirm Transaction
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openTopup(name) {
-            document.getElementById('targetUser').innerText = name;
-            document.getElementById('topupModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('topupModal').style.display = 'none';
-        }
-
-        function executeTopup() {
-            const amount = document.getElementById('topupAmount').value;
-            if (!amount || amount <= 0) {
-                alert("Please enter a valid positive amount.");
-                return;
-            }
-            
-            // Success Alert
-            alert(`TRANSACTION APPROVED: $${parseFloat(amount).toLocaleString()} credited to user account.`);
-            
-            // Visual Balance Update
-            const currentBalance = 84250.00;
-            const newBalance = currentBalance + parseFloat(amount);
-            document.getElementById('samuelBalance').innerText = `$${newBalance.toLocaleString()}.00`;
-            
-            closeModal();
-            document.getElementById('topupAmount').value = '';
-        }
-    </script>
-</body>
-</html>
+    </td>
+    <td class="px-6 py-4">
+        <p class="text-green-500 font-bold mono" id="userBalance">$94,250.00</p>
+    </td>
+    <td class="px-6 py-4 text-right space-x-2">
+        <button onclick="openTopup('Morris Thomas')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-[10px] font-bold transition">
+            TOP UP
+        </button>
+        <button onclick="alert('Account #ODIN-8842-X: Status changed to HOLD.')" class="bg-amber-500/10 text-amber-500 hover:bg-amber-500 px-4 py-2 rounded-lg text-[10px] font-bold border border-amber-500/20 transition">
+            HOLD
+        </button>
+    </td>
+</tr>
