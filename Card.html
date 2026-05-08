@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transglobal | Card Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        body { background: #f4f7f6; font-family: 'Segoe UI', sans-serif; }
+        /* Virtual Card Styling */
+        .credit-card {
+            background: linear-gradient(135deg, #1a237e 0%, #000000 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            height: 230px;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin: 0 auto 30px;
+        }
+        .chip { width: 50px; height: 40px; background: #d4af37; border-radius: 8px; margin-bottom: 20px; }
+        .card-number { font-size: 1.4rem; letter-spacing: 3px; margin-bottom: 15px; }
+        .card-holder { text-transform: uppercase; font-size: 0.9rem; opacity: 0.8; }
+        .status-badge { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; padding: 5px 10px; border-radius: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold">Card Management</h3>
+        <p class="text-muted">Manage your physical and virtual ATM cards</p>
+    </div>
+
+    <div class="credit-card">
+        <span id="card-status-label" class="badge bg-success status-badge">ACTIVE</span>
+        <div class="chip"></div>
+        <div class="card-number">4492 8820 1002 7741</div>
+        <div class="d-flex justify-content-between">
+            <div>
+                <small class="d-block opacity-50">Card Holder</small>
+                <span class="card-holder">Morris Thomas</span>
+            </div>
+            <div>
+                <small class="d-block opacity-50">Expires</small>
+                <span>12/28</span>
+            </div>
+        </div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" width="60" style="position: absolute; bottom: 20px; right: 20px; filter: brightness(0) invert(1);">
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm border-0">
+                <h6 class="fw-bold"><i class="fas fa-lock me-2 text-primary"></i>Security Controls</h6>
+                <hr>
+                <button class="btn btn-outline-danger w-100 mb-2" onclick="toggleCardStatus()">
+                    <i class="fas fa-ban me-2"></i> Block / Freeze Card
+                </button>
+                <button class="btn btn-outline-primary w-100" onclick="changePin()">
+                    <i class="fas fa-key me-2"></i> Change ATM PIN
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm border-0">
+                <h6 class="fw-bold"><i class="fas fa-list me-2 text-primary"></i>ATM Settings</h6>
+                <hr>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Online Transactions</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" checked>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Contactless Payment</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" checked>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="index.html" class="btn btn-dark px-5 py-2"><i class="fas fa-arrow-left me-2"></i> Back to Dashboard</a>
+    </div>
+</div>
+
+<script>
+    function toggleCardStatus() {
+        const label = document.getElementById('card-status-label');
+        if (label.innerText === "ACTIVE") {
+            label.innerText = "FROZEN";
+            label.className = "badge bg-danger status-badge";
+            alert("Your card has been frozen for security.");
+        } else {
+            label.innerText = "ACTIVE";
+            label.className = "badge bg-success status-badge";
+            alert("Your card is now active.");
+        }
+    }
+
+    function changePin() {
+        const newPin = prompt("Enter new 4-digit ATM PIN:");
+        if (newPin && newPin.length === 4) {
+            alert("ATM PIN updated successfully!");
+        } else {
+            alert("Invalid PIN. Please enter 4 digits.");
+        }
+    }
+</script>
+</body>
+</html>
