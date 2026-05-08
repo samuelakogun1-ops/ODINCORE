@@ -36,16 +36,10 @@
             <a href="card.html" class="sidebar-link flex items-center gap-3 p-3 text-slate-500 rounded-xl transition font-medium">
                 <i class="fas fa-credit-card"></i> Virtual Cards
             </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 text-slate-500 rounded-xl transition font-medium">
-                <i class="fas fa-chart-line"></i> Investments
-            </a>
             
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mt-8 mb-4">Settings</p>
             <a href="#" class="sidebar-link flex items-center gap-3 p-3 text-slate-500 rounded-xl transition font-medium">
                 <i class="fas fa-user-gear"></i> Profile
-            </a>
-            <a href="#" class="sidebar-link flex items-center gap-3 p-3 text-slate-500 rounded-xl transition font-medium">
-                <i class="fas fa-headset"></i> Support
             </a>
         </nav>
 
@@ -60,16 +54,10 @@
         <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-8 py-4 border-b border-slate-200 flex justify-between items-center">
             <div>
                 <h1 class="text-xl font-bold text-slate-800">Welcome back, Samuel</h1>
-                <p class="text-xs text-slate-500">Last login: May 08, 2026 at 03:42 AM</p>
+                <p class="text-xs text-slate-500">Last login: May 08, 2026 at 04:14 AM</p>
             </div>
-            <div class="flex items-center gap-5">
-                <div class="relative">
-                    <i class="fas fa-bell text-slate-400 text-lg cursor-pointer"></i>
-                    <span class="absolute -top-1 -right-1 bg-red-500 w-2 h-2 rounded-full border-2 border-white"></span>
-                </div>
-                <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center border border-blue-200">
-                    <span class="text-blue-600 font-bold">SO</span>
-                </div>
+            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center border border-blue-200">
+                <span class="text-blue-600 font-bold">SO</span>
             </div>
         </header>
 
@@ -79,61 +67,40 @@
                 <div class="lg:col-span-2 space-y-8">
                     <div class="bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-300">
                         <div class="relative z-10">
-                            <p class="text-slate-400 font-medium">Total Available Balance</p>
-                            <h2 class="text-4xl font-bold mt-2">$84,250.00</h2>
+                            <p class="text-slate-400 font-medium text-sm">Total Available Balance</p>
+                            <h2 class="text-5xl font-bold mt-2 tracking-tight">$94,250.00</h2>
                             <div class="flex gap-4 mt-8">
-                                <button onclick="window.location.href='transfer.html'" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold transition flex items-center gap-2">
+                                <button onclick="window.location.href='transfer.html'" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl font-bold transition flex items-center gap-2">
                                     <i class="fas fa-paper-plane text-xs"></i> Send Money
-                                </button>
-                                <button class="bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl font-bold transition">
-                                    + Add Funds
                                 </button>
                             </div>
                         </div>
                         <div class="absolute -right-20 -top-20 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
                     </div>
 
-                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm">
-                        <div class="p-6 border-b border-slate-50 flex justify-between items-center">
-                            <h3 class="font-bold text-slate-800 text-lg">Transaction History</h3>
-                            <button class="text-blue-600 font-bold text-sm">See All</button>
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-6 border-b border-slate-50">
+                            <h3 class="font-bold text-slate-800">Recent Transactions</h3>
                         </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left">
-                                <tbody class="divide-y divide-slate-50">
-                                    <tr class="hover:bg-slate-50 transition">
-                                        <td class="px-6 py-4 flex items-center gap-4">
-                                            <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-shopping-bag"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-slate-800">Apple Store Purchase</p>
-                                                <p class="text-xs text-slate-400">Electronic • 14:20 PM</p>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <p class="font-bold text-slate-800">-$999.00</p>
-                                            <p class="text-[10px] text-green-500 font-bold uppercase">Completed</p>
-                                        </td>
-                                    </tr>
-                                    <tr class="hover:bg-slate-50 transition">
-                                        <td class="px-6 py-4 flex items-center gap-4">
-                                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                                                <i class="fas fa-university"></i>
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-slate-800">External Wire Transfer</p>
-                                                <p class="text-xs text-slate-400">Transfer • May 07</p>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <p class="font-bold text-red-500">-$2,400.00</p>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase">Pending</p>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <table class="w-full text-left">
+                            <tbody class="divide-y divide-slate-50">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-6 py-4 flex items-center gap-4">
+                                        <div class="w-10 h-10 bg-green-100 text-green-600 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-arrow-down"></i>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800">Admin Manual Credit</p>
+                                            <p class="text-[10px] text-slate-400">May 08, 2026</p>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <p class="font-bold text-green-500">+$10,000.00</p>
+                                        <p class="text-[9px] font-bold uppercase text-slate-400">Confirmed</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -149,37 +116,7 @@
                                 <p class="text-[10px] uppercase opacity-60">Card Holder</p>
                                 <p class="text-sm font-bold tracking-wide">SAMUEL OKOGUN</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-[10px] uppercase opacity-60">Expiry</p>
-                                <p class="text-sm font-bold">08/29</p>
-                            </div>
                         </div>
-                    </div>
-
-                    <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-                        <h3 class="font-bold text-slate-800 mb-6">Quick Transfer</h3>
-                        <div class="flex justify-between mb-8">
-                            <div class="text-center cursor-pointer group">
-                                <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-2 group-hover:bg-blue-600 group-hover:text-white transition">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                                <p class="text-[10px] font-bold text-slate-500">New</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-2 border border-blue-100">
-                                    <span class="text-blue-600 font-bold text-xs">JD</span>
-                                </div>
-                                <p class="text-[10px] font-bold text-slate-500">John</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center mb-2 border border-purple-100">
-                                    <span class="text-purple-600 font-bold text-xs">AM</span>
-                                </div>
-                                <p class="text-[10px] font-bold text-slate-500">Alice</p>
-                            </div>
-                        </div>
-                        <input type="number" placeholder="Enter Amount" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 mb-4 focus:ring-2 focus:ring-blue-500 outline-none transition">
-                        <button class="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition">Continue</button>
                     </div>
                 </div>
 
