@@ -1,154 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transglobal | Admin Control Panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background: #121212; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; }
-        .admin-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; }
-        .status-select { background: #2c2c2c; color: white; border: 1px solid #444; }
-        .chat-box { height: 300px; overflow-y: auto; background: #000; border-radius: 8px; padding: 15px; }
-        .msg-user { color: #007bff; font-weight: bold; }
-        .msg-admin { color: #28a745; font-weight: bold; }
-        .nav-admin { background: #000; border-bottom: 2px solid #007bff; }
-    </style>
-</head>
-<body>
-
-<nav class="navbar nav-admin mb-4">
-    <div class="container">
-        <span class="navbar-brand text-primary fw-bold"><i class="fas fa-user-shield"></i> TRANSGLOBAL ADMIN</span>
-        <span class="badge bg-danger">LIVE SERVER</span>
-    </div>
-</nav>
-
-<div class="container">
-    <div class="row g-4">
-        
-        <div class="col-md-6">
-            <div class="card admin-card p-3 h-100">
-                <h5 class="text-primary mb-3"><i class="fas fa-headset"></i> Customer Chat Control</h5>
-                <div id="admin-chat-display" class="chat-box mb-3">
-                    <p class="text-muted italic">-- Waiting for customer messages --</p>
-                </div>
-                <div class="input-group">
-                    <input type="text" id="admin-reply-input" class="form-control bg-dark text-white border-secondary" placeholder="Reply to customer...">
-                    <button class="btn btn-primary" onclick="sendAdminReply()">Reply</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card admin-card p-3 h-100">
-                <h5 class="text-warning mb-3"><i class="fas fa-edit"></i> Account Manager</h5>
-                
-                <div class="mb-4">
-                    <label class="small">Adjust Account Balance</label>
-                    <div class="input-group">
-                        <input type="number" id="balance-amt" class="form-control bg-dark text-white border-secondary" placeholder="Amount">
-                        <button class="btn btn-success" onclick="updateBalance('Credit')">Add</button>
-                        <button class="btn btn-danger" onclick="updateBalance('Debit')">Deduct</button>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="small">Update Transaction Status</label>
-                    <table class="table table-dark table-hover mt-2">
-                        <thead>
-                            <tr class="small">
-                                <th>Ref ID</th>
-                                <th>New Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#TG-8829</td>
-                                <td>
-                                    <select class="form-select form-select-sm status-select" onchange="changeStatus(this.value)">
-                                        <option value="Pending">Pending</option>
-                                        <option value="Successful">Successful</option>
-                                        <option value="Declined">Declined</option>
-                                        <option value="Visit Branch">Visit Branch</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12">
-            <div class="card admin-card p-3">
-                <h5 class="text-info mb-3"><i class="fas fa-camera"></i> Profile Identity Control</h5>
-                <div class="row align-items-center">
-                    <div class="col-md-4 text-center">
-                        <img id="admin-preview-img" src="https://via.placeholder.com/100" class="rounded-circle mb-2" width="100" height="100" style="object-fit: cover; border: 2px solid #007bff;">
-                    </div>
-                    <div class="col-md-8">
-                        <label class="form-label">Upload your photo (Shows on User Dashboard)</label>
-                        <input type="file" class="form-control bg-dark text-white border-secondary" id="adminPhotoInput" onchange="previewAndSavePhoto(event)">
-                        <p class="small text-muted mt-2">Recommended: Square image (PNG/JPG)</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-</div>
-
 <script>
-    // 1. Profile Photo Logic
-    function previewAndSavePhoto(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            document.getElementById('admin-preview-img').src = reader.result;
-            // Saves locally so the other dashboard file can see it
-            localStorage.setItem('userPhoto', reader.result);
-            alert("Profile photo updated successfully!");
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
-    // 2. Chat Logic
-    function sendAdminReply() {
-        const input = document.getElementById('admin-reply-input');
-        const display = document.getElementById('admin-chat-display');
-        if(input.value.trim() === "") return;
-
-        const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        display.innerHTML += `<div><span class="msg-admin">SUPPORT [${time}]:</span> ${input.value}</div>`;
-        
-        // Auto-scroll to bottom
-        display.scrollTop = display.scrollHeight;
-        input.value = "";
-    }
-
-    // 3. Balance Logic
-    function updateBalance(type) {
-        const amt = document.getElementById('balance-amt').value;
-        if(!amt) return alert("Please enter an amount.");
-        
-        alert(`${type} of $${amt} has been processed.`);
-        // Note: In a real database, this would update the user's JSON file.
-        document.getElementById('balance-amt').value = "";
-    }
-
-    // 4. Status Logic
-    function changeStatus(val) {
-        alert("Transaction #TG-8829 is now: " + val.toUpperCase());
-    }
-
-    // Load photo if already saved
-    window.onload = () => {
-        if(localStorage.getItem('userPhoto')) {
-            document.getElementById('admin-preview-img').src = localStorage.getItem('userPhoto');
+    // Listen for customer messages
+    setInterval(() => {
+        const incoming = localStorage.getItem('customer_msg');
+        if(incoming) {
+            const chatDisplay = document.getElementById('admin-chat-display');
+            chatDisplay.innerHTML = `<div class="mb-2"><span class="badge bg-primary">USER:</span> ${incoming}</div>`;
+            // Clear message once seen if desired, or keep it displayed
         }
+    }, 1000);
+
+    function sendAdminReply() {
+        const reply = document.getElementById('admin-reply-input').value;
+        if(!reply) return;
+        const chatDisplay = document.getElementById('admin-chat-display');
+        chatDisplay.innerHTML += `<div class="mb-2 text-success"><span class="badge bg-success">ADMIN:</span> ${reply}</div>`;
+        document.getElementById('admin-reply-input').value = '';
+        // In this local setup, user doesn't see "replies" unless you use a real database
     }
 </script>
-
-</body>
-</html>
