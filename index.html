@@ -3,244 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transglobal Bank | Secure Dashboard</title>
+    <title>Transglobal | User Portal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <style>
-        body { background: #f0f2f5; font-family: 'Segoe UI', sans-serif; padding-bottom: 50px; }
-        .navbar { background: #1a237e !important; }
-        .card-balance { background: linear-gradient(135deg, #1a237e 0%, #283593 100%); color: white; border-radius: 15px; border: none; }
-        .transaction-card { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .status-success { color: #2e7d32; font-weight: 600; }
-        .status-pending { color: #f57c00; font-weight: 600; }
-        .status-declined { color: #d32f2f; font-weight: 600; }
-        .scroll-table { max-height: 400px; overflow-y: auto; }
-        #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        body { background: #f4f7f6; font-family: sans-serif; }
+        .card-custom { border-radius: 15px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .balance-card { background: #000; color: #fff; padding: 30px; position: relative; overflow: hidden; }
+        #loading-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 9999; text-align: center; padding-top: 20%; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark shadow-sm mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="#"><i class="fas fa-university me-2"></i>TRANSGLOBAL</a>
-        <div class="d-flex align-items-center">
-            <img id="display-profile-pic" src="https://via.placeholder.com/40" class="rounded-circle me-2" width="35" height="35" style="object-fit: cover;">
-            <span class="text-white d-none d-md-block">Morris Thomas</span>
-        </div>
+<div id="loading-overlay">
+    <div class="spinner-border text-primary mb-3"></div>
+    <h4>Securing Connection...</h4>
+    <p>Encrypting transaction data</p>
+</div>
+
+<div class="container mt-4">
+    <div class="card card-custom balance-card mb-4">
+        <small class="opacity-75">TOTAL PORTFOLIO VALUE</small>
+        <h1 id="balance-display">$10,000,000.00</h1>
+        <div class="mt-4">**** **** **** 0992</div>
+        <div class="fw-bold">MORRIS THOMAS</div>
     </div>
-</nav>
 
-<div class="container">
-    
-    <div class="row g-3 mb-4">
-        <div class="col-12 col-md-5">
-            <div class="card card-balance p-4 shadow">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <small class="opacity-75">Available Balance</small>
-                        <h1 class="fw-bold mt-1" id="main-balance">$45,250.00</h1>
-                    </div>
-                    <i class="fas fa-shield-alt fa-2x opacity-50"></i>
-                </div>
-                <div class="mt-4 d-flex justify-content-between align-items-center">
-                    <span class="letter-spacing">**** **** **** 8829</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" width="50" style="filter: brightness(0) invert(1);">
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-7">
-            <div class="card h-100 p-3 transaction-card">
-                <h6 class="fw-bold mb-3">Quick Transfers</h6>
-                <div class="row g-2">
-                    <div class="col-6">
-                        <button class="btn btn-outline-primary w-100 py-3" data-bs-toggle="modal" data-bs-target="#wireModal">
-                            <i class="fas fa-globe d-block mb-1"></i> International
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-outline-dark w-100 py-3">
-                            <i class="fas fa-exchange-alt d-block mb-1"></i> Internal
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <div class="card card-custom p-4 mb-4">
+        <h5 class="fw-bold"><i class="fas fa-globe me-2"></i>International Wire Transfer</h5>
+        <hr>
+        <div class="row g-3">
+            <div class="col-md-6"><input type="text" id="ben-name" class="form-control" placeholder="Beneficiary Full Name"></div>
+            <div class="col-md-6"><input type="text" id="ben-bank" class="form-control" placeholder="Bank Name"></div>
+            <div class="col-md-6"><input type="number" id="ben-amount" class="form-control" placeholder="Amount (USD)"></div>
+            <div class="col-md-6"><button class="btn btn-primary w-100 fw-bold" onclick="executeTransfer()">CONFIRM TRANSFER</button></div>
         </div>
     </div>
 
-    <div class="card transaction-card">
-        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold">Recent Transactions</h5>
-            <span class="badge bg-light text-dark border">Live Updates</span>
-        </div>
-        <div class="table-responsive scroll-table">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Details</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="history-rows">
-                    <tr>
-                        <td>
-                            <div class="fw-bold">Initial Deposit</div>
-                            <small class="text-muted">May 01, 2026</small>
-                        </td>
-                        <td class="text-success fw-bold">+$45,250.00</td>
-                        <td><span class="status-success">Success</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <hr class="my-5">
-
-    <div class="card border-primary mb-5">
-        <div class="card-header bg-primary text-white fw-bold">Admin Management Panel</div>
-        <div class="card-body">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">1. Upload Profile Photo</label>
-                    <input type="file" class="form-control" id="photoInput" onchange="updatePhoto(event)">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">2. Top-up Account (Credit)</label>
-                    <div class="input-group">
-                        <input type="number" id="topup-amount" class="form-control" placeholder="0.00">
-                        <button class="btn btn-success" onclick="adminProcess('Credit')">Add Funds</button>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">3. Manual Debit</label>
-                    <div class="input-group">
-                        <input type="number" id="debit-amount" class="form-control" placeholder="0.00">
-                        <button class="btn btn-danger" onclick="adminProcess('Debit')">Remove Funds</button>
-                    </div>
-                </div>
+    <div class="card card-custom p-4">
+        <h5 class="fw-bold">Recent Activity</h5>
+        <div id="activity-list">
+            <div class="d-flex justify-content-between border-bottom py-3">
+                <div><strong>Offshore Salary Deposit</strong><br><small class="text-muted">April 27, 2026</small></div>
+                <div class="text-success fw-bold">+$10,000,000.00</div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="wireModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title">International Wire Transfer</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Beneficiary Name</label>
-                    <input type="text" id="wire-name" class="form-control" placeholder="Full Name">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Amount (USD)</label>
-                    <input type="number" id="wire-amount" class="form-control" placeholder="0.00">
-                </div>
-                <button class="btn btn-primary w-100 py-2 fw-bold" onclick="executeWire()">Confirm & Send Payment</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="chat-widget">
-    <button class="btn btn-primary rounded-circle shadow-lg p-3" onclick="toggleChat()">
-        <i class="fas fa-headset fa-lg"></i>
-    </button>
-    <div id="chat-window" class="card shadow-lg d-none" style="width: 300px; position: absolute; bottom: 75px; right: 0;">
-        <div class="card-header bg-primary text-white">Live Support</div>
-        <div id="chat-body" class="card-body bg-light" style="height: 200px; overflow-y: auto; font-size: 0.9rem;">
-            <p class="bg-white p-2 rounded shadow-sm">Welcome to Transglobal Support. How can we help?</p>
-        </div>
-        <div class="card-footer p-2">
+<div id="chat-container" style="position: fixed; bottom: 20px; right: 20px; width: 300px; z-index: 1000;">
+    <div id="chat-box" class="card shadow-lg d-none">
+        <div class="card-header bg-primary text-white">Support Chat</div>
+        <div id="chat-msgs" class="card-body bg-light" style="height: 200px; overflow-y: auto; font-size: 0.9rem;"></div>
+        <div class="card-footer p-1">
             <div class="input-group">
-                <input type="text" id="chat-msg" class="form-control form-control-sm" placeholder="Message...">
-                <button class="btn btn-primary btn-sm" onclick="sendChat()">Send</button>
+                <input type="text" id="chat-input" class="form-control border-0" placeholder="Type here...">
+                <button class="btn btn-primary btn-sm" onclick="sendToAdmin()">Send</button>
             </div>
         </div>
     </div>
+    <button class="btn btn-primary rounded-circle shadow p-3 float-end" onclick="document.getElementById('chat-box').classList.toggle('d-none')">
+        <i class="fas fa-comments fa-lg"></i>
+    </button>
 </div>
 
 <script>
-    let balance = 45250.00;
+    // Initialize Data
+    let balance = localStorage.getItem('totalBalance') ? parseFloat(localStorage.getItem('totalBalance')) : 10000000;
+    document.getElementById('balance-display').innerText = "$" + balance.toLocaleString(undefined, {minimumFractionDigits: 2});
 
-    // Handle Profile Photo
-    function updatePhoto(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            document.getElementById('display-profile-pic').src = reader.result;
-            localStorage.setItem('userPhoto', reader.result);
-        };
-        reader.readAsDataURL(event.target.files[0]);
+    function executeTransfer() {
+        const name = document.getElementById('ben-name').value;
+        const amt = parseFloat(document.getElementById('ben-amount').value);
+        
+        if(!name || isNaN(amt)) return alert("Please fill in all details.");
+        if(amt > balance) return alert("Insufficient balance.");
+
+        // Show Loading Overlay
+        document.getElementById('loading-overlay').style.display = 'block';
+
+        setTimeout(() => {
+            // Update Balance
+            balance -= amt;
+            localStorage.setItem('totalBalance', balance);
+            document.getElementById('balance-display').innerText = "$" + balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+            // Add to History (Fixes NaN and Undefined)
+            const newRow = `<div class="d-flex justify-content-between border-bottom py-3">
+                <div><strong>Wire Transfer to ${name}</strong><br><small class="text-muted">Today</small></div>
+                <div class="text-danger fw-bold">-$${amt.toLocaleString(undefined, {minimumFractionDigits: 2})}</div>
+            </div>`;
+            document.getElementById('activity-list').insertAdjacentHTML('afterbegin', newRow);
+
+            // Reset UI
+            document.getElementById('loading-overlay').style.display = 'none';
+            document.getElementById('ben-name').value = '';
+            document.getElementById('ben-amount').value = '';
+            alert("Transfer Processed Successfully!");
+        }, 3000);
     }
 
-    // Process Admin Credit/Debit
-    function adminProcess(type) {
-        let amountInput = type === 'Credit' ? 'topup-amount' : 'debit-amount';
-        let amount = parseFloat(document.getElementById(amountInput).value);
-        if(!amount) return alert("Enter valid amount");
-        
-        updateSystem(type, amount, type === 'Credit' ? 'Account Top-up' : 'Admin Adjustment');
-        document.getElementById(amountInput).value = '';
-    }
-
-    // Process Wire Transfer
-    function executeWire() {
-        let name = document.getElementById('wire-name').value;
-        let amount = parseFloat(document.getElementById('wire-amount').value);
-        
-        if(!name || !amount) return alert("Please fill all fields");
-        if(amount > balance) return alert("Insufficient balance for this wire.");
-
-        updateSystem('Debit', amount, "Wire to: " + name);
-        
-        // Close Modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('wireModal'));
-        modal.hide();
-    }
-
-    // Core Update Engine
-    function updateSystem(type, amount, note) {
-        if(type === 'Debit') balance -= amount;
-        else balance += amount;
-
-        // Update Balance Display
-        document.getElementById('main-balance').innerText = `$${balance.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-
-        // Add to History
-        const row = `<tr>
-            <td>
-                <div class="fw-bold">${note}</div>
-                <small class="text-muted">${new Date().toLocaleDateString()}</small>
-            </td>
-            <td class="${type === 'Debit' ? 'text-danger' : 'text-success'} fw-bold">
-                ${type === 'Debit' ? '-' : '+'}$${amount.toLocaleString()}
-            </td>
-            <td><span class="status-success">Success</span></td>
-        </tr>`;
-        
-        document.getElementById('history-rows').insertAdjacentHTML('afterbegin', row);
-    }
-
-    // Chat Functions
-    function toggleChat() { document.getElementById('chat-window').classList.toggle('d-none'); }
-    function sendChat() {
-        let msg = document.getElementById('chat-msg').value;
+    function sendToAdmin() {
+        const msg = document.getElementById('chat-input').value;
         if(!msg) return;
-        document.getElementById('chat-body').innerHTML += `<p class="text-end text-primary fw-bold">You: ${msg}</p>`;
-        document.getElementById('chat-msg').value = '';
-    }
-
-    // Load saved photo on boot
-    window.onload = () => {
-        if(localStorage.getItem('userPhoto')) document.getElementById('display-profile-pic').src = localStorage.getItem('userPhoto');
+        document.getElementById('chat-msgs').innerHTML += `<div class="text-end mb-2"><span class="bg-primary text-white p-2 rounded d-inline-block">You: ${msg}</span></div>`;
+        localStorage.setItem('customer_msg', msg); // Send to Admin page
+        document.getElementById('chat-input').value = '';
     }
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
