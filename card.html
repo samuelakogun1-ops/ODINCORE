@@ -3,109 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODIN PRIVATE | Elite Banking</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Virtual Cards | Odinscafe Online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --dark-blue: #0a0e1a; --card-bg: #161b22; }
-        body { background-color: var(--dark-blue); color: white; font-family: 'Inter', sans-serif; }
-        
-        .sidebar { background: #0d1117; min-height: 100vh; border-right: 1px solid #30363d; padding: 30px 15px; }
-        .nav-link { color: #8b949e; padding: 12px; border-radius: 8px; margin-bottom: 10px; transition: 0.3s; }
-        .nav-link:hover, .nav-link.active { background: #21262d; color: var(--gold) !important; border-left: 3px solid var(--gold); }
-        
-        .premium-card { background: var(--card-bg); border: 1px solid #30363d; border-radius: 20px; padding: 30px; }
-        .balance-text { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; color: var(--gold); }
-        
-        .profile-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold); margin-bottom: 15px; }
-        .status-dot { height: 10px; width: 10px; background-color: #238636; border-radius: 50%; display: inline-block; margin-right: 5px; }
-        
-        .btn-gold { background: var(--gold); color: black; font-weight: 700; border-radius: 10px; padding: 12px; }
-        .btn-gold:hover { background: #b8962d; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .card-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
     </style>
 </head>
-<body>
+<body class="bg-[#f8fafc] flex min-h-screen">
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-lg-2 sidebar shadow-lg">
-            <div class="text-center">
-                <img id="user-avatar" src="https://via.placeholder.com/150" class="profile-img">
-                <h6 class="fw-bold mb-0">Morris Thomas</h6>
-                <p class="small text-muted"><span class="status-dot"></span> Private Client</p>
-            </div>
-            <hr class="text-muted">
-            <nav class="nav flex-column mt-4">
-                <a class="nav-link active" href="index.html"><i class="fas fa-th-large me-2"></i> Dashboard</a>
-                <a class="nav-link" href="transfer.html"><i class="fas fa-exchange-alt me-2"></i> Wire Transfer</a>
-                <a class="nav-link" href="card.html"><i class="fas fa-credit-card me-2"></i> Card Services</a>
-                <a class="nav-link" href="admin.html"><i class="fas fa-user-shield me-2"></i> Settings</a>
-                <a class="nav-link text-danger mt-5" href="#"><i class="fas fa-power-off me-2"></i> Logout</a>
-            </nav>
+    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen">
+        <div class="p-8 flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-shield-halved text-white"></i></div>
+            <span class="text-xl font-bold tracking-tight text-slate-800 uppercase">Odinscafe</span>
         </div>
+        <nav class="flex-grow px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
+                <i class="fas fa-house"></i> Dashboard
+            </a>
+            <a href="transfer.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold">
+                <i class="fas fa-paper-plane"></i> Transfers
+            </a>
+            <a href="card.html" class="bg-blue-600 text-white flex items-center gap-3 p-4 rounded-2xl transition font-bold shadow-lg shadow-blue-200">
+                <i class="fas fa-credit-card"></i> Virtual Cards
+            </a>
+        </nav>
+        <div class="p-6 border-t border-slate-100">
+            <a href="login.html" class="flex items-center gap-3 p-4 text-red-500 font-bold"><i class="fas fa-power-off"></i> Logout</a>
+        </div>
+    </aside>
 
-        <div class="col-md-9 col-lg-10 p-5">
-            <div class="row mb-4">
-                <div class="col-md-8">
-                    <h2 class="fw-bold">Wealth Overview</h2>
-                    <p class="text-muted">Welcome back, Mr. Thomas. Your portfolio is performing well.</p>
+    <main class="flex-grow">
+        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-8 py-6 border-b border-slate-200 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-slate-800">Card Management</h1>
+            <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="text-xs font-bold text-slate-800 uppercase">Morris Thomas</p>
+                    <p class="text-[10px] text-green-500 font-bold">Tier: Elite</p>
                 </div>
+                <div class="h-12 w-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold">MT</div>
             </div>
+        </header>
 
-            <div class="premium-card mb-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <small class="text-uppercase text-muted fw-bold">Total Liquid Assets</small>
-                        <h1 class="balance-text" id="main-bal">$10,000,000.00</h1>
+        <div class="p-8 max-w-4xl mx-auto">
+            <div class="bg-gradient-to-br from-slate-800 to-black rounded-[2.5rem] p-10 card-shadow relative overflow-hidden aspect-[1.58/1] text-white border border-white/10 mb-12">
+                <div class="flex justify-between items-start mb-16 relative z-10">
+                    <div class="flex flex-col gap-1">
+                        <p class="text-[10px] uppercase tracking-[0.3em] opacity-60">Elite Business</p>
+                        <i class="fas fa-microchip text-yellow-500 text-4xl"></i>
                     </div>
-                    <div class="col-md-6 text-md-end">
-                        <p class="mb-0 text-muted small">Account Type</p>
-                        <p class="fw-bold text-white">Offshore Private Savings</p>
-                        <p class="mb-0 text-muted small">Account Number</p>
-                        <p class="fw-bold text-white">**** **** 0992</p>
-                    </div>
+                    <span class="font-black italic text-3xl opacity-80">VISA</span>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="premium-card">
-                        <h5 class="fw-bold mb-4">Transaction Ledger</h5>
-                        <div class="table-responsive">
-                            <table class="table table-dark table-hover border-0">
-                                <tbody id="ledger-body">
-                                    <tr>
-                                        <td><i class="fas fa-arrow-down text-success me-3"></i> <strong>Salary Deposit</strong><br><small class="text-muted">April 27, 2026</small></td>
-                                        <td class="text-end text-success fw-bold">+$10,000,000.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                
+                <div class="relative z-10">
+                    <p class="text-3xl tracking-[0.2em] font-mono mb-10">4421 8892 0012 9928</p>
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <p class="text-[9px] uppercase tracking-widest opacity-50 mb-1">Card Holder</p>
+                            <p class="text-lg font-bold tracking-wider uppercase">Morris Thomas</p>
+                        </div>
+                        <div class="flex gap-8">
+                            <div>
+                                <p class="text-[9px] uppercase tracking-widest opacity-50 mb-1">Expires</p>
+                                <p class="text-sm font-bold tracking-wider">09/29</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] uppercase tracking-widest opacity-50 mb-1">CVV</p>
+                                <p class="text-sm font-bold tracking-wider">***</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800">Freeze Card</p>
+                            <p class="text-xs text-slate-400">Temporarily disable card</p>
+                        </div>
+                    </div>
+                    <button class="w-12 h-6 bg-slate-200 rounded-full relative">
+                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-sm"></div>
+                    </button>
+                </div>
+
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-800">Show Details</p>
+                            <p class="text-xs text-slate-400">View CVV & Number</p>
+                        </div>
+                    </div>
+                    <button class="text-blue-600 font-bold text-xs uppercase">Reveal</button>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </main>
 
-<script>
-    window.onload = function() {
-        // Load data from storage
-        const bal = localStorage.getItem('total_balance') || "10000000";
-        document.getElementById('main-bal').innerText = "$" + parseFloat(bal).toLocaleString(undefined, {minimumFractionDigits: 2});
-        
-        const photo = localStorage.getItem('saved_photo');
-        if(photo) document.getElementById('user-avatar').src = photo;
-
-        const history = JSON.parse(localStorage.getItem('transaction_history')) || [];
-        history.forEach(item => {
-            const row = `<tr>
-                <td><i class="fas fa-arrow-up text-danger me-3"></i> <strong>${item.note}</strong><br><small class="text-muted">${item.date}</small></td>
-                <td class="text-end text-danger fw-bold">-$${parseFloat(item.amount).toLocaleString()}</td>
-            </tr>`;
-            document.getElementById('ledger-body').insertAdjacentHTML('afterbegin', row);
-        });
-    };
-</script>
 </body>
 </html>
