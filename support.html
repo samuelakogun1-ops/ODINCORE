@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Support | Odinscafe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .chat-bubble-client { background: #3b82f6; color: white; border-radius: 20px 20px 4px 20px; }
+        .chat-bubble-admin { background: #f1f5f9; color: #1e293b; border-radius: 20px 20px 20px 4px; }
+    </style>
+</head>
+<body class="bg-[#f8fafc] flex h-screen overflow-hidden">
+
+    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col">
+        <div class="p-8 flex items-center gap-3">
+            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-shield-halved text-white"></i></div>
+            <span class="text-xl font-bold tracking-tight text-slate-800 uppercase">Odinscafe</span>
+        </div>
+        <nav class="flex-grow px-4 space-y-2">
+            <a href="dashboard.html" class="flex items-center gap-3 p-4 text-slate-500 hover:bg-slate-50 rounded-2xl transition font-bold"><i class="fas fa-house"></i> Dashboard</a>
+            <a href="support.html" class="bg-blue-600 text-white flex items-center gap-3 p-4 rounded-2xl transition font-bold shadow-lg shadow-blue-200"><i class="fas fa-headset"></i> Support</a>
+        </nav>
+    </aside>
+
+    <main class="flex-grow flex flex-col">
+        <header class="bg-white px-8 py-6 border-b border-slate-200 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white ring-4 ring-green-100">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div>
+                    <h2 class="text-sm font-bold text-slate-800">Private Banker (Online)</h2>
+                    <p class="text-[10px] text-green-600 font-bold uppercase tracking-widest">Priority Concierge</p>
+                </div>
+            </div>
+        </header>
+
+        <div id="chatBox" class="flex-grow overflow-y-auto p-8 space-y-6 bg-slate-50/50">
+            <div class="flex flex-col items-start">
+                <div class="chat-bubble-admin p-4 max-w-md shadow-sm text-sm">
+                    Hello Mr. Thomas, I am your dedicated concierge. How can I assist you with your offshore accounts today?
+                </div>
+                <span class="text-[9px] text-slate-400 mt-2 ml-2">04:30 AM</span>
+            </div>
+        </div>
+
+        <div class="p-6 bg-white border-t border-slate-200">
+            <div class="max-w-4xl mx-auto flex gap-4">
+                <input type="text" id="clientInput" placeholder="Type your message..." class="flex-grow bg-slate-100 border-none rounded-2xl p-4 focus:ring-2 focus:ring-blue-500">
+                <button onclick="sendMessage()" class="bg-blue-600 text-white w-14 h-14 rounded-2xl shadow-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('clientInput');
+            const chatBox = document.getElementById('chatBox');
+            if(input.value.trim() === "") return;
+
+            const msg = `
+                <div class="flex flex-col items-end">
+                    <div class="chat-bubble-client p-4 max-w-md shadow-lg shadow-blue-200 text-sm">
+                        ${input.value}
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-2 mr-2">Just Now</span>
+                </div>`;
+            chatBox.innerHTML += msg;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
