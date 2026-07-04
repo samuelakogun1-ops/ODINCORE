@@ -8,134 +8,144 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #ffffff; color: #0f172a; }
-        .hero-gradient { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; }
+        .hero-gradient { background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%); }
         .support-card { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
-        .support-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); border-color: #3b82f6; }
+        .support-card:hover { transform: translateY(-8px); box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08); border-color: #3b82f6; }
     </style>
 </head>
 <body>
-
-    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-8 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
-                <i class="fas fa-vault text-lg"></i>
+    <nav class="sticky top-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+            <a href="index.html" class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
+                    <i class="fas fa-vault"></i>
+                </div>
+                <span class="text-xl font-extrabold uppercase tracking-tight text-slate-800">Odin <span class="text-blue-600">Private</span></span>
+            </a>
+            <div class="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
+                <a href="#services" class="transition hover:text-blue-600">Services</a>
+                <a href="#support" class="transition hover:text-blue-600">Support</a>
+                <a href="#security" class="transition hover:text-blue-600">Security</a>
             </div>
-            <span class="font-extrabold text-xl tracking-tighter uppercase text-slate-800">Odin <span class="text-blue-600">Private</span></span>
+            <div class="flex items-center gap-3">
+                <a href="login.html" class="hidden rounded-full border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-blue-600 hover:text-blue-600 sm:inline-flex">Sign In</a>
+                <a href="login.html" class="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black">Open Account</a>
+                <button id="menuButton" class="rounded-full border border-slate-200 p-2 text-slate-700 md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
-        <div class="hidden md:flex gap-8 text-sm font-bold text-slate-500">
-            <a href="#services" class="hover:text-blue-600">Services</a>
-            <a href="#support" class="hover:text-blue-600">Support</a>
-            <a href="#security" class="hover:text-blue-600">Security</a>
-        </div>
-        <div class="flex gap-4">
-            <a href="login.html" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-full hover:bg-black transition">Open Account</a>
+        <div id="mobileMenu" class="hidden border-t border-slate-200 bg-white px-6 py-4 md:hidden">
+            <div class="flex flex-col gap-3 text-sm font-semibold text-slate-600">
+                <a href="#services" class="transition hover:text-blue-600">Services</a>
+                <a href="#support" class="transition hover:text-blue-600">Support</a>
+                <a href="#security" class="transition hover:text-blue-600">Security</a>
+            </div>
         </div>
     </nav>
 
-    <section class="hero-gradient pt-40 pb-20 px-8 text-center">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
-                Global Banking for <br><span class="text-blue-600">High-Net-Worth Professionals.</span>
+    <section class="hero-gradient px-6 py-20 lg:px-8 lg:py-28">
+        <div class="mx-auto max-w-6xl text-center">
+            <div class="mx-auto mb-6 inline-flex items-center rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
+                <i class="fas fa-shield-halved mr-2"></i> Institutional-grade banking for modern professionals
+            </div>
+            <h1 class="mb-6 text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl lg:text-6xl">
+                Global liquidity, private support, and secure execution in one place.
             </h1>
-            <p class="text-slate-500 text-lg mb-10 leading-relaxed">
-                Whether you are managing offshore infrastructure or domestic assets, Odin Private provides the concierge service and digital tools required for seamless global liquidity.
+            <p class="mx-auto mb-10 max-w-3xl text-lg leading-relaxed text-slate-600">
+                Odin Private helps founders, executives, and high-trust teams move capital, manage payments, and access human-led support around the clock.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="login.html" class="px-10 py-5 bg-blue-600 text-white font-bold rounded-2xl shadow-xl shadow-blue-200 hover:bg-blue-700">Start Application</a>
-                <a href="#support" class="px-10 py-5 bg-white text-slate-700 font-bold rounded-2xl border border-slate-200 hover:bg-slate-50">Talk to an Agent</a>
+            <div class="flex flex-col justify-center gap-4 sm:flex-row">
+                <a href="login.html" class="rounded-2xl bg-blue-600 px-8 py-4 font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700">Start Application</a>
+                <a href="#support" class="rounded-2xl border border-slate-200 bg-white px-8 py-4 font-semibold text-slate-700 transition hover:bg-slate-50">Talk to an Agent</a>
             </div>
         </div>
     </section>
 
-    <section id="support" class="max-w-6xl mx-auto py-24 px-8">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-extrabold text-slate-900">Personalized Concierge Support</h2>
-            <p class="text-slate-500 mt-4">Real humans. Real solutions. Available 24/7 globally.</p>
+    <section id="services" class="mx-auto max-w-7xl px-6 py-20 lg:px-8">
+        <div class="grid gap-8 lg:grid-cols-3">
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+                <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-blue-600"><i class="fas fa-globe text-2xl"></i></div>
+                <h3 class="mb-3 text-xl font-bold text-slate-900">Cross-border transfers</h3>
+                <p class="text-sm leading-relaxed text-slate-600">Route payments securely across jurisdictions with transparent tracking and protected handling.</p>
+            </div>
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+                <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600"><i class="fas fa-chart-line text-2xl"></i></div>
+                <h3 class="mb-3 text-xl font-bold text-slate-900">Portfolio visibility</h3>
+                <p class="text-sm leading-relaxed text-slate-600">Monitor balances, transactions, and account activity through a streamlined dashboard.</p>
+            </div>
+            <div class="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+                <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-50 text-purple-600"><i class="fas fa-lock text-2xl"></i></div>
+                <h3 class="mb-3 text-xl font-bold text-slate-900">Security-first operations</h3>
+                <p class="text-sm leading-relaxed text-slate-600">Protect every request with verified access, encrypted communications, and a dedicated support team.</p>
+            </div>
         </div>
+    </section>
 
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="support-card bg-white p-8 rounded-[2.5rem]">
-                <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-6">
-                    <i class="fas fa-user-tie text-blue-600 text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-3">Private Wealth Agents</h3>
-                <p class="text-sm text-slate-500 leading-relaxed mb-6">
-                    Dedicated account managers assigned to handle large-scale transfers, currency exchange, and asset protection.
-                </p>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
-                        <i class="fas fa-phone text-blue-500"></i> +1 (800) 555-ODIN
-                    </div>
-                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
-                        <i class="fas fa-envelope text-blue-500"></i> private@odinscafe.online
-                    </div>
+    <section id="support" class="mx-auto max-w-7xl px-6 pb-20 lg:px-8">
+        <div class="mb-12 text-center">
+            <h2 class="text-3xl font-extrabold text-slate-900">Professional support that feels personal</h2>
+            <p class="mt-3 text-slate-600">Real people, clear communication, and round-the-clock service for sensitive financial matters.</p>
+        </div>
+        <div class="grid gap-8 md:grid-cols-3">
+            <div class="support-card rounded-[2rem] bg-white p-8">
+                <h3 class="mb-3 text-xl font-bold text-slate-900">Private wealth agents</h3>
+                <p class="mb-6 text-sm leading-relaxed text-slate-600">Dedicated specialists support your transfer requests, account changes, and priority questions.</p>
+                <div class="space-y-3 text-sm font-semibold text-slate-700">
+                    <div class="flex items-center gap-3"><i class="fas fa-phone text-blue-500"></i> +1 (800) 555-ODIN</div>
+                    <div class="flex items-center gap-3"><i class="fas fa-envelope text-blue-500"></i> private@odinscafe.online</div>
                 </div>
             </div>
-
-            <div class="support-card bg-white p-8 rounded-[2.5rem]">
-                <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mb-6">
-                    <i class="fas fa-headset text-emerald-600 text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-3">24/7 Global Helpdesk</h3>
-                <p class="text-sm text-slate-500 leading-relaxed mb-6">
-                    Instant assistance for technical issues, login resets, and transaction tracking across all time zones.
-                </p>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
-                        <i class="fas fa-phone text-emerald-500"></i> +44 20 7946 0123
-                    </div>
-                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
-                        <i class="fas fa-comments text-emerald-500"></i> Live Chat Active
-                    </div>
+            <div class="support-card rounded-[2rem] bg-white p-8">
+                <h3 class="mb-3 text-xl font-bold text-slate-900">24/7 helpdesk</h3>
+                <p class="mb-6 text-sm leading-relaxed text-slate-600">Support for onboarding, access issues, and transaction visibility across every time zone.</p>
+                <div class="space-y-3 text-sm font-semibold text-slate-700">
+                    <div class="flex items-center gap-3"><i class="fas fa-headset text-emerald-500"></i> Live guidance available</div>
+                    <div class="flex items-center gap-3"><i class="fas fa-comments text-emerald-500"></i> Secure live chat ready</div>
                 </div>
             </div>
-
-            <div class="support-card bg-white p-8 rounded-[2.5rem]">
-                <div class="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center mb-6">
-                    <i class="fas fa-building text-purple-600 text-2xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-3">Institutional Logistics</h3>
-                <p class="text-sm text-slate-500 leading-relaxed mb-6">
-                    Expert support for corporate entities, shipping logistics companies, and international engineering firms.
-                </p>
-                <div class="space-y-3">
-                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
-                        <i class="fas fa-phone text-purple-500"></i> +1 (888) 999-CORP
-                    </div>
-                    <div class="flex items-center gap-3 text-sm font-bold text-slate-800">
-                        <i class="fas fa-globe text-purple-500"></i> Global Node Network
-                    </div>
+            <div class="support-card rounded-[2rem] bg-white p-8">
+                <h3 class="mb-3 text-xl font-bold text-slate-900">Institutional logistics</h3>
+                <p class="mb-6 text-sm leading-relaxed text-slate-600">Built for business owners, shipping operators, and teams managing international operations.</p>
+                <div class="space-y-3 text-sm font-semibold text-slate-700">
+                    <div class="flex items-center gap-3"><i class="fas fa-building text-purple-500"></i> Enterprise-ready workflows</div>
+                    <div class="flex items-center gap-3"><i class="fas fa-globe text-purple-500"></i> Global reach with local care</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="bg-slate-900 py-24 px-8 text-white">
-        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12">
-            <div class="md:w-1/2">
-                <h2 class="text-3xl font-bold mb-6">Beyond Traditional Banking.</h2>
-                <p class="text-slate-400 leading-relaxed mb-6">
-                    Odin Private was founded to bridge the gap between technical infrastructure and financial management. Our platform isn't just for engineers; it is for any professional requiring high-speed, secure, and human-verified global transactions.
-                </p>
-                <ul class="space-y-4">
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-400"></i> Multi-Currency Settlements</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-400"></i> Personal Concierge Assigned to Every Account</li>
-                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-400"></i> Institutional Grade Security Protocols</li>
+    <section id="security" class="bg-slate-900 px-6 py-20 text-white lg:px-8">
+        <div class="mx-auto flex max-w-7xl flex-col gap-10 lg:flex-row lg:items-center">
+            <div class="lg:w-1/2">
+                <h2 class="mb-4 text-3xl font-extrabold">Built for trust, speed, and accountability.</h2>
+                <p class="mb-6 max-w-2xl text-slate-400">Every touchpoint is designed to feel premium and dependable, from onboarding to confirmation and support.</p>
+                <ul class="space-y-4 text-sm text-slate-300">
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-400"></i> Multi-currency payments with clear audit trails</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-400"></i> Expert-led guidance for sensitive transactions</li>
+                    <li class="flex items-center gap-3"><i class="fas fa-check-circle text-blue-400"></i> Security controls that protect direct access and account activity</li>
                 </ul>
             </div>
-            <div class="md:w-1/2">
+            <div class="lg:w-1/2">
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="aspect-square rounded-3xl bg-slate-800 flex items-center justify-center text-5xl opacity-50">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="aspect-square rounded-3xl bg-blue-600 flex items-center justify-center text-5xl">
-                        <i class="fas fa-handshake"></i>
-                    </div>
+                    <div class="flex aspect-square items-center justify-center rounded-[2rem] bg-slate-800 text-5xl text-slate-300"><i class="fas fa-users"></i></div>
+                    <div class="flex aspect-square items-center justify-center rounded-[2rem] bg-blue-600 text-5xl"><i class="fas fa-handshake"></i></div>
                 </div>
             </div>
         </div>
     </section>
 
+    <footer class="border-t border-slate-200 bg-white px-6 py-8 text-center text-sm text-slate-500 lg:px-8">
+        <p>Odin Private © 2026. Secure financial access for professionals and institutions.</p>
+    </footer>
+
+    <script>
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuButton?.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Odinscafe Online</title>
+    <title>Dashboard | Odin Private</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -13,127 +13,117 @@
         .sidebar-link.active { background: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
-<body class="bg-[#f8fafc] flex min-h-screen">
-
-    <aside class="w-72 bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0 h-screen">
+<body class="flex min-h-screen bg-[#f8fafc]">
+    <aside class="sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200 bg-white lg:flex">
         <div class="p-8">
             <div class="flex items-center gap-3">
-                <div class="bg-blue-600 p-2 rounded-xl">
-                    <i class="fas fa-shield-halved text-white text-lg"></i>
-                </div>
-                <span class="text-xl font-bold tracking-tight text-slate-800 uppercase">Odinscafe</span>
+                <div class="rounded-xl bg-blue-600 p-2"><i class="fas fa-shield-halved text-lg text-white"></i></div>
+                <span class="text-xl font-bold uppercase tracking-tight text-slate-800">Odin Private</span>
             </div>
         </div>
-
-        <nav class="flex-grow px-4 space-y-2">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] px-4 mb-4">Main Menu</p>
-            <a href="dashboard.html" class="sidebar-link active flex items-center gap-3 p-4 rounded-2xl transition font-bold">
-                <i class="fas fa-house"></i> Dashboard
-            </a>
-            <a href="transfer.html" class="sidebar-link flex items-center gap-3 p-4 text-slate-500 rounded-2xl transition font-bold">
-                <i class="fas fa-paper-plane"></i> Transfers
-            </a>
-            <a href="card.html" class="sidebar-link flex items-center gap-3 p-4 text-slate-500 rounded-2xl transition font-bold">
-                <i class="fas fa-credit-card"></i> Virtual Cards
-            </a>
-            
-            <a href="support.html" class="sidebar-link flex items-center justify-between p-4 text-slate-500 rounded-2xl transition font-bold">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-headset"></i> Support
-                </div>
-                <span class="flex h-2 w-2 relative">
-                  <span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-            </a>
-            
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] px-4 mt-8 mb-4">Account Settings</p>
-            <a href="profile.html" class="sidebar-link flex items-center gap-3 p-4 text-slate-500 rounded-2xl transition font-bold">
-                <i class="fas fa-user-gear"></i> Profile Settings
-            </a>
+        <nav class="flex-grow space-y-2 px-4">
+            <p class="mb-4 px-4 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Main Menu</p>
+            <a href="dashboard.html" class="sidebar-link active flex items-center gap-3 rounded-2xl p-4 font-bold"><i class="fas fa-house"></i> Dashboard</a>
+            <a href="transfer.html" class="sidebar-link flex items-center gap-3 rounded-2xl p-4 font-bold text-slate-500"><i class="fas fa-paper-plane"></i> Transfers</a>
+            <a href="support.html" class="sidebar-link flex items-center gap-3 rounded-2xl p-4 font-bold text-slate-500"><i class="fas fa-headset"></i> Support</a>
+            <a href="profile.html" class="sidebar-link flex items-center gap-3 rounded-2xl p-4 font-bold text-slate-500"><i class="fas fa-user-gear"></i> Profile</a>
         </nav>
-
-        <div class="p-6 border-t border-slate-100">
-            <a href="login.html" class="flex items-center gap-3 p-4 text-red-500 hover:bg-red-50 rounded-2xl transition font-bold">
-                <i class="fas fa-power-off"></i> Logout
-            </a>
+        <div class="border-t border-slate-100 p-6">
+            <a href="login.html" class="flex items-center gap-3 rounded-2xl p-4 font-bold text-red-500 transition hover:bg-red-50"><i class="fas fa-power-off"></i> Logout</a>
         </div>
     </aside>
 
     <main class="flex-grow">
-        <header class="bg-white/80 backdrop-blur-md sticky top-0 z-10 px-8 py-6 border-b border-slate-200 flex justify-between items-center">
-            <div>
-                <h1 class="text-xl font-bold text-slate-800">Welcome back, Morris</h1>
-                <p class="text-xs text-slate-500">Security Status: <span class="text-green-600 font-bold italic">Encrypted Connection</span></p>
-            </div>
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden sm:block">
-                    <p class="text-xs font-bold text-slate-800 uppercase">Morris Thomas</p>
-                    <p class="text-[10px] text-slate-400">Account ID: #ODIN-8842-X</p>
+        <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/80 px-6 py-6 backdrop-blur-md lg:px-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 id="welcomeName" class="text-xl font-bold text-slate-800">Welcome back</h1>
+                    <p class="text-xs text-slate-500">Security status: <span class="font-bold italic text-green-600">Encrypted connection</span></p>
                 </div>
-                <div class="h-12 w-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-bold">
-                    MT
+                <div class="flex items-center gap-3">
+                    <div class="hidden text-right sm:block">
+                        <p id="userLabel" class="text-xs font-bold uppercase text-slate-800"></p>
+                        <p class="text-[10px] text-slate-400">Account ID: #ODIN-8842-X</p>
+                    </div>
+                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 font-bold text-white">MT</div>
                 </div>
             </div>
         </header>
 
-        <div class="p-8 max-w-7xl mx-auto">
-            <div class="grid lg:grid-cols-3 gap-8">
-                
-                <div class="lg:col-span-2 space-y-8">
-                    <div class="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl">
+        <div class="mx-auto max-w-7xl p-6 lg:p-8">
+            <div class="grid gap-8 lg:grid-cols-3">
+                <div class="space-y-8 lg:col-span-2">
+                    <div class="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-8 text-white shadow-2xl sm:p-10">
                         <div class="relative z-10">
-                            <p class="text-slate-400 font-bold text-xs uppercase tracking-widest">Total Available Balance</p>
-                            <h2 class="text-5xl font-bold mt-4 tracking-tighter">$94,250.00</h2>
-                            <div class="flex gap-4 mt-10">
-                                <a href="transfer.html" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-2xl font-bold transition flex items-center gap-3 shadow-lg shadow-blue-500/30">
-                                    <i class="fas fa-arrow-up-right-from-square text-xs"></i> Move Funds
-                                </a>
+                            <p class="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">Total available balance</p>
+                            <h2 class="mt-4 text-4xl font-bold tracking-tighter sm:text-5xl">$94,250.00</h2>
+                            <div class="mt-8 flex flex-wrap gap-4">
+                                <a href="transfer.html" class="flex items-center gap-3 rounded-2xl bg-blue-600 px-6 py-3 font-bold transition hover:bg-blue-700"><i class="fas fa-arrow-up-right-from-square"></i> Move Funds</a>
+                                <a href="support.html" class="rounded-2xl border border-slate-700 px-6 py-3 font-bold text-slate-300 transition hover:bg-slate-800">Request Support</a>
                             </div>
                         </div>
-                        <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-500/10 rounded-full blur-[100px]"></div>
+                        <div class="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-blue-500/10 blur-[100px]"></div>
                     </div>
 
-                    <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
-                        <div class="p-8 border-b border-slate-100 flex justify-between items-center">
-                            <h3 class="font-bold text-slate-800 text-lg">Transaction History</h3>
-                            <button class="text-blue-600 font-bold text-xs uppercase tracking-widest">View Ledger</button>
+                    <div class="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-sm">
+                        <div class="flex items-center justify-between border-b border-slate-100 p-6">
+                            <h3 class="text-lg font-bold text-slate-800">Recent activity</h3>
+                            <a href="transfer.html" class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Create transfer</a>
                         </div>
-                        <div class="divide-y divide-slate-50">
-                            <div class="p-6 flex items-center justify-between hover:bg-slate-50 transition">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-2xl flex items-center justify-center">
-                                        <i class="fas fa-plus"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-bold text-slate-800 leading-tight">External Credit Approval</p>
-                                        <p class="text-xs text-slate-400 font-medium">May 08, 2026 • 04:14 AM</p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="font-bold text-green-600 text-lg">+$10,000.00</p>
-                                    <p class="text-[10px] font-bold text-slate-300 uppercase">Completed</p>
-                                </div>
-                            </div>
-                        </div>
+                        <div id="activityList" class="divide-y divide-slate-50"></div>
                     </div>
                 </div>
 
-                <div class="bg-gradient-to-br from-slate-800 to-black rounded-[2rem] p-8 shadow-2xl relative overflow-hidden aspect-[1.58/1] text-white border border-white/10 self-start">
-                    <div class="flex justify-between items-start mb-12">
-                        <i class="fas fa-microchip text-yellow-500 text-2xl"></i>
-                        <span class="font-black italic text-2xl opacity-60">VISA</span>
+                <div class="self-start rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-800 to-black p-8 text-white shadow-2xl">
+                    <div class="mb-10 flex items-start justify-between">
+                        <i class="fas fa-microchip text-2xl text-yellow-500"></i>
+                        <span class="text-2xl font-black italic opacity-60">VISA</span>
                     </div>
-                    <p class="text-2xl tracking-[0.25em] font-mono mb-8">4421 •••• •••• 9928</p>
+                    <p class="mb-8 font-mono text-2xl tracking-[0.25em]">4421 •••• •••• 9928</p>
                     <div>
-                        <p class="text-[9px] uppercase tracking-widest opacity-50">Card Holder</p>
-                        <p class="text-sm font-bold tracking-wider uppercase">Morris Thomas</p>
+                        <p class="text-[9px] uppercase tracking-widest opacity-50">Card holder</p>
+                        <p id="cardName" class="text-sm font-bold uppercase tracking-wider"></p>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
 
+    <script>
+        if (localStorage.getItem('odinAuth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        const userEmail = localStorage.getItem('odinUser') || 'morris@odinprivate.com';
+        const displayName = userEmail.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        document.getElementById('welcomeName').textContent = `Welcome back, ${displayName}`;
+        document.getElementById('userLabel').textContent = displayName;
+        document.getElementById('cardName').textContent = displayName;
+
+        const activityList = document.getElementById('activityList');
+        const transactions = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
+
+        if (transactions.length === 0) {
+            activityList.innerHTML = `
+                <div class="p-6 text-sm text-slate-500">No transfers have been completed yet. Your recent activity will appear here after you dispatch a transfer.</div>
+            `;
+        } else {
+            activityList.innerHTML = transactions.map((item) => `
+                <div class="flex items-center justify-between p-6 hover:bg-slate-50">
+                    <div class="flex items-center gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-green-600"><i class="fas fa-arrow-right"></i></div>
+                        <div>
+                            <p class="font-bold text-slate-800">${item.beneficiary}</p>
+                            <p class="text-xs font-medium text-slate-400">${new Date(item.completedAt || item.createdAt).toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-lg font-bold text-slate-800">$${Number(item.amount).toLocaleString()}</p>
+                        <p class="text-[10px] font-bold uppercase text-green-600">${item.status}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
 </body>
 </html>

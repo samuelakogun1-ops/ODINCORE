@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Transfer | Odinscafe</title>
+    <title>International Transfer | Odin Private</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -11,118 +11,94 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-[#f8fafc] min-h-screen">
-
-    <div class="max-w-2xl mx-auto p-8">
-        <div class="flex items-center justify-between mb-10">
-            <h1 class="text-2xl font-bold text-slate-800">New Transfer</h1>
+<body class="min-h-screen bg-[#f8fafc]">
+    <div class="mx-auto max-w-2xl p-6 sm:p-8">
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">New Transfer</h1>
+                <p class="text-sm text-slate-500">Securely prepare your next international payment.</p>
+            </div>
             <div class="text-right">
-                <p class="text-sm font-bold text-slate-900">MORRIS THOMAS</p>
-                <p class="text-[10px] text-blue-600 font-bold uppercase">Senior Engineer Access</p>
+                <p id="senderName" class="text-sm font-bold text-slate-900">Morris Thomas</p>
+                <p class="text-[10px] font-bold uppercase text-blue-600">Senior Engineer Access</p>
             </div>
         </div>
 
-        <div class="bg-white rounded-[2.5rem] border border-slate-200 p-8 shadow-sm">
+        <div class="rounded-[2.5rem] border border-slate-200 bg-white p-8 shadow-sm">
             <div class="space-y-6">
-                
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Recipient Full Name</label>
-                    <input type="text" id="recName" placeholder="Enter legal name" 
-                    class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-medium">
+                    <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Recipient Full Name</label>
+                    <input type="text" id="recName" placeholder="Enter legal name" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 font-medium focus:border-blue-500 focus:outline-none">
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid gap-4 md:grid-cols-2">
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Account Number / IBAN</label>
-                        <input type="text" id="recIban" placeholder="Enter number" 
-                        class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-bold text-sm">
+                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Account Number / IBAN</label>
+                        <input type="text" id="recIban" placeholder="Enter number" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-bold focus:border-blue-500 focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">SWIFT / BIC Code</label>
-                        <input type="text" id="recSwift" placeholder="Enter SWIFT" 
-                        class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-bold text-sm">
+                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">SWIFT / BIC Code</label>
+                        <input type="text" id="recSwift" placeholder="Enter SWIFT" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-bold focus:border-blue-500 focus:outline-none">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Amount to Send (USD)</label>
+                    <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Amount to Send (USD)</label>
                     <div class="relative">
                         <span class="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
-                        <input type="number" id="transferAmt" placeholder="0.00" 
-                        class="w-full p-5 pl-10 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-blue-500 font-bold text-xl">
+                        <input type="number" id="transferAmt" placeholder="0.00" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 pl-10 text-xl font-bold focus:border-blue-500 focus:outline-none">
                     </div>
-                    <p class="mt-2 text-[10px] text-slate-400 font-medium">Available Balance: <span class="text-blue-600 font-bold">$94,250.00</span></p>
+                    <p class="mt-2 text-[10px] font-medium text-slate-400">Available balance: <span class="font-bold text-blue-600">$94,250.00</span></p>
                 </div>
 
-                <div class="bg-blue-50/50 rounded-2xl p-5 border border-blue-100 flex gap-4">
-                    <i class="fas fa-info-circle text-blue-500 mt-1"></i>
-                    <p class="text-[11px] text-slate-500 leading-relaxed">
-                        International transfers are processed through secured nodes. Verified accounts like <strong>Morris Thomas</strong> enjoy $0.00 promotional fees.
-                    </p>
+                <div class="flex gap-4 rounded-2xl border border-blue-100 bg-blue-50/50 p-5">
+                    <i class="fas fa-info-circle mt-1 text-blue-500"></i>
+                    <p class="text-[11px] leading-relaxed text-slate-600">Transfers are prepared securely and can be reviewed before final dispatch. Verified accounts receive priority processing.</p>
                 </div>
 
-                <button id="proceedBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-bold transition shadow-lg shadow-blue-100">
-                    Proceed to Review →
-                </button>
+                <button id="proceedBtn" class="w-full rounded-2xl bg-blue-600 py-5 font-bold text-white shadow-lg shadow-blue-100 transition hover:bg-blue-700">Proceed to Review →</button>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script>
+        if (localStorage.getItem('odinAuth') !== 'true') {
+            window.location.href = 'login.html';
+        }
 
-        // Your verified configuration from the console
-        const firebaseConfig = {
-            apiKey: "AIzaSyCDVHNccAM1jv5WppHFxygIfuCDDL1eIcc",
-            authDomain: "odin-private.firebaseapp.com",
-            projectId: "odin-private",
-            databaseURL: "https://odin-private-default-rtdb.firebaseio.com", 
-            storageBucket: "odin-private.appspot.com",
-            messagingSenderId: "1023424168524",
-            appId: "1:1023424168524:web:d5d3354cf3ba5433f7aae9"
-        };
+        const senderName = document.getElementById('senderName');
+        const userName = (localStorage.getItem('odinUser') || 'morris@odinprivate.com').split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        senderName.textContent = userName.toUpperCase();
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        document.getElementById('proceedBtn').addEventListener('click', function () {
+            const name = document.getElementById('recName').value.trim();
+            const iban = document.getElementById('recIban').value.trim();
+            const swift = document.getElementById('recSwift').value.trim();
+            const amt = Number(document.getElementById('transferAmt').value);
 
-        document.getElementById('proceedBtn').onclick = function() {
-            const name = document.getElementById('recName').value;
-            const iban = document.getElementById('recIban').value;
-            const swift = document.getElementById('recSwift').value;
-            const amt = document.getElementById('transferAmt').value;
-
-            // Protocol Check: Ensure all boxes are filled
-            if (!name || !iban || !swift || amt <= 0) {
-                alert("PROTOCOL ERROR: Please fill in all beneficiary wire details to proceed.");
+            if (!name || !iban || !swift || !amt || amt <= 0) {
+                alert('Please complete all beneficiary details and enter a valid amount.');
                 return;
             }
 
             this.disabled = true;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Connecting to Secure Node...';
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Preparing review...';
 
-            // Push data to your fresh Realtime Database
-            const transferId = Date.now();
-            set(ref(db, 'transfers/' + transferId), {
-                sender: "Morris Thomas",
+            const transferData = {
                 beneficiary: name,
                 account: iban,
                 swiftCode: swift,
                 amount: amt,
-                status: "Pending Verification",
-                timestamp: new Date().toISOString()
-            }).then(() => {
-                // Save to local session for the review page display
-                sessionStorage.setItem('recName', name);
-                sessionStorage.setItem('recIban', iban);
-                sessionStorage.setItem('transferAmt', amt);
+                sender: userName,
+                status: 'Pending Verification',
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('pendingTransfer', JSON.stringify(transferData));
+            setTimeout(() => {
                 window.location.href = 'review-transfer.html';
-            }).catch((error) => {
-                alert("Firebase Error: " + error.message);
-                this.disabled = false;
-                this.innerText = "Proceed to Review →";
-            });
-        };
+            }, 700);
+        });
     </script>
 </body>
 </html>

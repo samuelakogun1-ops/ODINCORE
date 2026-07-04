@@ -3,56 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authorize Transfer | Odinscafe</title>
+    <title>Authorize Transfer | Odin Private</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-[#f8fafc] min-h-screen flex items-center justify-center p-6">
-
-    <div class="bg-white rounded-[2.5rem] border border-slate-200 p-10 shadow-2xl w-full max-w-md text-center">
+<body class="flex min-h-screen items-center justify-center bg-[#f8fafc] p-6">
+    <div class="w-full max-w-md rounded-[2.5rem] border border-slate-200 bg-white p-8 text-center shadow-2xl">
         <div class="mb-6">
-            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-shield-check text-2xl"></i>
-            </div>
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600"><i class="fas fa-shield-check text-2xl"></i></div>
             <h2 class="text-xl font-bold text-slate-800">Final Authorization</h2>
-            <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Morris Thomas Account Node</p>
+            <p class="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Secure review before dispatch</p>
         </div>
 
-        <div class="bg-slate-50 rounded-3xl p-6 mb-8 text-left space-y-4 border border-slate-100">
+        <div class="mb-8 space-y-4 rounded-3xl border border-slate-100 bg-slate-50 p-6 text-left">
             <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-[10px] font-bold text-slate-400 uppercase">Beneficiary</span>
+                <span class="text-[10px] font-bold uppercase text-slate-400">Beneficiary</span>
                 <span id="dispName" class="text-sm font-bold text-slate-800">---</span>
             </div>
             <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-[10px] font-bold text-slate-400 uppercase">Amount</span>
+                <span class="text-[10px] font-bold uppercase text-slate-400">Amount</span>
                 <span id="dispAmt" class="text-sm font-bold text-blue-600">$0.00</span>
             </div>
-            <div class="text-center pt-2">
-                <p class="text-[9px] text-slate-400 uppercase font-bold">Transaction Status</p>
-                <p class="text-xs font-bold text-orange-500">Awaiting Secure Key</p>
+            <div class="pt-2 text-center">
+                <p class="text-[9px] font-bold uppercase text-slate-400">Transaction status</p>
+                <p class="text-xs font-bold text-orange-500">Awaiting secure confirmation</p>
             </div>
         </div>
 
-        <button onclick="completeTransfer()" id="finalBtn" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold shadow-lg hover:bg-black transition">
-            Confirm & Dispatch
-        </button>
+        <button id="finalBtn" class="w-full rounded-2xl bg-slate-900 py-5 font-bold text-white shadow-lg transition hover:bg-black">Confirm & Dispatch</button>
     </div>
 
     <script>
-        // Pull details from the temporary session memory
-        document.getElementById('dispName').innerText = sessionStorage.getItem('recName') || "Unknown";
-        document.getElementById('dispAmt').innerText = "$" + parseFloat(sessionStorage.getItem('transferAmt')).toLocaleString();
+        const pendingTransfer = JSON.parse(localStorage.getItem('pendingTransfer') || '{}');
+        document.getElementById('dispName').textContent = pendingTransfer.beneficiary || 'Unknown';
+        document.getElementById('dispAmt').textContent = '$' + Number(pendingTransfer.amount || 0).toLocaleString();
 
-        function completeTransfer() {
-            const btn = document.getElementById('finalBtn');
+        document.getElementById('finalBtn').addEventListener('click', function () {
+            const btn = this;
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-            
+
+            const history = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
+            const completedTransfer = {
+                ...pendingTransfer,
+                status: 'Completed',
+                completedAt: new Date().toISOString()
+            };
+            history.unshift(completedTransfer);
+            localStorage.setItem('odinTransactions', JSON.stringify(history.slice(0, 6)));
+
             setTimeout(() => {
-                alert("SUCCESS: Funds have been dispatched globally.");
                 window.location.href = 'dashboard.html';
-            }, 3000);
-        }
+            }, 1200);
+        });
     </script>
 </body>
 </html>
