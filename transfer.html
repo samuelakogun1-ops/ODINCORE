@@ -42,6 +42,26 @@
                     </div>
                 </div>
 
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Destination Currency</label>
+                        <select id="destCurrency" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-semibold focus:border-blue-500 focus:outline-none">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                            <option value="AED">AED</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Priority</label>
+                        <select id="priorityLevel" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-semibold focus:border-blue-500 focus:outline-none">
+                            <option value="standard">Standard</option>
+                            <option value="priority">Priority</option>
+                            <option value="same-day">Same Day</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div>
                     <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Amount to Send (USD)</label>
                     <div class="relative">
@@ -49,6 +69,17 @@
                         <input type="number" id="transferAmt" placeholder="0.00" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 pl-10 text-xl font-bold focus:border-blue-500 focus:outline-none">
                     </div>
                     <p class="mt-2 text-[10px] font-medium text-slate-400">Available balance: <span class="font-bold text-blue-600">$94,250.00</span></p>
+                </div>
+
+                <div id="estimateBox" class="rounded-2xl border border-blue-100 bg-blue-50/50 p-5 text-sm text-slate-700">
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold">Estimated delivery</span>
+                        <span id="deliveryTime" class="font-bold text-blue-700">1-2 business days</span>
+                    </div>
+                    <div class="mt-2 flex items-center justify-between">
+                        <span class="font-semibold">Estimated fee</span>
+                        <span id="feeEstimate" class="font-bold text-blue-700">$0.00</span>
+                    </div>
                 </div>
 
                 <div class="flex gap-4 rounded-2xl border border-blue-100 bg-blue-50/50 p-5">
@@ -69,6 +100,35 @@
         const senderName = document.getElementById('senderName');
         const userName = (localStorage.getItem('odinUser') || 'morris@odinprivate.com').split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
         senderName.textContent = userName.toUpperCase();
+
+        const feeEstimate = document.getElementById('feeEstimate');
+        const deliveryTime = document.getElementById('deliveryTime');
+        const amountInput = document.getElementById('transferAmt');
+        const priorityInput = document.getElementById('priorityLevel');
+
+        function updateEstimate() {
+            const amount = Number(amountInput.value) || 0;
+            const priority = priorityInput.value;
+            let fee = 0;
+            let timeText = '1-2 business days';
+
+            if (priority === 'priority') {
+                fee = amount * 0.008;
+                timeText = 'Same business day';
+            } else if (priority === 'same-day') {
+                fee = amount * 0.015;
+                timeText = 'Within 4 hours';
+            } else {
+                fee = amount * 0.004;
+            }
+
+            feeEstimate.textContent = `$${fee.toFixed(2)}`;
+            deliveryTime.textContent = timeText;
+        }
+
+        [amountInput, priorityInput].forEach((element) => element.addEventListener('input', updateEstimate));
+        [amountInput, priorityInput].forEach((element) => element.addEventListener('change', updateEstimate));
+        updateEstimate();
 
         document.getElementById('proceedBtn').addEventListener('click', function () {
             const name = document.getElementById('recName').value.trim();

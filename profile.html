@@ -62,7 +62,7 @@
                         <span class="bg-green-100 px-4 py-1.5 rounded-full text-[10px] font-bold text-green-600 uppercase italic">Verified Identity</span>
                     </div>
                 </div>
-                <button onclick="alert('Profile Saved Successfully')" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-100">
+                <button id="saveProfileBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-100">
                     Save Changes
                 </button>
             </div>
@@ -117,7 +117,51 @@
                     </div>
                 </div>
             </div>
+
+            <div class="mt-8 bg-white rounded-[2rem] border border-slate-200 p-8 shadow-sm">
+                <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+                    <i class="fas fa-bell text-blue-500"></i> Communication Preferences
+                </h3>
+                <div class="space-y-4">
+                    <label class="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
+                        <span class="text-sm font-semibold text-slate-700">Email alerts</span>
+                        <input id="emailAlerts" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                    </label>
+                    <label class="flex items-center justify-between rounded-2xl bg-slate-50 p-4">
+                        <span class="text-sm font-semibold text-slate-700">SMS updates</span>
+                        <input id="smsAlerts" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500">
+                    </label>
+                    <button id="savePreferencesBtn" class="w-full rounded-xl bg-slate-900 py-3 text-sm font-bold text-white transition hover:bg-black">Save Preferences</button>
+                    <p id="prefsStatus" class="text-sm text-slate-500"></p>
+                </div>
+            </div>
         </div>
     </main>
+
+    <script>
+        const saveProfileBtn = document.getElementById('saveProfileBtn');
+        const savePreferencesBtn = document.getElementById('savePreferencesBtn');
+        const prefsStatus = document.getElementById('prefsStatus');
+
+        const storedPrefs = JSON.parse(localStorage.getItem('odinPreferences') || '{"emailAlerts":true,"smsAlerts":false}');
+        document.getElementById('emailAlerts').checked = storedPrefs.emailAlerts;
+        document.getElementById('smsAlerts').checked = storedPrefs.smsAlerts;
+
+        saveProfileBtn?.addEventListener('click', () => {
+            saveProfileBtn.textContent = 'Saved';
+            setTimeout(() => {
+                saveProfileBtn.textContent = 'Save Changes';
+            }, 1200);
+        });
+
+        savePreferencesBtn?.addEventListener('click', () => {
+            const preferences = {
+                emailAlerts: document.getElementById('emailAlerts').checked,
+                smsAlerts: document.getElementById('smsAlerts').checked
+            };
+            localStorage.setItem('odinPreferences', JSON.stringify(preferences));
+            prefsStatus.textContent = 'Preferences updated successfully.';
+        });
+    </script>
 </body>
 </html>
