@@ -6,10 +6,10 @@
     <title>Control Center | ODINROOT Internal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); color: #e2e8f0; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal { display: none; }</style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); color: #e2e8f0; overflow-x: hidden; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal { display: none; } main { position: relative; z-index: 1; } aside { position: relative; z-index: 20; }</style>
 </head>
 <body>
-    <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100">
+    <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
         <div class="border-b border-slate-800 p-8">
             <div class="flex items-center gap-3">
                 <div class="rounded-lg bg-red-600 p-2 shadow-lg shadow-red-900/20"><i class="fas fa-terminal text-white"></i></div>
@@ -34,7 +34,7 @@
         </div>
     </aside>
     <main class="flex-grow">
-        <header class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-950/80 px-8 py-6 backdrop-blur-md">
+        <header class="sticky top-0 z-30 flex items-center justify-between border-b border-slate-800 bg-slate-950/80 px-8 py-6 backdrop-blur-md">
             <div class="flex items-center gap-4">
                 <span class="flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-[10px] font-bold text-green-500"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span> SYSTEM STATUS: OPTIMAL</span>
             </div>
@@ -65,8 +65,8 @@
             <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/50 p-6">
                     <h3 class="text-lg font-bold text-white">Managed Client Registry</h3>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <button id="registerUserBtn" class="rounded-lg bg-emerald-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-emerald-500">Register User</button>
+                    <div class="relative z-20 flex flex-wrap items-center gap-3">
+                        <button id="registerUserBtn" class="relative z-20 rounded-lg bg-emerald-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-emerald-500">Register User</button>
                         <input id="searchInput" type="text" placeholder="Search client..." class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-500" />
                     </div>
                 </div>
@@ -214,10 +214,10 @@
                     <td class="px-6 py-4"><span class="rounded-md border px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter ${user.status.includes('Pending') ? 'border-amber-500/20 bg-amber-500/10 text-amber-400' : 'border-green-500/20 bg-green-500/10 text-green-500'}">${user.status}</span></td>
                     <td class="px-6 py-4"><p class="text-sm font-bold text-slate-200 mono">$${user.balance.toLocaleString()}</p></td>
                     <td class="px-6 py-4"><p class="rounded-full px-3 py-1 text-[10px] font-bold uppercase ${user.held ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">${user.held ? 'Held' : 'Active'}</p></td>
-                    <td class="space-x-2 px-6 py-4 text-right">
-                        <button onclick="openTopup('${user.id}')" class="rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
-                        <button onclick="messageUser('${user.id}')" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
-                        <button onclick="toggleHold('${user.id}')" class="rounded-xl border ${user.held ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white'} px-4 py-2 text-[10px] font-bold transition">${user.held ? 'Release' : 'Hold'}</button>
+                    <td class="relative z-20 space-x-2 px-6 py-4 text-right">
+                        <button onclick="openTopup('${user.id}')" class="relative z-20 rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
+                        <button onclick="messageUser('${user.id}')" class="relative z-20 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
+                        <button onclick="toggleHold('${user.id}')" class="relative z-20 rounded-xl border ${user.held ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white'} px-4 py-2 text-[10px] font-bold transition">${user.held ? 'Release' : 'Hold'}</button>
                     </td>
                 `;
                 clientTableBody.appendChild(row);

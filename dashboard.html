@@ -8,13 +8,69 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        main { min-width: 0; width: 100%; }
         .sidebar-link:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
         .sidebar-link.active { background: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .dashboard-shell { display: grid; gap: 2rem; }
+        .mobile-overlay { display: none; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow-x: hidden; }
+            .dashboard-content { padding: 1rem; max-width: 100%; }
+            .dashboard-shell { grid-template-columns: 1fr !important; gap: 1rem; }
+            .main-column { order: 1; }
+            .side-column { order: 2; width: 100%; }
+            .hero-panel { padding: 1.25rem; border-radius: 1.5rem; }
+            .hero-panel h2 { font-size: 2rem; line-height: 1.1; }
+            .dashboard-actions { flex-direction: column; width: 100%; }
+            .dashboard-actions a { width: 100%; justify-content: center; padding: 0.95rem 1rem; }
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0.75rem; }
+            .stats-grid > div { padding: 1rem; border-radius: 1.25rem; }
+            .panel-card, .side-card, .activity-card, .support-card { padding: 1rem; border-radius: 1.25rem; }
+            .panel-card h3, .side-card h3, .activity-card h3, .support-card h3 { font-size: 1rem; }
+            .activity-entry, .support-item { padding: 1rem; }
+            .mobile-overlay.open { display: block; }
+            .mobile-nav-toggle { display: inline-flex !important; }
+            .desktop-sidebar {
+                display: none;
+                position: fixed;
+                inset: 0 auto 0 0;
+                z-index: 50;
+                width: 82vw;
+                max-width: 18rem;
+                transform: translateX(-100%);
+                transition: transform 0.25s ease;
+                box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+            }
+            .desktop-sidebar.open { display: flex; transform: translateX(0); }
+            header { padding: 0.9rem 0.9rem 0.9rem 0.75rem; }
+            header .welcome-block h1 { font-size: 1.05rem; }
+            header .welcome-block p { font-size: 0.7rem; }
+            .profile-badge { width: 2.5rem; height: 2.5rem; font-size: 0.9rem; }
+        }
+
+        @media (min-width: 1024px) {
+            .desktop-sidebar { display: flex !important; position: sticky; width: 18rem; max-width: 18rem; transform: none; box-shadow: none; }
+            .mobile-nav-toggle { display: none !important; }
+            .mobile-overlay { display: none !important; }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-content { padding: 0.75rem; }
+            .hero-panel { padding: 1rem; }
+            .hero-panel .badge-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .hero-panel h2 { font-size: 1.7rem; }
+            .stats-grid { grid-template-columns: 1fr !important; }
+            .dashboard-actions a { font-size: 0.95rem; }
+            .priority-item, .activity-entry, .support-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .activity-entry .right { text-align: left; }
+        }
     </style>
 </head>
 <body class="flex min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100">
-    <aside class="sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200 bg-white lg:flex">
+    <div id="mobileOverlay" class="mobile-overlay fixed inset-0 z-40 bg-slate-950/50"></div>
+    <aside id="desktopSidebar" class="desktop-sidebar sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200 bg-white lg:flex">
         <div class="p-8">
             <div class="flex items-center gap-3">
                 <div class="rounded-xl bg-blue-600 p-2"><i class="fas fa-shield-halved text-lg text-white"></i></div>
@@ -35,42 +91,47 @@
 
     <main class="flex-grow">
         <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/80 px-6 py-6 backdrop-blur-md lg:px-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 id="welcomeName" class="text-xl font-bold text-slate-800">Welcome back</h1>
-                    <p class="text-xs text-slate-500">Security status: <span class="font-bold italic text-green-600">Encrypted connection</span></p>
+            <div class="flex items-center justify-between gap-3">
+                <div class="welcome-block flex items-center gap-3">
+                    <button id="mobileMenuBtn" class="mobile-nav-toggle hidden items-center justify-center rounded-2xl border border-slate-200 bg-white p-2.5 text-slate-700 shadow-sm lg:hidden">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <h1 id="welcomeName" class="text-xl font-bold text-slate-800">Welcome back</h1>
+                        <p class="text-xs text-slate-500">Security status: <span class="font-bold italic text-green-600">Encrypted connection</span></p>
+                    </div>
                 </div>
                 <div class="flex items-center gap-3">
                     <div class="hidden text-right sm:block">
                         <p id="userLabel" class="text-xs font-bold uppercase text-slate-800"></p>
                         <p class="text-[10px] text-slate-400">Account ID: #ODIN-8842-X</p>
                     </div>
-                    <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 font-bold text-white">MT</div>
+                    <div class="profile-badge flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-600 font-bold text-white">MT</div>
                 </div>
             </div>
         </header>
 
-        <div class="mx-auto max-w-7xl p-6 lg:p-8">
-            <div class="grid gap-8 xl:grid-cols-[1.7fr_0.9fr]">
-                <div class="space-y-8">
-                    <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-8 text-white shadow-2xl sm:p-10">
+        <div class="dashboard-content mx-auto max-w-7xl p-6 lg:p-8">
+            <div class="dashboard-shell grid gap-8 xl:grid-cols-[1.7fr_0.9fr]">
+                <div class="main-column space-y-8">
+                    <div class="hero-panel relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-8 text-white shadow-2xl sm:p-10">
                         <div class="relative z-10">
-                            <div class="flex flex-wrap items-center gap-3">
+                            <div class="badge-row flex flex-wrap items-center gap-3">
                                 <span class="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-200">Executive overview</span>
                                 <span class="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-emerald-300">Protected</span>
                             </div>
                             <p class="mt-5 text-xs font-bold uppercase tracking-[0.25em] text-slate-400">Total available balance</p>
                             <h2 id="balanceValue" class="mt-3 text-4xl font-bold tracking-tighter sm:text-5xl">$0.00</h2>
                             <p id="todayDate" class="mt-3 text-sm text-slate-300"></p>
-                            <div class="mt-8 flex flex-wrap gap-4">
-                                <a href="transfer.html" class="flex items-center gap-3 rounded-2xl bg-blue-600 px-6 py-3 font-bold transition hover:bg-blue-700"><i class="fas fa-arrow-up-right-from-square"></i> Move Funds</a>
-                                <a href="support.html" class="rounded-2xl border border-slate-700 px-6 py-3 font-bold text-slate-300 transition hover:bg-slate-800">Request Support</a>
+                            <div class="dashboard-actions mt-8 flex flex-wrap gap-4">
+                                <a href="transfer.html" class="flex items-center justify-center gap-3 rounded-2xl bg-blue-600 px-6 py-3 font-bold transition hover:bg-blue-700"><i class="fas fa-arrow-up-right-from-square"></i> Move Funds</a>
+                                <a href="support.html" class="flex items-center justify-center rounded-2xl border border-slate-700 px-6 py-3 font-bold text-slate-300 transition hover:bg-slate-800">Request Support</a>
                             </div>
                         </div>
                         <div class="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-blue-500/10 blur-[100px]"></div>
                     </div>
 
-                    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div class="stats-grid grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                         <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
                             <div class="flex items-center justify-between">
                                 <p class="text-sm font-semibold text-slate-500">Security score</p>
@@ -141,10 +202,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="panel-card rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
                             <h3 class="text-lg font-bold text-slate-800">Priority actions</h3>
                             <div class="mt-4 space-y-3">
-                                <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                <div class="priority-item flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4">
                                     <div>
                                         <p class="text-sm font-semibold text-slate-800">Confirm scheduled transfer</p>
                                         <p class="text-xs text-slate-500">Due before 4:00 PM</p>
@@ -170,7 +231,7 @@
                     </div>
 
                     <div class="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-                        <div class="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-sm">
+                        <div class="activity-card overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-sm">
                             <div class="flex items-center justify-between border-b border-slate-100 p-6">
                                 <h3 class="text-lg font-bold text-slate-800">Recent activity</h3>
                                 <a href="transfer.html" class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Create transfer</a>
@@ -178,11 +239,11 @@
                             <div id="activityList" class="divide-y divide-slate-50"></div>
                         </div>
                         <div class="space-y-4">
-                            <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="support-card rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
                                 <h3 class="text-lg font-bold text-slate-800">Recent support requests</h3>
                                 <div id="supportFeed" class="mt-4 space-y-3"></div>
                             </div>
-                            <div class="rounded-[2rem] border border-emerald-100 bg-gradient-to-br from-emerald-600 to-teal-700 p-6 text-white shadow-sm">
+                            <div class="side-card rounded-[2rem] border border-emerald-100 bg-gradient-to-br from-emerald-600 to-teal-700 p-6 text-white shadow-sm">
                                 <p class="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-100">Compliance status</p>
                                 <h3 class="mt-2 text-lg font-bold">All policy controls are verified</h3>
                                 <p class="mt-2 text-sm text-emerald-50">Your account remains fully aligned with current governance and audit standards.</p>
@@ -191,8 +252,8 @@
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                <div class="side-column space-y-4">
+                    <div class="side-card rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-bold text-slate-800">Account health</h3>
                             <span class="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Stable</span>
@@ -224,7 +285,7 @@
                         </div>
                     </div>
 
-                    <div class="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-800 to-slate-950 p-6 text-white shadow-sm">
+                    <div class="side-card rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-800 to-slate-950 p-6 text-white shadow-sm">
                         <h3 class="text-lg font-bold">Client services</h3>
                         <p class="mt-2 text-sm text-slate-300">Priority assistance is available for urgent requests and exception handling.</p>
                         <div class="mt-6 space-y-3">
@@ -257,6 +318,40 @@
         if (localStorage.getItem('odinAuth') !== 'true') {
             window.location.href = 'login.html';
         }
+
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const desktopSidebar = document.getElementById('desktopSidebar');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMobileMenu() {
+            const isOpen = desktopSidebar.classList.toggle('open');
+            mobileOverlay.classList.toggle('open', isOpen);
+            document.body.style.overflow = isOpen ? 'hidden' : '';
+        }
+
+        function closeMobileMenu() {
+            desktopSidebar.classList.remove('open');
+            mobileOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        }
+
+        if (mobileOverlay) {
+            mobileOverlay.addEventListener('click', closeMobileMenu);
+        }
+
+        document.querySelectorAll('#desktopSidebar a').forEach((link) => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                closeMobileMenu();
+            }
+        });
 
         const userEmail = localStorage.getItem('odinUser') || 'morris@odinprivate.com';
         const today = new Date();
