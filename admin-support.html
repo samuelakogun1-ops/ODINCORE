@@ -6,83 +6,63 @@
     <title>Support Control | ODINROOT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap'); body { font-family: 'Inter', sans-serif; }</style>
 </head>
-<body class="bg-[#020617] text-slate-300 h-screen flex">
-    
-    <aside class="w-72 bg-slate-950 border-r border-slate-800 flex flex-col">
-        <div class="p-8 border-b border-slate-800">
-            <h1 class="text-xl font-bold text-white tracking-tighter">ODIN<span class="text-red-500 text-sm">SUPPORT</span></h1>
-        </div>
-        <div class="p-4 space-y-4">
-            <div class="bg-blue-600/10 border border-blue-500/20 p-4 rounded-xl flex items-center gap-4 cursor-pointer">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">MT</div>
-                <div>
-                    <p class="text-xs font-bold text-white">Morris Thomas</p>
-                    <p class="text-[9px] text-green-500 font-bold uppercase tracking-tighter">Online</p>
-                </div>
-            </div>
-            <a href="admin.html" class="flex items-center gap-3 p-3 text-slate-400 hover:bg-white/5 rounded-xl transition text-sm">
-                <i class="fas fa-arrow-left"></i> Back to Panel
-            </a>
+<body class="flex h-screen bg-[#020617] text-slate-300">
+    <aside class="flex w-72 flex-col border-r border-slate-800 bg-slate-950">
+        <div class="border-b border-slate-800 p-8"><h1 class="text-xl font-bold tracking-tighter text-white">ODIN<span class="text-sm text-red-500">SUPPORT</span></h1></div>
+        <div class="space-y-4 p-4">
+            <div class="flex items-center gap-4 rounded-xl border border-blue-500/20 bg-blue-600/10 p-4"><div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 font-bold text-white">MT</div><div><p class="text-xs font-bold text-white">Morris Thomas</p><p class="text-[9px] font-bold uppercase tracking-tighter text-green-500">Online</p></div></div>
+            <a href="admin.html" class="flex items-center gap-3 rounded-xl p-3 text-sm text-slate-400 transition hover:bg-white/5"><i class="fas fa-arrow-left"></i> Back to Panel</a>
         </div>
     </aside>
-
-    <main class="flex-grow flex flex-col">
-        <header class="p-6 border-b border-slate-800 bg-slate-950/50 flex justify-between items-center">
-            <div>
-                <h2 class="text-sm font-bold uppercase tracking-widest text-slate-500">Live Session: #ODIN-8842-X</h2>
-                <p class="text-[10px] text-blue-400">Secure Channel: AES-256</p>
-            </div>
-            <span class="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-[10px] font-bold">ENCRYPTED</span>
-        </header>
-
-        <div id="adminChatBox" class="flex-grow p-8 space-y-6 overflow-y-auto bg-[#020617]">
-             <div class="flex flex-col items-start">
-                <div class="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl max-w-md text-sm text-slate-300 shadow-xl">
-                    System initialized. Waiting for Morris Thomas to send a message...
-                </div>
-                <span class="text-[9px] text-slate-600 mt-2 ml-2">SYSTEM BOT</span>
-             </div>
-        </div>
-
-        <div class="p-8 border-t border-slate-800 bg-slate-950/50">
-            <div class="max-w-4xl mx-auto flex gap-4">
-                <input type="text" id="adminInput" placeholder="Reply as Private Banker..." class="flex-grow bg-slate-900 border border-slate-800 rounded-2xl p-5 text-white focus:border-blue-500 outline-none transition shadow-inner">
-                <button onclick="adminReply()" class="bg-red-600 hover:bg-red-700 text-white px-8 rounded-2xl font-bold transition shadow-lg shadow-red-900/30">
-                    SEND
-                </button>
-            </div>
+    <main class="flex flex-grow flex-col">
+        <header class="flex items-center justify-between border-b border-slate-800 bg-slate-950/50 p-6"><div><h2 class="text-sm font-bold uppercase tracking-widest text-slate-500">Live Session: #ODIN-8842-X</h2><p class="text-[10px] text-blue-400">Secure Channel: AES-256</p></div><span class="rounded-full bg-green-500/10 px-3 py-1 text-[10px] font-bold text-green-500">ENCRYPTED</span></header>
+        <div id="adminChatBox" class="flex-grow space-y-6 overflow-y-auto bg-[#020617] p-8"></div>
+        <div class="border-t border-slate-800 bg-slate-950/50 p-8">
+            <div class="mx-auto flex max-w-4xl gap-4"><input type="text" id="adminInput" placeholder="Reply as Private Banker..." class="flex-grow rounded-2xl border border-slate-800 bg-slate-900 p-5 text-white outline-none transition focus:border-blue-500"><button id="sendBtn" class="rounded-2xl bg-red-600 px-8 font-bold text-white shadow-lg shadow-red-900/30 transition hover:bg-red-700">SEND</button></div>
         </div>
     </main>
-
     <script>
-        function adminReply() {
-            const input = document.getElementById('adminInput');
-            const box = document.getElementById('adminChatBox');
-            if(input.value.trim() === "") return;
-            
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
-            box.innerHTML += `
-                <div class="flex flex-col items-end">
-                    <div class="bg-blue-600 text-white p-4 rounded-2xl text-sm max-w-md shadow-lg shadow-blue-900/20">
-                        ${input.value}
-                    </div>
-                    <span class="text-[9px] text-slate-600 mt-2 mr-2">${time}</span>
-                </div>`;
-            
-            input.value = "";
-            box.scrollTop = box.scrollHeight;
+        const chatBox = document.getElementById('adminChatBox');
+        const input = document.getElementById('adminInput');
+        const storageKey = 'odinAdminMessages';
+        const initialMessages = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+        function renderMessages() {
+            chatBox.innerHTML = initialMessages.map((item) => `
+                <div class="flex flex-col ${item.role === 'admin' ? 'items-end' : 'items-start'}">
+                    <div class="max-w-md rounded-2xl border border-slate-800 p-4 text-sm shadow-xl ${item.role === 'admin' ? 'bg-blue-600 text-white' : 'bg-slate-900/80 text-slate-300'}">${item.text}</div>
+                    <span class="mt-2 text-[9px] text-slate-600 ${item.role === 'admin' ? 'mr-2' : 'ml-2'}">${item.time}</span>
+                </div>
+            `).join('');
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
-        
-        // Allow Enter key to send
-        document.getElementById('adminInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') adminReply();
-        });
+
+        function addMessage(text, role = 'admin') {
+            const message = { text, role, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+            initialMessages.push(message);
+            localStorage.setItem(storageKey, JSON.stringify(initialMessages));
+            renderMessages();
+        }
+
+        function adminReply() {
+            const value = input.value.trim();
+            if (!value) return;
+            addMessage(value, 'admin');
+            input.value = '';
+            setTimeout(() => {
+                addMessage('Thanks for reaching out. We have logged your request and will continue monitoring your case.', 'client');
+            }, 700);
+        }
+
+        document.getElementById('sendBtn').addEventListener('click', adminReply);
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') adminReply(); });
+        if (initialMessages.length === 0) {
+            addMessage('System initialized. Waiting for Morris Thomas to send a message...', 'client');
+        } else {
+            renderMessages();
+        }
     </script>
 </body>
 </html>
