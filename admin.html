@@ -63,9 +63,12 @@
                 </div>
             </div>
             <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
-                <div class="flex items-center justify-between border-b border-slate-800 bg-slate-900/50 p-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/50 p-6">
                     <h3 class="text-lg font-bold text-white">Managed Client Registry</h3>
-                    <input id="searchInput" type="text" placeholder="Search client..." class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-500" />
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button id="registerUserBtn" class="rounded-lg bg-emerald-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-emerald-500">Register User</button>
+                        <input id="searchInput" type="text" placeholder="Search client..." class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-500" />
+                    </div>
                 </div>
                 <table class="w-full text-left">
                     <thead class="border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-widest text-slate-500">
@@ -107,6 +110,48 @@
             <div class="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl"></div>
         </div>
     </div>
+
+    <div id="registerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
+        <div class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+            <div class="relative z-10">
+                <div class="mb-8 flex items-start justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold tracking-tight text-white">Register Client</h3>
+                        <p class="mt-1 text-sm text-slate-500">Create a new account profile and assign an initial balance.</p>
+                    </div>
+                    <button id="closeRegisterModalBtn" class="text-slate-500 transition hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Full Name</label>
+                        <input id="regName" type="text" placeholder="Client full name" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                    </div>
+                    <div>
+                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Email Address</label>
+                        <input id="regEmail" type="email" placeholder="client@domain.com" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Initial Balance</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span>
+                                <input id="regBalance" type="number" min="0" step="100" placeholder="0.00" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 pl-10 text-sm font-mono text-white outline-none focus:border-blue-500" />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Verification Level</label>
+                            <select id="regStatus" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500">
+                                <option value="Verified">Verified</option>
+                                <option value="Verified Elite">Verified Elite</option>
+                                <option value="Pending Review">Pending Review</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button id="createUserBtn" class="w-full rounded-2xl bg-emerald-600 py-4 text-[10px] font-bold uppercase tracking-widest text-white transition hover:bg-emerald-500">Create Client Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         const users = [
             { id: 'ODIN-8842-X', name: 'Morris Thomas', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com' },
@@ -123,6 +168,10 @@
         const targetUser = document.getElementById('targetUser');
         const topupAmount = document.getElementById('topupAmount');
         const supportPanelBtn = document.getElementById('supportPanelBtn');
+        const registerUserBtn = document.getElementById('registerUserBtn');
+        const registerModal = document.getElementById('registerModal');
+        const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
+        const createUserBtn = document.getElementById('createUserBtn');
 
         function loadUsers() {
             const stored = localStorage.getItem('odinAdminUsers');
@@ -177,6 +226,16 @@
             holdCount.textContent = allUsers.filter((user) => user.held).length.toString();
         }
 
+        function generateUserId() {
+            const stamp = Date.now().toString().slice(-4);
+            const suffix = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            return `ODIN-${stamp}-${suffix}`;
+        }
+
+        function createInitials(fullName) {
+            return fullName.split(' ').filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U';
+        }
+
         function openTopup(id) {
             selectedUserId = id;
             const user = getUsers().find((item) => item.id === id);
@@ -187,6 +246,18 @@
 
         function closeModal() {
             topupModal.classList.add('hidden');
+        }
+
+        function openRegisterModal() {
+            document.getElementById('regName').value = '';
+            document.getElementById('regEmail').value = '';
+            document.getElementById('regBalance').value = '';
+            document.getElementById('regStatus').value = 'Verified';
+            registerModal.classList.remove('hidden');
+        }
+
+        function closeRegisterModal() {
+            registerModal.classList.add('hidden');
         }
 
         function executeTopup() {
@@ -203,6 +274,41 @@
             closeModal();
             alert(`TRANSACTION SUCCESSFUL
 $${amount.toLocaleString()} credited to ${user.name}.`);
+        }
+
+        function registerClient() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const balance = Number(document.getElementById('regBalance').value || 0);
+            const status = document.getElementById('regStatus').value;
+
+            if (!name || !email) {
+                alert('Please provide both a full name and email address.');
+                return;
+            }
+
+            const list = getUsers();
+            const exists = list.some((item) => item.email && item.email.toLowerCase() === email);
+            if (exists) {
+                alert('A client with this email already exists.');
+                return;
+            }
+
+            const newUser = {
+                id: generateUserId(),
+                name,
+                status,
+                balance: Number(balance) || 0,
+                held: false,
+                initials: createInitials(name),
+                email
+            };
+
+            list.unshift(newUser);
+            saveUsers(list);
+            renderTable();
+            closeRegisterModal();
+            alert(`CLIENT PROFILE CREATED\n${newUser.name} has been registered with a starting balance of $${newUser.balance.toLocaleString()}.`);
         }
 
         function toggleHold(id) {
@@ -224,6 +330,9 @@ $${amount.toLocaleString()} credited to ${user.name}.`);
             window.location.href = 'admin-support.html';
         });
         searchInput.addEventListener('input', renderTable);
+        registerUserBtn.addEventListener('click', openRegisterModal);
+        closeRegisterModalBtn.addEventListener('click', closeRegisterModal);
+        createUserBtn.addEventListener('click', registerClient);
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
         document.getElementById('authorizeTopupBtn').addEventListener('click', executeTopup);
 
