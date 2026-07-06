@@ -6,7 +6,7 @@
     <title>Control Center | ODINROOT Internal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); color: #e2e8f0; overflow-x: hidden; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal { display: none; } main { position: relative; z-index: 1; } aside { position: relative; z-index: 20; }</style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); color: #e2e8f0; overflow-x: hidden; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal, #registerModal { display: none; } #topupModal:not(.hidden), #registerModal:not(.hidden) { display: flex; } main { position: relative; z-index: 1; } aside { position: relative; z-index: 20; } .action-btn { position: relative; z-index: 40; pointer-events: auto; }</style>
 </head>
 <body>
     <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
@@ -215,9 +215,9 @@
                     <td class="px-6 py-4"><p class="text-sm font-bold text-slate-200 mono">$${user.balance.toLocaleString()}</p></td>
                     <td class="px-6 py-4"><p class="rounded-full px-3 py-1 text-[10px] font-bold uppercase ${user.held ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">${user.held ? 'Held' : 'Active'}</p></td>
                     <td class="relative z-20 space-x-2 px-6 py-4 text-right">
-                        <button onclick="openTopup('${user.id}')" class="relative z-20 rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
-                        <button onclick="messageUser('${user.id}')" class="relative z-20 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
-                        <button onclick="toggleHold('${user.id}')" class="relative z-20 rounded-xl border ${user.held ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white'} px-4 py-2 text-[10px] font-bold transition">${user.held ? 'Release' : 'Hold'}</button>
+                        <button type="button" data-action="topup" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
+                        <button type="button" data-action="message" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
+                        <button type="button" data-action="hold" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl border ${user.held ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white'} px-4 py-2 text-[10px] font-bold transition">${user.held ? 'Release' : 'Hold'}</button>
                     </td>
                 `;
                 clientTableBody.appendChild(row);
@@ -329,6 +329,20 @@ $${amount.toLocaleString()} credited to ${user.name}.`);
         supportPanelBtn.addEventListener('click', () => {
             window.location.href = 'admin-support.html';
         });
+        clientTableBody.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-action]');
+            if (!button) return;
+            const action = button.getAttribute('data-action');
+            const userId = button.getAttribute('data-user-id');
+            if (action === 'topup') {
+                openTopup(userId);
+            } else if (action === 'message') {
+                messageUser(userId);
+            } else if (action === 'hold') {
+                toggleHold(userId);
+            }
+        });
+
         searchInput.addEventListener('input', renderTable);
         registerUserBtn.addEventListener('click', openRegisterModal);
         closeRegisterModalBtn.addEventListener('click', closeRegisterModal);
