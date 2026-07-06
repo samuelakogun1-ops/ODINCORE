@@ -62,6 +62,24 @@
                     <h3 class="text-2xl font-bold text-sky-400 mono">1</h3>
                 </div>
             </div>
+
+            <div class="mb-8 grid gap-6 xl:grid-cols-2">
+                <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
+                    <div class="border-b border-slate-800 bg-slate-900/50 p-6">
+                        <h3 class="text-lg font-bold text-white">Transfer Oversight</h3>
+                        <p class="mt-1 text-sm text-slate-500">Approve requests, assign status, and set the visible transaction timestamp.</p>
+                    </div>
+                    <div id="transferQueue" class="divide-y divide-slate-800"></div>
+                </div>
+                <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
+                    <div class="border-b border-slate-800 bg-slate-900/50 p-6">
+                        <h3 class="text-lg font-bold text-white">Registration Approvals</h3>
+                        <p class="mt-1 text-sm text-slate-500">Activate new clients only after OTP verification.</p>
+                    </div>
+                    <div id="registrationQueue" class="divide-y divide-slate-800"></div>
+                </div>
+            </div>
+
             <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/50 p-6">
                     <h3 class="text-lg font-bold text-white">Managed Client Registry</h3>
@@ -83,6 +101,31 @@
                     <tbody id="clientTableBody" class="divide-y divide-slate-800"></tbody>
                 </table>
             </div>
+
+            <div class="mt-8 overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
+                <div class="border-b border-slate-800 bg-slate-900/50 p-6">
+                    <h3 class="text-lg font-bold text-white">User Management</h3>
+                    <p class="mt-1 text-sm text-slate-500">View account details, login history, and manage activation state.</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[820px] text-left">
+                        <thead class="border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-widest text-slate-500">
+                            <tr>
+                                <th class="px-6 py-4">Full Name</th>
+                                <th class="px-6 py-4">Username</th>
+                                <th class="px-6 py-4">Email</th>
+                                <th class="px-6 py-4">Phone</th>
+                                <th class="px-6 py-4">Account</th>
+                                <th class="px-6 py-4">Balance</th>
+                                <th class="px-6 py-4">Registered</th>
+                                <th class="px-6 py-4">Last Login</th>
+                                <th class="px-6 py-4">Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userManagementBody" class="divide-y divide-slate-800"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
     <div id="topupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
@@ -101,6 +144,16 @@
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span>
                             <input type="number" id="topupAmount" placeholder="0.00" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-5 pl-10 text-2xl font-mono text-white shadow-inner outline-none focus:border-blue-500" />
+                        </div>
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Transaction Date</label>
+                            <input type="date" id="topupDate" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm font-mono text-white outline-none focus:border-blue-500" />
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Transaction Time</label>
+                            <input type="time" id="topupTime" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm font-mono text-white outline-none focus:border-blue-500" />
                         </div>
                     </div>
                     <button id="authorizeTopupBtn" class="w-full rounded-2xl bg-blue-600 py-5 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Authorize Transaction</button>
@@ -126,9 +179,29 @@
                         <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Full Name</label>
                         <input id="regName" type="text" placeholder="Client full name" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
                     </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Username</label>
+                            <input id="regUsername" type="text" placeholder="username" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Phone Number</label>
+                            <input id="regPhone" type="text" placeholder="+1-555-0000" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                        </div>
+                    </div>
                     <div>
                         <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Email Address</label>
                         <input id="regEmail" type="email" placeholder="client@domain.com" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Account Number</label>
+                            <input id="regAccount" type="text" placeholder="1002003004" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                        </div>
+                        <div>
+                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Password</label>
+                            <input id="regPassword" type="password" placeholder="Set temporary password" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-4 text-sm text-white outline-none focus:border-blue-500" />
+                        </div>
                     </div>
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
@@ -153,10 +226,19 @@
         </div>
     </div>
     <script>
+        function hashPassword(password) {
+            let hash = 0;
+            for (let index = 0; index < password.length; index += 1) {
+                hash = (hash << 5) - hash + password.charCodeAt(index);
+                hash |= 0;
+            }
+            return `h${Math.abs(hash).toString(16)}`;
+        }
+
         const users = [
-            { id: 'ODIN-8842-X', name: 'Morris Thomas', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com' },
-            { id: 'ODIN-2217-B', name: 'Elena Hart', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com' },
-            { id: 'ODIN-3394-C', name: 'Amir Das', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com' }
+            { id: 'ODIN-8842-X', name: 'Morris Thomas', username: 'morris', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com', phone: '+1-555-0101', accountNumber: '1002003001', registrationDate: '2025-01-14', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
+            { id: 'ODIN-2217-B', name: 'Elena Hart', username: 'elena', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com', phone: '+1-555-0102', accountNumber: '1002003002', registrationDate: '2025-02-09', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
+            { id: 'ODIN-3394-C', name: 'Amir Das', username: 'amir', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com', phone: '+1-555-0103', accountNumber: '1002003003', registrationDate: '2025-03-11', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' }
         ];
         let selectedUserId = null;
 
@@ -167,38 +249,83 @@
         const topupModal = document.getElementById('topupModal');
         const targetUser = document.getElementById('targetUser');
         const topupAmount = document.getElementById('topupAmount');
+        const topupDate = document.getElementById('topupDate');
+        const topupTime = document.getElementById('topupTime');
         const supportPanelBtn = document.getElementById('supportPanelBtn');
         const registerUserBtn = document.getElementById('registerUserBtn');
         const registerModal = document.getElementById('registerModal');
         const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
         const createUserBtn = document.getElementById('createUserBtn');
+        const transferQueue = document.getElementById('transferQueue');
+        const registrationQueue = document.getElementById('registrationQueue');
+        const userManagementBody = document.getElementById('userManagementBody');
 
-        function loadUsers() {
-            const stored = localStorage.getItem('odinAdminUsers');
-            if (stored) {
-                try {
-                    return JSON.parse(stored);
-                } catch (e) {
-                    return users;
-                }
+        function notifyAdmin(title, message) {
+            const notifications = JSON.parse(localStorage.getItem('odinNotifications') || '[]');
+            notifications.unshift({ id: Date.now(), type: title, message, createdAt: new Date().toISOString() });
+            localStorage.setItem('odinNotifications', JSON.stringify(notifications.slice(0, 8)));
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, { body: message });
             }
-            return users;
+            window.dispatchEvent(new Event('odin:state-updated'));
         }
 
-        function saveUsers(list) {
-            localStorage.setItem('odinAdminUsers', JSON.stringify(list));
+        function ensureUserDefaults(user) {
+            return {
+                id: user.id || `ODIN-${Date.now()}`,
+                name: user.name || 'Unnamed Client',
+                username: user.username || (user.name || 'client').toLowerCase().replace(/\s+/g, '.'),
+                status: user.status || 'Verified',
+                balance: Number(user.balance || 0),
+                held: Boolean(user.held),
+                initials: user.initials || (user.name || 'U').split(' ').filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U',
+                email: user.email || '',
+                phone: user.phone || '',
+                accountNumber: user.accountNumber || '',
+                registrationDate: user.registrationDate || new Date().toISOString(),
+                lastLogin: user.lastLogin || '',
+                loginActivity: Array.isArray(user.loginActivity) ? user.loginActivity : [],
+                isActive: user.isActive !== false,
+                passwordHash: user.passwordHash || hashPassword('Welcome123!'),
+                registrationStatus: user.registrationStatus || 'Active',
+                otp: user.otp || ''
+            };
         }
 
         function getUsers() {
             const stored = localStorage.getItem('odinAdminUsers');
             if (stored) {
                 try {
-                    return JSON.parse(stored);
-                } catch (e) {
-                    return users;
+                    return JSON.parse(stored).map(ensureUserDefaults);
+                } catch (error) {
+                    return users.map(ensureUserDefaults);
                 }
             }
-            return users;
+            return users.map(ensureUserDefaults);
+        }
+
+        function saveUsers(list) {
+            const normalized = list.map(ensureUserDefaults);
+            localStorage.setItem('odinAdminUsers', JSON.stringify(normalized));
+            window.dispatchEvent(new Event('odin:state-updated'));
+        }
+
+        function getTransferRequests() {
+            return JSON.parse(localStorage.getItem('odinTransferRequests') || '[]');
+        }
+
+        function saveTransferRequests(list) {
+            localStorage.setItem('odinTransferRequests', JSON.stringify(list));
+            window.dispatchEvent(new Event('odin:state-updated'));
+        }
+
+        function getRegistrationRequests() {
+            return JSON.parse(localStorage.getItem('odinRegistrationRequests') || '[]');
+        }
+
+        function saveRegistrationRequests(list) {
+            localStorage.setItem('odinRegistrationRequests', JSON.stringify(list));
+            window.dispatchEvent(new Event('odin:state-updated'));
         }
 
         function renderTable() {
@@ -212,8 +339,8 @@
                 row.innerHTML = `
                     <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="flex h-9 w-9 items-center justify-center rounded-lg border border-blue-500/20 bg-blue-600/10 text-xs font-bold text-blue-500">${user.initials}</div><div><p class="font-bold text-slate-200">${user.name}</p><p class="mono text-[10px] text-slate-500">${user.id}</p></div></div></td>
                     <td class="px-6 py-4"><span class="rounded-md border px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter ${user.status.includes('Pending') ? 'border-amber-500/20 bg-amber-500/10 text-amber-400' : 'border-green-500/20 bg-green-500/10 text-green-500'}">${user.status}</span></td>
-                    <td class="px-6 py-4"><p class="text-sm font-bold text-slate-200 mono">$${user.balance.toLocaleString()}</p></td>
-                    <td class="px-6 py-4"><p class="rounded-full px-3 py-1 text-[10px] font-bold uppercase ${user.held ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">${user.held ? 'Held' : 'Active'}</p></td>
+                    <td class="px-6 py-4"><p class="text-sm font-bold text-slate-200 mono">$${Number(user.balance || 0).toLocaleString()}</p></td>
+                    <td class="px-6 py-4"><p class="rounded-full px-3 py-1 text-[10px] font-bold uppercase ${user.held ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-amber-500/20'}">${user.held ? 'Held' : 'Active'}</p></td>
                     <td class="relative z-20 space-x-2 px-6 py-4 text-right">
                         <button type="button" data-action="topup" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
                         <button type="button" data-action="message" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
@@ -224,6 +351,84 @@
             });
             clientCount.textContent = allUsers.length.toString();
             holdCount.textContent = allUsers.filter((user) => user.held).length.toString();
+        }
+
+        function renderTransferQueue() {
+            const requests = getTransferRequests();
+            if (!requests.length) {
+                transferQueue.innerHTML = '<div class="p-6 text-sm text-slate-500">No transfer requests are waiting for review.</div>';
+                return;
+            }
+            transferQueue.innerHTML = requests.map((request) => `
+                <div class="p-6">
+                    <div class="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-white">${request.beneficiary || 'Transfer request'}</p>
+                            <p class="text-xs text-slate-500">OTP: <span class="font-semibold text-amber-400">${request.otp || '—'}</span></p>
+                            <p class="mt-1 text-xs text-slate-500">${request.amount ? `$${Number(request.amount).toLocaleString()}` : '—'} • ${request.sender || 'Client'}</p>
+                        </div>
+                        <span class="rounded-full bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-400">${request.status || 'Pending OTP'}</span>
+                    </div>
+                    <div class="mt-4 grid gap-3 md:grid-cols-[1.1fr_0.8fr_auto]">
+                        <select data-transfer-id="${request.id}" data-field="status" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500">
+                            <option value="Successful" ${request.status === 'Successful' ? 'selected' : ''}>Successful</option>
+                            <option value="Pending" ${request.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Visit Nearest Branch" ${request.status === 'Visit Nearest Branch' ? 'selected' : ''}>Visit Nearest Branch</option>
+                        </select>
+                        <input type="date" data-transfer-id="${request.id}" data-field="date" value="${request.adminDate || ''}" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
+                        <input type="time" data-transfer-id="${request.id}" data-field="time" value="${request.adminTime || ''}" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
+                    </div>
+                    <button type="button" data-action="review-transfer" data-transfer-id="${request.id}" class="mt-4 rounded-xl bg-emerald-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-emerald-500">Apply decision</button>
+                </div>
+            `).join('');
+        }
+
+        function renderRegistrationQueue() {
+            const requests = getRegistrationRequests();
+            if (!requests.length) {
+                registrationQueue.innerHTML = '<div class="p-6 text-sm text-slate-500">No registration requests need approval.</div>';
+                return;
+            }
+            registrationQueue.innerHTML = requests.map((request) => `
+                <div class="p-6">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-white">${request.name}</p>
+                            <p class="text-xs text-slate-500">${request.email}</p>
+                            <p class="mt-1 text-xs text-slate-500">OTP: <span class="font-semibold text-amber-400">${request.otp || '—'}</span></p>
+                        </div>
+                        <span class="rounded-full bg-amber-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-400">${request.registrationStatus || 'Pending OTP'}</span>
+                    </div>
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        <input type="text" data-registration-id="${request.id}" data-field="otp" placeholder="Enter OTP" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
+                        <button type="button" data-action="approve-registration" data-registration-id="${request.id}" class="rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-blue-700">Approve</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderUserManagement() {
+            const allUsers = getUsers();
+            userManagementBody.innerHTML = allUsers.map((user) => `
+                <tr class="transition hover:bg-slate-900/40">
+                    <td class="px-6 py-4"><div class="font-semibold text-slate-200">${user.name}</div><div class="text-[10px] text-slate-500">${user.id}</div></td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${user.username || '—'}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${user.email || '—'}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${user.phone || '—'}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${user.accountNumber || '—'}</td>
+                    <td class="px-6 py-4 text-sm font-semibold text-slate-200">$${Number(user.balance || 0).toLocaleString()}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${user.registrationDate ? new Date(user.registrationDate).toLocaleDateString() : '—'}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '—'}</td>
+                    <td class="px-6 py-4 text-sm text-slate-300">${Array.isArray(user.loginActivity) ? user.loginActivity.length : 0} sessions</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAll() {
+            renderTable();
+            renderTransferQueue();
+            renderRegistrationQueue();
+            renderUserManagement();
         }
 
         function generateUserId() {
@@ -241,6 +446,10 @@
             const user = getUsers().find((item) => item.id === id);
             targetUser.textContent = `${user.name} (${user.id})`;
             topupAmount.value = '';
+            const now = new Date();
+            const offset = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+            topupDate.value = offset.slice(0, 10);
+            topupTime.value = offset.slice(11, 16);
             topupModal.classList.remove('hidden');
         }
 
@@ -250,7 +459,11 @@
 
         function openRegisterModal() {
             document.getElementById('regName').value = '';
+            document.getElementById('regUsername').value = '';
+            document.getElementById('regPhone').value = '';
             document.getElementById('regEmail').value = '';
+            document.getElementById('regAccount').value = '';
+            document.getElementById('regPassword').value = '';
             document.getElementById('regBalance').value = '';
             document.getElementById('regStatus').value = 'Verified';
             registerModal.classList.remove('hidden');
@@ -258,6 +471,66 @@
 
         function closeRegisterModal() {
             registerModal.classList.add('hidden');
+        }
+
+        function upsertTransaction(entry) {
+            const history = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
+            const existingIndex = history.findIndex((item) => item.requestId === entry.requestId || item.id === entry.id);
+            if (existingIndex >= 0) {
+                history[existingIndex] = entry;
+            } else {
+                history.unshift(entry);
+            }
+            localStorage.setItem('odinTransactions', JSON.stringify(history.slice(0, 12)));
+        }
+
+        function applyTransferDecision(requestId, nextStatus, adminDate, adminTime) {
+            const requests = getTransferRequests();
+            const request = requests.find((item) => item.id === requestId);
+            if (!request) return;
+            const user = getUsers().find((item) => item.id === request.senderId);
+            const previousStatus = request.status;
+            const timestamp = adminDate && adminTime ? new Date(`${adminDate}T${adminTime}`).toISOString() : new Date().toISOString();
+            const oldDecision = request.adminDecision || previousStatus;
+
+            request.status = nextStatus;
+            request.adminDecision = nextStatus;
+            request.adminDate = adminDate;
+            request.adminTime = adminTime;
+            request.reviewedAt = timestamp;
+            request.completedAt = timestamp;
+
+            if (user) {
+                if (oldDecision === 'Successful' && nextStatus !== 'Successful') {
+                    user.balance = Number(user.balance || 0) + Number(request.amount || 0);
+                } else if (oldDecision !== 'Successful' && nextStatus === 'Successful') {
+                    user.balance = Math.max(0, Number(user.balance || 0) - Number(request.amount || 0));
+                }
+            }
+
+            const transactionEntry = {
+                id: `txn-${request.id}`,
+                requestId: request.id,
+                type: 'transfer',
+                beneficiary: request.beneficiary,
+                amount: Number(request.amount || 0),
+                status: nextStatus,
+                createdAt: timestamp,
+                completedAt: timestamp,
+                adminDate,
+                adminTime
+            };
+
+            if (user) {
+                const userIndex = getUsers().findIndex((item) => item.id === user.id);
+                const list = getUsers();
+                list[userIndex] = user;
+                saveUsers(list);
+            }
+            upsertTransaction(transactionEntry);
+            saveTransferRequests(requests);
+            notifyAdmin('Transfer updated', `${request.beneficiary} is now marked ${nextStatus}`);
+            renderAll();
         }
 
         function executeTopup() {
@@ -268,17 +541,38 @@
             }
             const list = getUsers();
             const user = list.find((item) => item.id === selectedUserId);
-            user.balance += amount;
+            if (!user) return;
+            const selectedDate = topupDate.value;
+            const selectedTime = topupTime.value;
+            const timestamp = selectedDate && selectedTime ? new Date(`${selectedDate}T${selectedTime}`).toISOString() : new Date().toISOString();
+            user.balance = Number(user.balance || 0) + amount;
+            const historyEntry = {
+                id: `fund-${Date.now()}`,
+                type: 'funding',
+                requestId: `fund-${Date.now()}`,
+                beneficiary: user.name,
+                amount,
+                status: 'Successful',
+                createdAt: timestamp,
+                completedAt: timestamp,
+                adminDate: selectedDate,
+                adminTime: selectedTime
+            };
             saveUsers(list);
-            renderTable();
+            upsertTransaction(historyEntry);
             closeModal();
-            alert(`TRANSACTION SUCCESSFUL
-$${amount.toLocaleString()} credited to ${user.name}.`);
+            renderAll();
+            notifyAdmin('Account funded', `${user.name} received a $${amount.toLocaleString()} credit`);
+            alert(`TRANSACTION SUCCESSFUL\n$${amount.toLocaleString()} credited to ${user.name}.`);
         }
 
         function registerClient() {
             const name = document.getElementById('regName').value.trim();
+            const username = document.getElementById('regUsername').value.trim().toLowerCase();
+            const phone = document.getElementById('regPhone').value.trim();
             const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const accountNumber = document.getElementById('regAccount').value.trim();
+            const password = document.getElementById('regPassword').value;
             const balance = Number(document.getElementById('regBalance').value || 0);
             const status = document.getElementById('regStatus').value;
 
@@ -294,21 +588,61 @@ $${amount.toLocaleString()} credited to ${user.name}.`);
                 return;
             }
 
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
             const newUser = {
                 id: generateUserId(),
                 name,
+                username: username || name.toLowerCase().replace(/\s+/g, '.'),
+                phone,
+                accountNumber: accountNumber || `100200${Math.floor(1000 + Math.random() * 9000)}`,
                 status,
                 balance: Number(balance) || 0,
                 held: false,
                 initials: createInitials(name),
-                email
+                email,
+                isActive: false,
+                registrationStatus: 'Pending OTP',
+                registrationDate: new Date().toISOString(),
+                lastLogin: '',
+                loginActivity: [],
+                passwordHash: hashPassword(password || 'Welcome123!'),
+                otp
             };
 
             list.unshift(newUser);
             saveUsers(list);
-            renderTable();
+            const registrationRequests = getRegistrationRequests();
+            registrationRequests.unshift({ id: newUser.id, name, email, otp, registrationStatus: 'Pending OTP' });
+            saveRegistrationRequests(registrationRequests);
+            renderAll();
             closeRegisterModal();
-            alert(`CLIENT PROFILE CREATED\n${newUser.name} has been registered with a starting balance of $${newUser.balance.toLocaleString()}.`);
+            notifyAdmin('Registration request', `${name} requires OTP verification`);
+            alert(`CLIENT PROFILE CREATED\n${newUser.name} is pending OTP verification.`);
+        }
+
+        function approveRegistration(registrationId, otpValue) {
+            const requests = getRegistrationRequests();
+            const request = requests.find((item) => item.id === registrationId);
+            if (!request) return;
+            if (!otpValue) {
+                alert('Enter the OTP to approve registration.');
+                return;
+            }
+            const list = getUsers();
+            const user = list.find((item) => item.id === registrationId);
+            if (!user) return;
+            if (String(user.otp || '').trim() !== String(otpValue).trim()) {
+                alert('The OTP entered is incorrect.');
+                return;
+            }
+            user.isActive = true;
+            user.registrationStatus = 'Active';
+            user.otp = '';
+            saveUsers(list);
+            request.registrationStatus = 'Approved';
+            saveRegistrationRequests(requests.filter((item) => item.id !== registrationId).concat(request));
+            renderAll();
+            notifyAdmin('Registration approved', `${user.name} is now active`);
         }
 
         function toggleHold(id) {
@@ -318,13 +652,31 @@ $${amount.toLocaleString()} credited to ${user.name}.`);
             user.held = !user.held;
             user.status = user.held ? 'Held for review' : (user.status.includes('Verified') ? 'Verified' : 'Verified');
             saveUsers(list);
-            renderTable();
+            renderAll();
         }
 
         function messageUser(id) {
             localStorage.setItem('odinAdminMessageTarget', id);
             window.location.href = 'admin-support.html';
         }
+
+        transferQueue.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-action="review-transfer"]');
+            if (!button) return;
+            const transferId = button.getAttribute('data-transfer-id');
+            const statusSelect = transferQueue.querySelector(`select[data-transfer-id="${transferId}"][data-field="status"]`);
+            const dateInput = transferQueue.querySelector(`input[data-transfer-id="${transferId}"][data-field="date"]`);
+            const timeInput = transferQueue.querySelector(`input[data-transfer-id="${transferId}"][data-field="time"]`);
+            applyTransferDecision(transferId, statusSelect.value, dateInput.value, timeInput.value);
+        });
+
+        registrationQueue.addEventListener('click', (event) => {
+            const button = event.target.closest('button[data-action="approve-registration"]');
+            if (!button) return;
+            const registrationId = button.getAttribute('data-registration-id');
+            const otpInput = registrationQueue.querySelector(`input[data-registration-id="${registrationId}"][data-field="otp"]`);
+            approveRegistration(registrationId, otpInput.value);
+        });
 
         supportPanelBtn.addEventListener('click', () => {
             window.location.href = 'admin-support.html';
@@ -353,7 +705,18 @@ $${amount.toLocaleString()} credited to ${user.name}.`);
         if (!localStorage.getItem('odinAdminUsers')) {
             saveUsers(users);
         }
-        renderTable();
+        if (!localStorage.getItem('odinTransferRequests')) {
+            localStorage.setItem('odinTransferRequests', '[]');
+        }
+        if (!localStorage.getItem('odinRegistrationRequests')) {
+            localStorage.setItem('odinRegistrationRequests', '[]');
+        }
+        renderAll();
+        window.addEventListener('storage', renderAll);
+        window.addEventListener('odin:state-updated', renderAll);
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().catch(() => {});
+        }
     </script>
 </body>
 </html>

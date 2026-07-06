@@ -62,11 +62,20 @@
         const statusBox = document.getElementById('loginStatus');
         const form = document.getElementById('loginForm');
 
+        function hashPassword(password) {
+            let hash = 0;
+            for (let index = 0; index < password.length; index += 1) {
+                hash = (hash << 5) - hash + password.charCodeAt(index);
+                hash |= 0;
+            }
+            return `h${Math.abs(hash).toString(16)}`;
+        }
+
         function getDefaultAdminUsers() {
             return [
-                { id: 'ODIN-8842-X', name: 'Morris Thomas', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com' },
-                { id: 'ODIN-2217-B', name: 'Elena Hart', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com' },
-                { id: 'ODIN-3394-C', name: 'Amir Das', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com' }
+                { id: 'ODIN-8842-X', name: 'Morris Thomas', username: 'morris', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com', phone: '+1-555-0101', accountNumber: '1002003001', registrationDate: '2025-01-14', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
+                { id: 'ODIN-2217-B', name: 'Elena Hart', username: 'elena', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com', phone: '+1-555-0102', accountNumber: '1002003002', registrationDate: '2025-02-09', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
+                { id: 'ODIN-3394-C', name: 'Amir Das', username: 'amir', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com', phone: '+1-555-0103', accountNumber: '1002003003', registrationDate: '2025-03-11', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' }
             ];
         }
 
@@ -83,8 +92,32 @@
             return matchByName || users[0];
         }
 
+        function saveUsers(list) {
+            localStorage.setItem('odinAdminUsers', JSON.stringify(list));
+            window.dispatchEvent(new Event('odin:state-updated'));
+        }
+
+        function showStatus(message, type) {
+            statusBox.textContent = message;
+            statusBox.className = type === 'error'
+                ? 'mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700'
+                : 'mb-5 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700';
+            statusBox.classList.remove('hidden');
+        }
+
+        function verifyPassword(inputPassword, storedHash) {
+            if (!storedHash) {
+                return inputPassword === 'Welcome123!';
+            }
+            return hashPassword(inputPassword) === storedHash;
+        }
+
         if (localStorage.getItem('odinAuth') === 'true') {
             window.location.href = 'dashboard.html';
+        }
+
+        if (!localStorage.getItem('odinAdminUsers')) {
+            saveUsers(getDefaultAdminUsers());
         }
 
         form.addEventListener('submit', function (event) {
@@ -94,32 +127,39 @@
 
             statusBox.classList.add('hidden');
             if (!email || !password) {
-                statusBox.textContent = 'Please enter your email and password.';
-                statusBox.classList.remove('hidden');
+                showStatus('Please enter your email and password.', 'error');
                 return;
             }
             if (!email.includes('@')) {
-                statusBox.textContent = 'Please use a valid email address.';
-                statusBox.classList.remove('hidden');
+                showStatus('Please use a valid email address.', 'error');
                 return;
             }
             if (password.length < 6) {
-                statusBox.textContent = 'Password must be at least 6 characters.';
-                statusBox.classList.remove('hidden');
+                showStatus('Password must be at least 6 characters.', 'error');
                 return;
             }
 
-            if (!localStorage.getItem('odinAdminUsers')) {
-                localStorage.setItem('odinAdminUsers', JSON.stringify(getDefaultAdminUsers()));
+            const users = JSON.parse(localStorage.getItem('odinAdminUsers') || '[]');
+            const activeUser = users.find((user) => user.email && user.email.toLowerCase() === email.toLowerCase()) || resolveActiveUser(email);
+            if (!activeUser || !verifyPassword(password, activeUser.passwordHash)) {
+                showStatus('Incorrect password. Please try again.', 'error');
+                return;
+            }
+            if (activeUser.isActive === false || activeUser.registrationStatus === 'Pending OTP') {
+                showStatus('Account pending activation. Complete OTP verification with the administrator.', 'error');
+                return;
             }
 
-            const activeUser = resolveActiveUser(email);
+            activeUser.lastLogin = new Date().toISOString();
+            activeUser.loginActivity = Array.isArray(activeUser.loginActivity) ? activeUser.loginActivity : [];
+            activeUser.loginActivity.unshift(new Date().toISOString());
+            saveUsers(users.map((user) => user.id === activeUser.id ? activeUser : user));
+
             localStorage.setItem('odinAuth', 'true');
             localStorage.setItem('odinUser', email);
             localStorage.setItem('odinActiveUserId', activeUser.id);
             localStorage.setItem('odinActiveUserName', activeUser.name);
-            statusBox.textContent = 'Access verified. Redirecting to your dashboard...';
-            statusBox.className = 'mb-5 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700';
+            showStatus('Access verified. Redirecting to your dashboard...', 'success');
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 900);

@@ -193,17 +193,31 @@
             this.disabled = true;
             this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Preparing review...';
 
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
             const transferData = {
+                id: `TX-${Date.now()}`,
                 beneficiary: name,
                 account: iban,
                 swiftCode: swift,
                 amount: amt,
                 sender: userName,
-                status: 'Pending Verification',
-                createdAt: new Date().toISOString()
+                senderId: currentUser?.id || localStorage.getItem('odinActiveUserId'),
+                status: 'Pending OTP',
+                createdAt: new Date().toISOString(),
+                otp,
+                adminDecision: 'Pending',
+                adminDate: '',
+                adminTime: ''
             };
 
+            const pendingRequests = JSON.parse(localStorage.getItem('odinTransferRequests') || '[]');
+            pendingRequests.unshift(transferData);
+            localStorage.setItem('odinTransferRequests', JSON.stringify(pendingRequests));
             localStorage.setItem('pendingTransfer', JSON.stringify(transferData));
+            localStorage.setItem('odinNotifications', JSON.stringify([
+                ...(JSON.parse(localStorage.getItem('odinNotifications') || '[]')),
+                { id: Date.now(), type: 'New transfer request', message: `Transfer request created for ${name}` , createdAt: new Date().toISOString() }
+            ].slice(-8)));
             setTimeout(() => {
                 window.location.href = 'review-transfer.html';
             }, 700);

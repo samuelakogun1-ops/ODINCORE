@@ -37,24 +37,25 @@
         const pendingTransfer = JSON.parse(localStorage.getItem('pendingTransfer') || '{}');
         document.getElementById('dispName').textContent = pendingTransfer.beneficiary || 'Unknown';
         document.getElementById('dispAmt').textContent = '$' + Number(pendingTransfer.amount || 0).toLocaleString();
+        document.getElementById('finalBtn').textContent = pendingTransfer.status === 'Pending OTP' ? 'Awaiting admin approval' : 'Confirm & Dispatch';
 
         document.getElementById('finalBtn').addEventListener('click', function () {
             const btn = this;
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Pending admin review...';
 
             const history = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
-            const completedTransfer = {
+            const pendingEntry = {
                 ...pendingTransfer,
-                status: 'Completed',
+                status: 'Pending OTP',
                 completedAt: new Date().toISOString()
             };
-            history.unshift(completedTransfer);
-            localStorage.setItem('odinTransactions', JSON.stringify(history.slice(0, 6)));
+            history.unshift(pendingEntry);
+            localStorage.setItem('odinTransactions', JSON.stringify(history.slice(0, 8)));
 
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
-            }, 1200);
+            }, 700);
         });
     </script>
 </body>

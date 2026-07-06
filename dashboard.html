@@ -403,32 +403,55 @@
         window.addEventListener('focus', updateBalanceDisplay);
         setInterval(updateBalanceDisplay, 4000);
 
-        const activityList = document.getElementById('activityList');
-        const supportFeed = document.getElementById('supportFeed');
-        const transactions = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
-        const inquiries = JSON.parse(localStorage.getItem('odinInquiries') || '[]');
+        function renderDashboardActivity() {
+            const activityList = document.getElementById('activityList');
+            const supportFeed = document.getElementById('supportFeed');
+            const transactions = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
+            const inquiries = JSON.parse(localStorage.getItem('odinInquiries') || '[]');
 
-        if (transactions.length === 0) {
-            activityList.innerHTML = `
-                <div class="p-6 text-sm text-slate-500">No transfers have been completed yet. Your recent activity will appear here after you dispatch a transfer.</div>
-            `;
-        } else {
-            activityList.innerHTML = transactions.map((item) => `
-                <div class="flex items-center justify-between p-6 hover:bg-slate-50">
-                    <div class="flex items-center gap-4">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-green-600"><i class="fas fa-arrow-right"></i></div>
-                        <div>
-                            <p class="font-bold text-slate-800">${item.beneficiary}</p>
-                            <p class="text-xs font-medium text-slate-400">${new Date(item.completedAt || item.createdAt).toLocaleString()}</p>
+            if (transactions.length === 0) {
+                activityList.innerHTML = `
+                    <div class="p-6 text-sm text-slate-500">No transfers have been completed yet. Your recent activity will appear here after you dispatch a transfer.</div>
+                `;
+            } else {
+                activityList.innerHTML = transactions.map((item) => {
+                    const statusColor = item.status === 'Successful' ? 'text-green-600' : item.status === 'Pending' ? 'text-amber-600' : item.status === 'Visit Nearest Branch' ? 'text-purple-600' : 'text-slate-600';
+                    const label = item.type === 'funding' ? 'Account funded' : item.beneficiary || 'Transfer';
+                    return `
+                        <div class="flex items-center justify-between p-6 hover:bg-slate-50">
+                            <div class="flex items-center gap-4">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100 text-green-600"><i class="fas fa-arrow-right"></i></div>
+                                <div>
+                                    <p class="font-bold text-slate-800">${label}</p>
+                                    <p class="text-xs font-medium text-slate-400">${new Date(item.completedAt || item.createdAt || item.adminDate || Date.now()).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg font-bold text-slate-800">$${Number(item.amount || 0).toLocaleString()}</p>
+                                <p class="text-[10px] font-bold uppercase ${statusColor}">${item.status || 'Pending'}</p>
+                            </div>
                         </div>
+                    `;
+                }).join('');
+            }
+
+            if (inquiries.length === 0) {
+                supportFeed.innerHTML = '<div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-500">No support requests yet. Your recent inquiries will appear here.</div>';
+            } else {
+                supportFeed.innerHTML = inquiries.slice(0, 3).map((item) => `
+                    <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                        <div class="flex items-center justify-between">
+                            <p class="text-sm font-semibold text-slate-800">${item.category}</p>
+                            <span class="rounded-full bg-blue-100 px-2 py-1 text-[10px] font-bold uppercase text-blue-600">${item.status}</span>
+                        </div>
+                        <p class="mt-2 text-sm text-slate-600">${item.content}</p>
                     </div>
-                    <div class="text-right">
-                        <p class="text-lg font-bold text-slate-800">$${Number(item.amount).toLocaleString()}</p>
-                        <p class="text-[10px] font-bold uppercase text-green-600">${item.status}</p>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
         }
+
+        renderDashboardActivity();
+        window.addEventListener('odin:state-updated', renderDashboardActivity);
 
         if (inquiries.length === 0) {
             supportFeed.innerHTML = '<div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm text-slate-500">No support requests yet. Your recent inquiries will appear here.</div>';
