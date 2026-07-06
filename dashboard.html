@@ -13,7 +13,7 @@
         .sidebar-link.active { background: #3b82f6; color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
-<body class="flex min-h-screen bg-[#f8fafc]">
+<body class="flex min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100">
     <aside class="sticky top-0 hidden h-screen w-72 flex-col border-r border-slate-200 bg-white lg:flex">
         <div class="p-8">
             <div class="flex items-center gap-3">
@@ -51,12 +51,17 @@
         </header>
 
         <div class="mx-auto max-w-7xl p-6 lg:p-8">
-            <div class="grid gap-8 lg:grid-cols-3">
-                <div class="space-y-8 lg:col-span-2">
-                    <div class="relative overflow-hidden rounded-[2.5rem] bg-slate-900 p-8 text-white shadow-2xl sm:p-10">
+            <div class="grid gap-8 xl:grid-cols-[1.7fr_0.9fr]">
+                <div class="space-y-8">
+                    <div class="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-8 text-white shadow-2xl sm:p-10">
                         <div class="relative z-10">
-                            <p class="text-xs font-bold uppercase tracking-[0.25em] text-slate-400">Total available balance</p>
-                            <h2 class="mt-4 text-4xl font-bold tracking-tighter sm:text-5xl">$94,250.00</h2>
+                            <div class="flex flex-wrap items-center gap-3">
+                                <span class="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-200">Executive overview</span>
+                                <span class="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-emerald-300">Protected</span>
+                            </div>
+                            <p class="mt-5 text-xs font-bold uppercase tracking-[0.25em] text-slate-400">Total available balance</p>
+                            <h2 id="balanceValue" class="mt-3 text-4xl font-bold tracking-tighter sm:text-5xl">$0.00</h2>
+                            <p id="todayDate" class="mt-3 text-sm text-slate-300"></p>
                             <div class="mt-8 flex flex-wrap gap-4">
                                 <a href="transfer.html" class="flex items-center gap-3 rounded-2xl bg-blue-600 px-6 py-3 font-bold transition hover:bg-blue-700"><i class="fas fa-arrow-up-right-from-square"></i> Move Funds</a>
                                 <a href="support.html" class="rounded-2xl border border-slate-700 px-6 py-3 font-bold text-slate-300 transition hover:bg-slate-800">Request Support</a>
@@ -65,58 +70,183 @@
                         <div class="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-blue-500/10 blur-[100px]"></div>
                     </div>
 
-                    <div class="grid gap-4 md:grid-cols-3">
-                        <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm">
-                            <p class="text-sm font-semibold text-slate-500">Security posture</p>
-                            <p class="mt-2 text-xl font-bold text-slate-900">Protected</p>
-                            <p class="mt-1 text-sm text-slate-500">Two-factor verification and live monitoring enabled.</p>
+                    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                        <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-semibold text-slate-500">Security score</p>
+                                <i class="fas fa-shield-halved text-blue-600"></i>
+                            </div>
+                            <p class="mt-2 text-2xl font-bold text-slate-900">98/100</p>
+                            <p class="mt-1 text-sm text-slate-500">Multi-layer protection active</p>
                         </div>
-                        <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm">
-                            <p class="text-sm font-semibold text-slate-500">Next review window</p>
-                            <p class="mt-2 text-xl font-bold text-slate-900">15 mins</p>
-                            <p class="mt-1 text-sm text-slate-500">Fast-track transfers are prioritized throughout the day.</p>
+                        <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-semibold text-slate-500">Transfers today</p>
+                                <i class="fas fa-chart-line text-emerald-600"></i>
+                            </div>
+                            <p class="mt-2 text-2xl font-bold text-slate-900">14</p>
+                            <p class="mt-1 text-sm text-slate-500">High priority routing enabled</p>
                         </div>
-                        <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm">
-                            <p class="text-sm font-semibold text-slate-500">Client concierge</p>
-                            <p class="mt-2 text-xl font-bold text-slate-900">Available</p>
-                            <p class="mt-1 text-sm text-slate-500">A specialist can assist with urgent account requests.</p>
+                        <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-semibold text-slate-500">Response SLA</p>
+                                <i class="fas fa-clock text-amber-600"></i>
+                            </div>
+                            <p class="mt-2 text-2xl font-bold text-slate-900">6 min</p>
+                            <p class="mt-1 text-sm text-slate-500">Dedicated support queue</p>
+                        </div>
+                        <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-semibold text-slate-500">Risk index</p>
+                                <i class="fas fa-bolt text-violet-600"></i>
+                            </div>
+                            <p class="mt-2 text-2xl font-bold text-slate-900">Low</p>
+                            <p class="mt-1 text-sm text-slate-500">No anomalies detected</p>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+                        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-lg font-bold text-slate-800">Portfolio intelligence</h3>
+                                <span class="rounded-full bg-blue-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-700">Updated live</span>
+                            </div>
+                            <div class="mt-5 space-y-4">
+                                <div class="rounded-2xl bg-slate-50 p-4">
+                                    <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
+                                        <span>Allocation efficiency</span>
+                                        <span>84%</span>
+                                    </div>
+                                    <div class="mt-3 h-2 rounded-full bg-slate-200">
+                                        <div class="h-2 w-[84%] rounded-full bg-blue-600"></div>
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl bg-slate-50 p-4">
+                                    <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
+                                        <span>Review readiness</span>
+                                        <span>92%</span>
+                                    </div>
+                                    <div class="mt-3 h-2 rounded-full bg-slate-200">
+                                        <div class="h-2 w-[92%] rounded-full bg-emerald-600"></div>
+                                    </div>
+                                </div>
+                                <div class="rounded-2xl bg-slate-50 p-4">
+                                    <div class="flex items-center justify-between text-sm font-semibold text-slate-700">
+                                        <span>Cash reserve target</span>
+                                        <span>76%</span>
+                                    </div>
+                                    <div class="mt-3 h-2 rounded-full bg-slate-200">
+                                        <div class="h-2 w-[76%] rounded-full bg-amber-500"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                            <h3 class="text-lg font-bold text-slate-800">Priority actions</h3>
+                            <div class="mt-4 space-y-3">
+                                <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800">Confirm scheduled transfer</p>
+                                        <p class="text-xs text-slate-500">Due before 4:00 PM</p>
+                                    </div>
+                                    <a href="transfer.html" class="text-sm font-semibold text-blue-600">Open</a>
+                                </div>
+                                <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800">Review compliance checklist</p>
+                                        <p class="text-xs text-slate-500">All documents are up to date</p>
+                                    </div>
+                                    <a href="support.html" class="text-sm font-semibold text-blue-600">Review</a>
+                                </div>
+                                <div class="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800">Update beneficiary profile</p>
+                                        <p class="text-xs text-slate-500">Ensure verification remains current</p>
+                                    </div>
+                                    <a href="profile.html" class="text-sm font-semibold text-blue-600">Edit</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-                        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-                            <h3 class="text-lg font-bold text-slate-800">Quick actions</h3>
-                            <div class="mt-4 grid gap-3 sm:grid-cols-2">
-                                <a href="transfer.html" class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm font-semibold text-slate-700 transition hover:border-blue-500 hover:text-blue-600">Send a transfer</a>
-                                <a href="support.html" class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm font-semibold text-slate-700 transition hover:border-blue-500 hover:text-blue-600">Request support</a>
-                                <a href="profile.html" class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm font-semibold text-slate-700 transition hover:border-blue-500 hover:text-blue-600">Update profile</a>
-                                <a href="index.html" class="rounded-2xl border border-slate-100 bg-slate-50 p-4 text-sm font-semibold text-slate-700 transition hover:border-blue-500 hover:text-blue-600">View overview</a>
+                        <div class="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-sm">
+                            <div class="flex items-center justify-between border-b border-slate-100 p-6">
+                                <h3 class="text-lg font-bold text-slate-800">Recent activity</h3>
+                                <a href="transfer.html" class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Create transfer</a>
+                            </div>
+                            <div id="activityList" class="divide-y divide-slate-50"></div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                                <h3 class="text-lg font-bold text-slate-800">Recent support requests</h3>
+                                <div id="supportFeed" class="mt-4 space-y-3"></div>
+                            </div>
+                            <div class="rounded-[2rem] border border-emerald-100 bg-gradient-to-br from-emerald-600 to-teal-700 p-6 text-white shadow-sm">
+                                <p class="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-100">Compliance status</p>
+                                <h3 class="mt-2 text-lg font-bold">All policy controls are verified</h3>
+                                <p class="mt-2 text-sm text-emerald-50">Your account remains fully aligned with current governance and audit standards.</p>
                             </div>
                         </div>
-                        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-                            <h3 class="text-lg font-bold text-slate-800">Recent support requests</h3>
-                            <div id="supportFeed" class="mt-4 space-y-3"></div>
-                        </div>
-                    </div>
-
-                    <div class="overflow-hidden rounded-[2.5rem] border border-slate-200 bg-white shadow-sm">
-                        <div class="flex items-center justify-between border-b border-slate-100 p-6">
-                            <h3 class="text-lg font-bold text-slate-800">Recent activity</h3>
-                            <a href="transfer.html" class="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">Create transfer</a>
-                        </div>
-                        <div id="activityList" class="divide-y divide-slate-50"></div>
                     </div>
                 </div>
 
-                <div class="self-start rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-800 to-black p-8 text-white shadow-2xl">
-                    <div class="mb-10 flex items-start justify-between">
-                        <i class="fas fa-microchip text-2xl text-yellow-500"></i>
-                        <span class="text-2xl font-black italic opacity-60">VISA</span>
+                <div class="space-y-4">
+                    <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-bold text-slate-800">Account health</h3>
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Stable</span>
+                        </div>
+                        <div class="mt-6 rounded-[1.5rem] bg-slate-950 p-6 text-white">
+                            <div class="mb-10 flex items-start justify-between">
+                                <i class="fas fa-microchip text-2xl text-yellow-500"></i>
+                                <span class="text-2xl font-black italic opacity-60">VISA</span>
+                            </div>
+                            <p class="mb-8 font-mono text-2xl tracking-[0.25em]">4421 •••• •••• 9928</p>
+                            <div>
+                                <p class="text-[9px] uppercase tracking-widest opacity-50">Client</p>
+                                <p id="cardName" class="text-sm font-bold uppercase tracking-wider"></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 space-y-3 text-sm text-slate-600">
+                            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+                                <span>Verification status</span>
+                                <span class="font-semibold text-emerald-600">Verified</span>
+                            </div>
+                            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+                                <span>Backup approval</span>
+                                <span class="font-semibold text-slate-800">Enabled</span>
+                            </div>
+                            <div class="flex items-center justify-between rounded-2xl bg-slate-50 p-3">
+                                <span>Escalation desk</span>
+                                <span class="font-semibold text-blue-600">24/7</span>
+                            </div>
+                        </div>
                     </div>
-                    <p class="mb-8 font-mono text-2xl tracking-[0.25em]">4421 •••• •••• 9928</p>
-                    <div>
-                        <p class="text-[9px] uppercase tracking-widest opacity-50">Card holder</p>
-                        <p id="cardName" class="text-sm font-bold uppercase tracking-wider"></p>
+
+                    <div class="rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-800 to-slate-950 p-6 text-white shadow-sm">
+                        <h3 class="text-lg font-bold">Client services</h3>
+                        <p class="mt-2 text-sm text-slate-300">Priority assistance is available for urgent requests and exception handling.</p>
+                        <div class="mt-6 space-y-3">
+                            <div class="rounded-2xl border border-white/10 bg-white/10 p-3">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span>Dedicated advisor</span>
+                                    <span class="font-semibold text-emerald-300">Online</span>
+                                </div>
+                            </div>
+                            <div class="rounded-2xl border border-white/10 bg-white/10 p-3">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span>Escalation queue</span>
+                                    <span class="font-semibold text-blue-300">Priority</span>
+                                </div>
+                            </div>
+                            <div class="rounded-2xl border border-white/10 bg-white/10 p-3">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span>Document review</span>
+                                    <span class="font-semibold text-amber-300">Fast</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -129,10 +259,54 @@
         }
 
         const userEmail = localStorage.getItem('odinUser') || 'morris@odinprivate.com';
-        const displayName = userEmail.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-        document.getElementById('welcomeName').textContent = `Welcome back, ${displayName}`;
-        document.getElementById('userLabel').textContent = displayName;
-        document.getElementById('cardName').textContent = displayName;
+        const today = new Date();
+        const formatCurrency = (amount) => `$${Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        function getAdminUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('odinAdminUsers') || '[]');
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function getCurrentUserProfile() {
+            const adminUsers = getAdminUsers();
+            if (!adminUsers.length) {
+                return null;
+            }
+            const activeUserId = localStorage.getItem('odinActiveUserId');
+            if (activeUserId) {
+                const matched = adminUsers.find((item) => item.id === activeUserId);
+                if (matched) {
+                    return matched;
+                }
+            }
+            const normalizedEmail = (userEmail || '').toLowerCase();
+            const matchedByEmail = adminUsers.find((item) => item.email && item.email.toLowerCase() === normalizedEmail);
+            if (matchedByEmail) {
+                return matchedByEmail;
+            }
+            return adminUsers[0];
+        }
+
+        function updateBalanceDisplay() {
+            const activeUser = getCurrentUserProfile();
+            const displayName = activeUser?.name || userEmail.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            document.getElementById('welcomeName').textContent = `Welcome back, ${displayName}`;
+            document.getElementById('userLabel').textContent = displayName;
+            document.getElementById('cardName').textContent = displayName;
+            document.getElementById('todayDate').textContent = today.toLocaleDateString('en', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+            const balanceValue = document.getElementById('balanceValue');
+            if (balanceValue) {
+                balanceValue.textContent = formatCurrency(activeUser?.balance || 0);
+            }
+        }
+
+        updateBalanceDisplay();
+        window.addEventListener('storage', updateBalanceDisplay);
+        window.addEventListener('focus', updateBalanceDisplay);
+        setInterval(updateBalanceDisplay, 4000);
 
         const activityList = document.getElementById('activityList');
         const supportFeed = document.getElementById('supportFeed');

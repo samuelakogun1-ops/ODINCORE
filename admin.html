@@ -6,8 +6,231 @@
     <title>Control Center | ODINROOT Internal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { font-family: 'Inter', sans-serif; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal { display: none; }</style>
+    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); color: #e2e8f0; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal { display: none; }</style>
 </head>
-<body class="flex min-h-screen bg-[#020617] text-slate-300">
-    <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950"><div class="border-b border-slate-800 p-8"><div class="flex items-center gap-3"><div class="rounded-lg bg-red-600 p-2 shadow-lg shadow-red-900/20"><i class="fas fa-terminal text-white"></i></div><div><h1 class="text-xl font-bold tracking-tighter text-white">ODIN<span class="text-sm text-red-500">ROOT</span></h1><p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Master Admin Access</p></div></div></div><nav class="flex-grow space-y-1 p-4"><div class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Core Infrastructure</div><a href="admin.html" class="flex items-center gap-3 rounded-xl bg-slate-900 p-3 text-white"><i class="fas fa-users-gear text-blue-400"></i> User Directory</a><a href="vault.html" class="flex items-center gap-3 rounded-xl p-3 transition hover:bg-white/5"><i class="fas fa-vault text-amber-500"></i> Global Vaults</a><div class="mt-6 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Communications</div><a href="admin-support.html" class="group flex items-center justify-between rounded-xl p-3 transition hover:bg-white/5"><div class="flex items-center gap-3"><i class="fas fa-comment-dots text-green-400"></i><span>Support Desk</span></div><span class="animate-pulse rounded-full bg-red-500 px-1.5 py-0.5 text-[9px] text-white">1</span></a></nav><div class="border-t border-slate-800 p-6"><a href="login.html" class="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-red-400 transition hover:bg-red-500/5"><i class="fas fa-power-off"></i> Terminate Session</a></div></aside>
-    <main class="flex-grow"><header class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-950/50 px-8 py-6 backdrop-blur-md"><div class="flex items-center gap-4"><span class="flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-[10px] font-bold text-green-500"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span> SYSTEM STATUS: OPTIMAL</span></div><div class="text-right"><p class="text-sm font-bold uppercase tracking-tight text-white">Root Administrator</p><p class="font-mono text-[10px] text-slate-500">NODE: 102.16.88.42</p></div></header><div class="p-8"><div class="mb-8 grid gap-6 lg:grid-cols-4"><div class="admin-gradient rounded-2xl border border-slate-800 p-6 shadow-xl"><p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Liquidity</p><h3 class="text-2xl font-bold text-white mono">$42,850,000</h3></div><div class="rounded-2xl border border-slate-800 bg-slate-950 p-6"><p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Active Clients</p><h3 class="text-2xl font-bold text-white mono">128</h3></div></div><div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl"><div class="flex items-center justify-between border-b border-slate-800 bg-slate-900/50 p-6"><h3 class="text-lg font-bold text-white">Managed Client Registry</h3><input id="searchInput" type="text" placeholder="Search client..." class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs outline-none focus:border-blue-500"></div><table class="w-full text-left"><thead class="border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-widest text-slate-500"><tr><th class="px-6 py-4">Client / ID</th><th class="px-6 py-4">Verification</th><th class="px-6 py-4">Balance</th><th class="px-6 py-4 text-right">Administrative Actions</th></tr></thead><tbody id="clientTableBody" class="divide-y divide-slate-800"><tr class="transition hover:bg-slate-900/40"><td class="px-6 py-4"><div class="flex items-center gap-3"><div class="flex h-9 w-9 items-center justify-center rounded-lg border border-blue-500/20 bg-blue-600/10 text-xs font-bold text-blue-500">MT</div><div><p class="font-bold text-slate-200">Morris Thomas</p><p class="mono text-[10px] text-slate-500">#ODIN-8842-X</p></div></div></td><td class="px-6 py-4"><span class="rounded-md border border-green-500/20 bg-green-500/10 px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter text-green-500">Verified Elite</span></td><td class="px-6 py-4"><p id="morrisBalance" class="text-sm font-bold text-green-500 mono">$94,250.00</p></td><td class="space-x-2 px-6 py-4 text-right"><button onclick="openTopup('Morris Thomas')" class="rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button><button onclick="window.location.href='admin-support.html'" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button><button onclick="confirm('Are you sure you want to FREEZE account #ODIN-8842-X?')" class="rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-2 text-[10px] font-bold text-amber-500 transition hover:bg-amber-500 hover:text-white">Hold</button></td></tr></tbody></table></div></div></main><div id="topupModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-6 backdrop-blur-sm"><div class="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-10 shadow-2xl"><div class="relative z-10"><div class="mb-8 flex items-start justify-between"><div><h3 class="text-2xl font-bold tracking-tight text-white">Manual Credit</h3><p class="mt-1 text-sm text-slate-500">Beneficiary: <span id="targetUser" class="font-bold italic text-blue-400"></span></p></div><button onclick="closeModal()" class="text-slate-500 transition hover:text-white"><i class="fas fa-times text-xl"></i></button></div><div class="space-y-6"><div><label class="mb-3 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Deposit Amount (USD)</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span><input type="number" id="topupAmount" placeholder="0.00" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-5 pl-10 text-2xl font-mono text-white shadow-inner outline-none focus:border-blue-500"></div></div><button onclick="executeTopup()" class="w-full rounded-2xl bg-blue-600 py-5 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Authorize Transaction</button><p class="text-center text-[9px] uppercase tracking-widest text-slate-600">Encryption Level: AES-256 BIT</p></div></div><div class="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl"></div></div></div><script>const searchInput = document.getElementById('searchInput'); const balanceText = document.getElementById('morrisBalance'); let currentBalance = Number(localStorage.getItem('odinAdminBalance') || '94250'); function renderBalance() { balanceText.textContent = `$${currentBalance.toLocaleString()}.00`; } function openTopup(name) { document.getElementById('targetUser').innerText = name; document.getElementById('topupModal').style.display = 'flex'; } function closeModal() { document.getElementById('topupModal').style.display = 'none'; } function executeTopup() { const amount = document.getElementById('topupAmount').value; if (!amount || amount <= 0) { alert('CRITICAL ERROR: Invalid Transaction Amount.'); return; } alert(`TRANSACTION SUCCESSFUL\n$${parseFloat(amount).toLocaleString()} credited to Morris Thomas.`); currentBalance += parseFloat(amount); localStorage.setItem('odinAdminBalance', currentBalance); renderBalance(); closeModal(); document.getElementById('topupAmount').value = ''; } searchInput.addEventListener('input', (event) => { const query = event.target.value.toLowerCase(); const rows = document.querySelectorAll('#clientTableBody tr'); rows.forEach((row) => { const name = row.textContent.toLowerCase(); row.style.display = name.includes(query) ? '' : 'none'; }); }); renderBalance();</script></body></html>
+<body>
+    <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100">
+        <div class="border-b border-slate-800 p-8">
+            <div class="flex items-center gap-3">
+                <div class="rounded-lg bg-red-600 p-2 shadow-lg shadow-red-900/20"><i class="fas fa-terminal text-white"></i></div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tighter text-white">ODIN<span class="text-sm text-red-500">ROOT</span></h1>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Master Admin Access</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-grow space-y-1 p-4">
+            <div class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Core Infrastructure</div>
+            <a href="admin.html" class="flex items-center gap-3 rounded-xl bg-slate-900 p-3 text-white"><i class="fas fa-users-gear text-blue-400"></i> User Directory</a>
+            <a href="vault.html" class="flex items-center gap-3 rounded-xl p-3 text-slate-200 transition hover:bg-white/5"><i class="fas fa-vault text-amber-500"></i> Global Vaults</a>
+            <div class="mt-6 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Communications</div>
+            <button id="supportPanelBtn" class="group flex w-full items-center justify-between rounded-xl p-3 text-left text-slate-200 transition hover:bg-white/5">
+                <span class="flex items-center gap-3"><i class="fas fa-comment-dots text-green-400"></i><span>Support Desk</span></span>
+                <span class="animate-pulse rounded-full bg-red-500 px-1.5 py-0.5 text-[9px] text-white">1</span>
+            </button>
+        </nav>
+        <div class="border-t border-slate-800 p-6">
+            <a href="login.html" class="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-red-400 transition hover:bg-red-500/5"><i class="fas fa-power-off"></i> Terminate Session</a>
+        </div>
+    </aside>
+    <main class="flex-grow">
+        <header class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-800 bg-slate-950/80 px-8 py-6 backdrop-blur-md">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-[10px] font-bold text-green-500"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span> SYSTEM STATUS: OPTIMAL</span>
+            </div>
+            <div class="text-right">
+                <p class="text-sm font-bold uppercase tracking-tight text-white">Root Administrator</p>
+                <p class="font-mono text-[10px] text-slate-500">NODE: 102.16.88.42</p>
+            </div>
+        </header>
+        <div class="p-8">
+            <div class="mb-8 grid gap-6 lg:grid-cols-4">
+                <div class="admin-gradient rounded-2xl border border-slate-800 p-6 shadow-xl">
+                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Liquidity</p>
+                    <h3 class="text-2xl font-bold text-white mono">$42,850,000</h3>
+                </div>
+                <div class="rounded-2xl border border-slate-800 bg-slate-950 p-6">
+                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Active Clients</p>
+                    <h3 class="text-2xl font-bold text-white mono" id="clientCount">3</h3>
+                </div>
+                <div class="rounded-2xl border border-slate-800 bg-slate-950 p-6">
+                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Pending Holds</p>
+                    <h3 class="text-2xl font-bold text-amber-400 mono" id="holdCount">0</h3>
+                </div>
+                <div class="rounded-2xl border border-slate-800 bg-slate-950 p-6">
+                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Support Queue</p>
+                    <h3 class="text-2xl font-bold text-sky-400 mono">1</h3>
+                </div>
+            </div>
+            <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
+                <div class="flex items-center justify-between border-b border-slate-800 bg-slate-900/50 p-6">
+                    <h3 class="text-lg font-bold text-white">Managed Client Registry</h3>
+                    <input id="searchInput" type="text" placeholder="Search client..." class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-500" />
+                </div>
+                <table class="w-full text-left">
+                    <thead class="border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-widest text-slate-500">
+                        <tr>
+                            <th class="px-6 py-4">Client / ID</th>
+                            <th class="px-6 py-4">Verification</th>
+                            <th class="px-6 py-4">Balance</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody" class="divide-y divide-slate-800"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <div id="topupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
+        <div class="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-10 shadow-2xl">
+            <div class="relative z-10">
+                <div class="mb-8 flex items-start justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold tracking-tight text-white">Manual Credit</h3>
+                        <p class="mt-1 text-sm text-slate-500">Beneficiary: <span id="targetUser" class="font-bold italic text-blue-400"></span></p>
+                    </div>
+                    <button id="closeModalBtn" class="text-slate-500 transition hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <label class="mb-3 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Deposit Amount (USD)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span>
+                            <input type="number" id="topupAmount" placeholder="0.00" class="w-full rounded-2xl border border-slate-800 bg-slate-950 p-5 pl-10 text-2xl font-mono text-white shadow-inner outline-none focus:border-blue-500" />
+                        </div>
+                    </div>
+                    <button id="authorizeTopupBtn" class="w-full rounded-2xl bg-blue-600 py-5 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Authorize Transaction</button>
+                    <p class="text-center text-[9px] uppercase tracking-widest text-slate-600">Encryption Level: AES-256 BIT</p>
+                </div>
+            </div>
+            <div class="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl"></div>
+        </div>
+    </div>
+    <script>
+        const users = [
+            { id: 'ODIN-8842-X', name: 'Morris Thomas', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com' },
+            { id: 'ODIN-2217-B', name: 'Elena Hart', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com' },
+            { id: 'ODIN-3394-C', name: 'Amir Das', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com' }
+        ];
+        let selectedUserId = null;
+
+        const clientTableBody = document.getElementById('clientTableBody');
+        const clientCount = document.getElementById('clientCount');
+        const holdCount = document.getElementById('holdCount');
+        const searchInput = document.getElementById('searchInput');
+        const topupModal = document.getElementById('topupModal');
+        const targetUser = document.getElementById('targetUser');
+        const topupAmount = document.getElementById('topupAmount');
+        const supportPanelBtn = document.getElementById('supportPanelBtn');
+
+        function loadUsers() {
+            const stored = localStorage.getItem('odinAdminUsers');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    return users;
+                }
+            }
+            return users;
+        }
+
+        function saveUsers(list) {
+            localStorage.setItem('odinAdminUsers', JSON.stringify(list));
+        }
+
+        function getUsers() {
+            const stored = localStorage.getItem('odinAdminUsers');
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (e) {
+                    return users;
+                }
+            }
+            return users;
+        }
+
+        function renderTable() {
+            const allUsers = getUsers();
+            const query = searchInput.value.toLowerCase();
+            const visible = allUsers.filter((user) => `${user.name} ${user.id} ${user.status}`.toLowerCase().includes(query));
+            clientTableBody.innerHTML = '';
+            visible.forEach((user) => {
+                const row = document.createElement('tr');
+                row.className = 'transition hover:bg-slate-900/40';
+                row.innerHTML = `
+                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="flex h-9 w-9 items-center justify-center rounded-lg border border-blue-500/20 bg-blue-600/10 text-xs font-bold text-blue-500">${user.initials}</div><div><p class="font-bold text-slate-200">${user.name}</p><p class="mono text-[10px] text-slate-500">${user.id}</p></div></div></td>
+                    <td class="px-6 py-4"><span class="rounded-md border px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter ${user.status.includes('Pending') ? 'border-amber-500/20 bg-amber-500/10 text-amber-400' : 'border-green-500/20 bg-green-500/10 text-green-500'}">${user.status}</span></td>
+                    <td class="px-6 py-4"><p class="text-sm font-bold text-slate-200 mono">$${user.balance.toLocaleString()}</p></td>
+                    <td class="px-6 py-4"><p class="rounded-full px-3 py-1 text-[10px] font-bold uppercase ${user.held ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">${user.held ? 'Held' : 'Active'}</p></td>
+                    <td class="space-x-2 px-6 py-4 text-right">
+                        <button onclick="openTopup('${user.id}')" class="rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
+                        <button onclick="messageUser('${user.id}')" class="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
+                        <button onclick="toggleHold('${user.id}')" class="rounded-xl border ${user.held ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white'} px-4 py-2 text-[10px] font-bold transition">${user.held ? 'Release' : 'Hold'}</button>
+                    </td>
+                `;
+                clientTableBody.appendChild(row);
+            });
+            clientCount.textContent = allUsers.length.toString();
+            holdCount.textContent = allUsers.filter((user) => user.held).length.toString();
+        }
+
+        function openTopup(id) {
+            selectedUserId = id;
+            const user = getUsers().find((item) => item.id === id);
+            targetUser.textContent = `${user.name} (${user.id})`;
+            topupAmount.value = '';
+            topupModal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            topupModal.classList.add('hidden');
+        }
+
+        function executeTopup() {
+            const amount = Number(topupAmount.value);
+            if (!amount || amount <= 0) {
+                alert('CRITICAL ERROR: Invalid Transaction Amount.');
+                return;
+            }
+            const list = getUsers();
+            const user = list.find((item) => item.id === selectedUserId);
+            user.balance += amount;
+            saveUsers(list);
+            renderTable();
+            closeModal();
+            alert(`TRANSACTION SUCCESSFUL
+$${amount.toLocaleString()} credited to ${user.name}.`);
+        }
+
+        function toggleHold(id) {
+            const list = getUsers();
+            const user = list.find((item) => item.id === id);
+            if (!user) return;
+            user.held = !user.held;
+            user.status = user.held ? 'Held for review' : (user.status.includes('Verified') ? 'Verified' : 'Verified');
+            saveUsers(list);
+            renderTable();
+        }
+
+        function messageUser(id) {
+            localStorage.setItem('odinAdminMessageTarget', id);
+            window.location.href = 'admin-support.html';
+        }
+
+        supportPanelBtn.addEventListener('click', () => {
+            window.location.href = 'admin-support.html';
+        });
+        searchInput.addEventListener('input', renderTable);
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        document.getElementById('authorizeTopupBtn').addEventListener('click', executeTopup);
+
+        if (!localStorage.getItem('odinAdminUsers')) {
+            saveUsers(users);
+        }
+        renderTable();
+    </script>
+</body>
+</html>

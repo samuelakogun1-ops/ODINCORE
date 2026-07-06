@@ -11,7 +11,7 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="min-h-screen bg-[#f8fafc]">
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100">
     <div class="mx-auto max-w-2xl p-6 sm:p-8">
         <div class="mb-8 flex items-center justify-between">
             <div>
@@ -68,7 +68,7 @@
                         <span class="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
                         <input type="number" id="transferAmt" placeholder="0.00" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 pl-10 text-xl font-bold focus:border-blue-500 focus:outline-none">
                     </div>
-                    <p class="mt-2 text-[10px] font-medium text-slate-400">Available balance: <span class="font-bold text-blue-600">$94,250.00</span></p>
+                    <p class="mt-2 text-[10px] font-medium text-slate-400">Available balance: <span id="availableBalance" class="font-bold text-blue-600">$0.00</span></p>
                 </div>
 
                 <div id="estimateBox" class="rounded-2xl border border-blue-100 bg-blue-50/50 p-5 text-sm text-slate-700">
@@ -98,8 +98,51 @@
         }
 
         const senderName = document.getElementById('senderName');
-        const userName = (localStorage.getItem('odinUser') || 'morris@odinprivate.com').split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const userEmail = localStorage.getItem('odinUser') || 'morris@odinprivate.com';
+        const userName = userEmail.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+        const formatCurrency = (amount) => `$${Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+        function getAdminUsers() {
+            try {
+                return JSON.parse(localStorage.getItem('odinAdminUsers') || '[]');
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function getCurrentUserProfile() {
+            const adminUsers = getAdminUsers();
+            if (!adminUsers.length) {
+                return null;
+            }
+            const activeUserId = localStorage.getItem('odinActiveUserId');
+            if (activeUserId) {
+                const matched = adminUsers.find((item) => item.id === activeUserId);
+                if (matched) {
+                    return matched;
+                }
+            }
+            const normalizedEmail = userEmail.toLowerCase();
+            const matchedByEmail = adminUsers.find((item) => item.email && item.email.toLowerCase() === normalizedEmail);
+            if (matchedByEmail) {
+                return matchedByEmail;
+            }
+            return adminUsers[0];
+        }
+
+        function updateBalanceDisplay() {
+            const activeUser = getCurrentUserProfile();
+            const balanceValue = document.getElementById('availableBalance');
+            if (balanceValue) {
+                balanceValue.textContent = formatCurrency(activeUser?.balance || 0);
+            }
+            senderName.textContent = (activeUser?.name || userName).toUpperCase();
+        }
+
         senderName.textContent = userName.toUpperCase();
+        updateBalanceDisplay();
+        window.addEventListener('storage', updateBalanceDisplay);
+        window.addEventListener('focus', updateBalanceDisplay);
 
         const feeEstimate = document.getElementById('feeEstimate');
         const deliveryTime = document.getElementById('deliveryTime');
@@ -138,6 +181,12 @@
 
             if (!name || !iban || !swift || !amt || amt <= 0) {
                 alert('Please complete all beneficiary details and enter a valid amount.');
+                return;
+            }
+
+            const currentUser = getCurrentUserProfile();
+            if (currentUser && amt > (currentUser.balance || 0)) {
+                alert('The transfer amount exceeds your available balance.');
                 return;
             }
 

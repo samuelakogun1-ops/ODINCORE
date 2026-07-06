@@ -11,7 +11,7 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+<body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100 p-6">
     <div class="w-full max-w-md overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-200/60">
         <div class="bg-slate-900 p-8 text-center text-white">
             <div class="mb-4 inline-flex items-center justify-center rounded-2xl bg-blue-600 p-3">
@@ -62,6 +62,27 @@
         const statusBox = document.getElementById('loginStatus');
         const form = document.getElementById('loginForm');
 
+        function getDefaultAdminUsers() {
+            return [
+                { id: 'ODIN-8842-X', name: 'Morris Thomas', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com' },
+                { id: 'ODIN-2217-B', name: 'Elena Hart', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com' },
+                { id: 'ODIN-3394-C', name: 'Amir Das', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com' }
+            ];
+        }
+
+        function resolveActiveUser(email) {
+            const storedUsers = JSON.parse(localStorage.getItem('odinAdminUsers') || '[]');
+            const users = storedUsers.length ? storedUsers : getDefaultAdminUsers();
+            const normalizedEmail = email.toLowerCase();
+            const matchByEmail = users.find((user) => user.email && user.email.toLowerCase() === normalizedEmail);
+            if (matchByEmail) {
+                return matchByEmail;
+            }
+            const nameToken = normalizedEmail.split('@')[0].replace(/[._-]/g, ' ');
+            const matchByName = users.find((user) => user.name.toLowerCase().includes(nameToken) || nameToken.includes(user.name.toLowerCase().split(' ')[0]));
+            return matchByName || users[0];
+        }
+
         if (localStorage.getItem('odinAuth') === 'true') {
             window.location.href = 'dashboard.html';
         }
@@ -88,8 +109,15 @@
                 return;
             }
 
+            if (!localStorage.getItem('odinAdminUsers')) {
+                localStorage.setItem('odinAdminUsers', JSON.stringify(getDefaultAdminUsers()));
+            }
+
+            const activeUser = resolveActiveUser(email);
             localStorage.setItem('odinAuth', 'true');
             localStorage.setItem('odinUser', email);
+            localStorage.setItem('odinActiveUserId', activeUser.id);
+            localStorage.setItem('odinActiveUserName', activeUser.name);
             statusBox.textContent = 'Access verified. Redirecting to your dashboard...';
             statusBox.className = 'mb-5 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700';
             setTimeout(() => {
