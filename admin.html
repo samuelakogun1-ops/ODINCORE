@@ -9,35 +9,41 @@
     <script src="app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); 
+        html, body { height: 100%; } 
+        * { -webkit-tap-highlight-color: transparent; } 
         body { 
             margin: 0; 
             font-family: 'Inter', sans-serif; 
             background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); 
             color: #e2e8f0; 
             overflow-x: hidden; 
+            overscroll-behavior: none; 
         } 
+        button, a, input, select, textarea { touch-action: manipulation; } 
         .mono { font-family: 'JetBrains Mono', monospace; } 
         .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } 
-        #topupModal, #registerModal, #otpModal { display: none; } 
+        #topupModal, #registerModal, #otpModal { display: none; position: fixed; inset: 0; z-index: 80; align-items: center; justify-content: center; padding: 1rem; overflow-y: auto; -webkit-overflow-scrolling: touch; } 
         #topupModal:not(.hidden), #registerModal:not(.hidden), #otpModal:not(.hidden) { display: flex; } 
-        main { position: relative; z-index: 1; } 
+        .modal-shell { max-height: calc(100dvh - 2rem); overflow-y: auto; -webkit-overflow-scrolling: touch; } 
+        main { position: relative; z-index: 1; min-height: 100vh; } 
         aside { position: relative; z-index: 20; } 
         .action-btn { position: relative; z-index: 40; pointer-events: auto; } 
         .toast-card { box-shadow: 0 18px 45px rgba(2, 6, 23, 0.4); } 
         .toast-success { border-color: rgba(34, 197, 94, 0.3); background: rgba(5, 46, 22, 0.95); } 
         .toast-warning { border-color: rgba(245, 158, 11, 0.25); background: rgba(69, 26, 3, 0.95); } 
         .toast-error { border-color: rgba(248, 113, 113, 0.3); background: rgba(69, 10, 10, 0.95); }
-        #adminOverlay { display: none; }
+        #adminOverlay { display: none; pointer-events: none; }
+        #adminOverlay:not(.hidden) { display: block; pointer-events: auto; }
         @media (max-width: 1023px) {
             body { flex-direction: column; }
             #adminOverlay { display: block; }
-            aside { width: min(86vw, 20rem); height: 100vh; position: fixed; left: 0; top: 0; transform: translateX(-100%); transition: transform 0.2s ease; z-index: 60; }
+            aside { width: min(86vw, 20rem); height: 100dvh; position: fixed; left: 0; top: 0; transform: translateX(-100%); transition: transform 0.2s ease; z-index: 70; overflow-y: auto; overscroll-behavior: contain; }
             aside.open { transform: translateX(0); }
             main { width: 100%; }
             .p-8 { padding: 1rem; }
             .px-8 { padding-left: 1rem; padding-right: 1rem; }
             .grid.gap-6.lg\:grid-cols-4 { grid-template-columns: 1fr; }
-            .overflow-x-auto { overflow-x: auto; }
+            .overflow-x-auto { overflow-x: auto; -webkit-overflow-scrolling: touch; }
             table { min-width: 760px; }
             .rounded-\[2\.5rem\], .rounded-\[2rem\], .rounded-3xl { border-radius: 1.25rem; }
         }
@@ -51,7 +57,7 @@
 </head>
 <body class="flex">
     <div id="adminOverlay" class="fixed inset-0 z-50 hidden bg-slate-950/70"></div>
-    <button id="mobileAdminToggle" class="fixed left-4 top-4 z-50 rounded-full border border-slate-700 bg-slate-900/95 p-3 text-white lg:hidden"><i class="fas fa-bars"></i></button>
+    <button id="mobileAdminToggle" class="fixed left-4 top-4 z-[80] rounded-full border border-slate-700 bg-slate-900/95 p-3 text-white lg:hidden"><i class="fas fa-bars"></i></button>
     <aside id="adminSidebar" class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
         <div class="border-b border-slate-800 p-8">
             <div class="flex items-center gap-3">
@@ -173,7 +179,7 @@
     </main>
 
     <div id="topupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
-        <div class="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-10 shadow-2xl">
+        <div class="modal-shell relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-10 shadow-2xl">
             <div class="relative z-10">
                 <div class="mb-8 flex items-start justify-between">
                     <div>
@@ -209,7 +215,7 @@
     </div>
 
     <div id="registerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
-        <div class="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+        <div class="modal-shell relative w-full max-w-lg overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-8 shadow-2xl">
             <div class="relative z-10">
                 <div class="mb-8 flex items-start justify-between">
                     <div>
@@ -500,10 +506,12 @@
             topupDate.value = offset.slice(0, 10);
             topupTime.value = offset.slice(11, 16);
             topupModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeModal() {
             topupModal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         function openRegisterModal() {
@@ -516,10 +524,12 @@
             document.getElementById('regBalance').value = '';
             document.getElementById('regStatus').value = 'Verified';
             registerModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeRegisterModal() {
             registerModal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
 
         function upsertTransaction(entry) {
@@ -684,19 +694,24 @@
 
         const overlay = document.getElementById('adminOverlay');
         const sidebar = document.getElementById('adminSidebar');
-        const toggleSidebar = () => {
+        const mobileToggle = document.getElementById('mobileAdminToggle');
+        const toggleSidebar = (event) => {
+            if (event) {
+                event.preventDefault();
+            }
             const isOpen = sidebar.classList.toggle('open');
             overlay.classList.toggle('hidden', !isOpen);
             if (window.innerWidth < 1024) {
                 document.body.style.overflow = isOpen ? 'hidden' : '';
             }
         };
-        document.getElementById('mobileAdminToggle').addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', () => {
+        const closeSidebar = () => {
             sidebar.classList.remove('open');
             overlay.classList.add('hidden');
             document.body.style.overflow = '';
-        });
+        };
+        mobileToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', closeSidebar);
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 1024) {
                 sidebar.classList.remove('open');
@@ -707,6 +722,32 @@
 
         supportPanelBtn.addEventListener('click', () => {
             window.location.href = 'admin-support.html';
+        });
+
+        topupModal.addEventListener('click', (event) => {
+            if (event.target === topupModal) {
+                closeModal();
+            }
+        });
+
+        registerModal.addEventListener('click', (event) => {
+            if (event.target === registerModal) {
+                closeRegisterModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                if (!topupModal.classList.contains('hidden')) {
+                    closeModal();
+                }
+                if (!registerModal.classList.contains('hidden')) {
+                    closeRegisterModal();
+                }
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            }
         });
 
         clientTableBody.addEventListener('click', (event) => {
