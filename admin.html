@@ -6,9 +6,29 @@
     <title>Control Center | ODINROOT Internal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); color: #e2e8f0; overflow-x: hidden; } .mono { font-family: 'JetBrains Mono', monospace; } .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } #topupModal, #registerModal, #otpModal { display: none; } #topupModal:not(.hidden), #registerModal:not(.hidden), #otpModal:not(.hidden) { display: flex; } main { position: relative; z-index: 1; } aside { position: relative; z-index: 20; } .action-btn { position: relative; z-index: 40; pointer-events: auto; } .toast-card { box-shadow: 0 18px 45px rgba(2, 6, 23, 0.4); } .toast-success { border-color: rgba(34, 197, 94, 0.3); background: rgba(5, 46, 22, 0.95); } .toast-warning { border-color: rgba(245, 158, 11, 0.25); background: rgba(69, 26, 3, 0.95); } .toast-error { border-color: rgba(248, 113, 113, 0.3); background: rgba(69, 10, 10, 0.95); }</style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); 
+        body { 
+            margin: 0; 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); 
+            color: #e2e8f0; 
+            overflow-x: hidden; 
+        } 
+        .mono { font-family: 'JetBrains Mono', monospace; } 
+        .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } 
+        #topupModal, #registerModal, #otpModal { display: none; } 
+        #topupModal:not(.hidden), #registerModal:not(.hidden), #otpModal:not(.hidden) { display: flex; } 
+        main { position: relative; z-index: 1; } 
+        aside { position: relative; z-index: 20; } 
+        .action-btn { position: relative; z-index: 40; pointer-events: auto; } 
+        .toast-card { box-shadow: 0 18px 45px rgba(2, 6, 23, 0.4); } 
+        .toast-success { border-color: rgba(34, 197, 94, 0.3); background: rgba(5, 46, 22, 0.95); } 
+        .toast-warning { border-color: rgba(245, 158, 11, 0.25); background: rgba(69, 26, 3, 0.95); } 
+        .toast-error { border-color: rgba(248, 113, 113, 0.3); background: rgba(69, 10, 10, 0.95); }
+    </style>
 </head>
-<body>
+<body class="flex">
     <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
         <div class="border-b border-slate-800 p-8">
             <div class="flex items-center gap-3">
@@ -128,6 +148,7 @@
             </div>
         </div>
     </main>
+
     <div id="topupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
         <div class="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-10 shadow-2xl">
             <div class="relative z-10">
@@ -225,6 +246,7 @@
             </div>
         </div>
     </div>
+
     <script>
         function hashPassword(password) {
             let hash = 0;
@@ -650,7 +672,7 @@
             const user = list.find((item) => item.id === id);
             if (!user) return;
             user.held = !user.held;
-            user.status = user.held ? 'Held for review' : (user.status.includes('Verified') ? 'Verified' : 'Verified');
+            user.status = user.held ? 'Held for review' : 'Verified';
             saveUsers(list);
             renderAll();
         }
@@ -681,6 +703,7 @@
         supportPanelBtn.addEventListener('click', () => {
             window.location.href = 'admin-support.html';
         });
+
         clientTableBody.addEventListener('click', (event) => {
             const button = event.target.closest('button[data-action]');
             if (!button) return;
@@ -711,6 +734,7 @@
         if (!localStorage.getItem('odinRegistrationRequests')) {
             localStorage.setItem('odinRegistrationRequests', '[]');
         }
+
         renderAll();
         window.addEventListener('storage', renderAll);
         window.addEventListener('odin:state-updated', renderAll);
