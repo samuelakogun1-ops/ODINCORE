@@ -306,14 +306,15 @@
         const registrationQueue = document.getElementById('registrationQueue');
         const userManagementBody = document.getElementById('userManagementBody');
 
-        function notifyAdmin(title, message) {
+        function notifyAdmin(title, message, type = 'info') {
             const notifications = JSON.parse(localStorage.getItem('odinNotifications') || '[]');
-            notifications.unshift({ id: Date.now(), type: title, message, createdAt: new Date().toISOString() });
+            notifications.unshift({ id: Date.now(), title, message, type, createdAt: new Date().toISOString() });
             localStorage.setItem('odinNotifications', JSON.stringify(notifications.slice(0, 8)));
             if ('Notification' in window && Notification.permission === 'granted') {
                 new Notification(title, { body: message });
             }
             window.dispatchEvent(new Event('odin:state-updated'));
+            window.dispatchEvent(new Event('odin:notifications-updated'));
         }
 
         function ensureUserDefaults(user) {

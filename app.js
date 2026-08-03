@@ -889,6 +889,85 @@
         applyTranslations();
     }
 
+    function injectGlobalStyles() {
+        if (typeof document === 'undefined' || !document || !document.head) {
+            return;
+        }
+        if (document.getElementById('odinSharedStyles')) {
+            return;
+        }
+        const style = document.createElement('style');
+        style.id = 'odinSharedStyles';
+        style.textContent = `
+            * { box-sizing: border-box; }
+            html, body { margin: 0; padding: 0; overflow-x: hidden; }
+            body { min-height: 100vh; }
+            .responsive-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .responsive-table { min-width: 720px; }
+            .odin-toast-container { position: fixed; right: 1rem; bottom: 1rem; z-index: 90; display: flex; flex-direction: column; gap: 0.75rem; max-width: min(92vw, 24rem); }
+            .odin-toast { border-radius: 1rem; padding: 0.9rem 1rem; box-shadow: 0 18px 45px rgba(2, 6, 23, 0.25); color: white; backdrop-filter: blur(8px); }
+            .odin-toast.success { background: rgba(5, 46, 22, 0.95); border: 1px solid rgba(34, 197, 94, 0.3); }
+            .odin-toast.info { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(96, 165, 250, 0.25); }
+            .odin-toast.warning { background: rgba(69, 26, 3, 0.95); border: 1px solid rgba(245, 158, 11, 0.25); }
+            .odin-toast.error { background: rgba(69, 10, 10, 0.95); border: 1px solid rgba(248, 113, 113, 0.3); }
+            @media (max-width: 768px) {
+                .odin-toast-container { left: 0.75rem; right: 0.75rem; bottom: 0.75rem; max-width: none; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function getNotifications() {
+        try {
+            return JSON.parse(localStorage.getItem('odinNotifications') || '[]');
+        } catch (error) {
+            return [];
+        }
+    }
+
+    function saveNotifications(list) {
+        const normalized = (list || []).slice(0, 12);
+        localStorage.setItem('odinNotifications', JSON.stringify(normalized));
+        window.dispatchEvent(new Event('odin:notifications-updated'));
+        return normalized;
+    }
+
+    function renderToast(message) {
+        let container = document.getElementById('odinToastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'odinToastContainer';
+            container.className = 'odin-toast-container';
+            document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = `odin-toast ${message.type || 'info'}`;
+        toast.innerHTML = `<div class="font-semibold">${message.title}</div><div class="mt-1 text-sm opacity-90">${message.message}</div>`;
+        container.appendChild(toast);
+        window.setTimeout(() => {
+            if (toast && typeof toast.remove === 'function') {
+                toast.remove();
+            }
+        }, 3200);
+    }
+
+    function pushNotification(title, message, type = 'info') {
+        const notification = {
+            id: Date.now(),
+            title,
+            message,
+            type,
+            createdAt: new Date().toISOString()
+        };
+        const notifications = saveNotifications([notification, ...getNotifications()]);
+        renderToast(notification);
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, { body: message });
+        }
+        window.dispatchEvent(new Event('odin:state-updated'));
+        return notifications[0];
+    }
+
     function persistTransferRequest(updatedRequest) {
         const requests = JSON.parse(localStorage.getItem('odinTransferRequests') || '[]');
         const index = requests.findIndex((item) => item.id === updatedRequest.id);
@@ -914,7 +993,8 @@
             adminTime,
             reviewedAt: timestamp,
             completedAt: timestamp,
-            createdAt: transferRequest.createdAt || timestamp
+            createdAt: transferRequest.createdAt || timestamp,
+            referenceNumber: transferRequest.referenceNumber || `TXN-${String(Date.now()).slice(-6)}`
         };
 
         const users = getAdminUsers();
@@ -935,15 +1015,27 @@
             requestId: updatedTransfer.id,
             type: 'transfer',
             beneficiary: updatedTransfer.beneficiary,
+            sender: sender?.name || transferRequest.sender || 'Unknown sender',
+            receiver: updatedTransfer.beneficiary || 'Recipient',
             amount: Number(updatedTransfer.amount || 0),
             status: normalizedStatus,
             createdAt: updatedTransfer.createdAt || timestamp,
             completedAt: timestamp,
             adminDate,
             adminTime,
-            senderId: updatedTransfer.senderId
+            senderId: updatedTransfer.senderId,
+            referenceNumber: updatedTransfer.referenceNumber,
+            transactionType: 'Transfer',
+            date: adminDate || new Date(timestamp).toISOString().slice(0, 10),
+            time: adminTime || new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            remainingBalance: sender ? Number(sender.balance || 0) : 0
         };
         upsertTransaction(transactionEntry);
+        if (normalizedStatus === 'Completed') {
+            pushNotification('Transfer Completed', `${updatedTransfer.beneficiary} received the transfer update.`, 'success');
+        } else {
+            pushNotification('Transfer Updated', `${updatedTransfer.beneficiary} is now marked ${normalizedStatus}.`, 'info');
+        }
         return { transfer: updatedTransfer, transaction: transactionEntry, currentUser: currentUser || sender };
     }
 
@@ -969,22 +1061,34 @@
             type: 'funding',
             requestId: `fund-${Date.now()}`,
             beneficiary: user.name,
+            sender: 'Administrator',
+            receiver: user.name,
             amount: amountValue,
             status: 'Completed',
             createdAt: timestamp,
             completedAt: timestamp,
             adminDate,
-            adminTime
+            adminTime,
+            referenceNumber: `FND-${String(Date.now()).slice(-6)}`,
+            transactionType: 'Funding',
+            date: adminDate || new Date(timestamp).toISOString().slice(0, 10),
+            time: adminTime || new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            remainingBalance: Number(user.balance || 0)
         };
         upsertTransaction(historyEntry);
+        pushNotification('Account Funded', `${user.name} received a ${formatCurrency(amountValue)} credit.`, 'success');
         return historyEntry;
     }
 
     function initSharedUI() {
+        injectGlobalStyles();
         injectLanguageSwitcher();
         applyTranslations();
         document.addEventListener('visibilitychange', applyTranslations);
         window.addEventListener('storage', applyTranslations);
+        if (typeof window !== 'undefined' && window.Notification && Notification.permission === 'default') {
+            Notification.requestPermission().catch(() => {});
+        }
     }
 
     window.odinApp = {
@@ -1008,7 +1112,10 @@
         ensureUserDefaults,
         completeTransferRequest,
         creditAccount,
-        persistTransferRequest
+        persistTransferRequest,
+        getNotifications,
+        saveNotifications,
+        pushNotification
     };
 
     if (document.readyState === 'loading') {
