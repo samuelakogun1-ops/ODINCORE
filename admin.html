@@ -6,6 +6,7 @@
     <title>Control Center | ODINROOT Internal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); 
         body { 
@@ -26,10 +27,32 @@
         .toast-success { border-color: rgba(34, 197, 94, 0.3); background: rgba(5, 46, 22, 0.95); } 
         .toast-warning { border-color: rgba(245, 158, 11, 0.25); background: rgba(69, 26, 3, 0.95); } 
         .toast-error { border-color: rgba(248, 113, 113, 0.3); background: rgba(69, 10, 10, 0.95); }
+        #adminOverlay { display: none; }
+        @media (max-width: 1023px) {
+            body { flex-direction: column; }
+            #adminOverlay { display: block; }
+            aside { width: min(86vw, 20rem); height: 100vh; position: fixed; left: 0; top: 0; transform: translateX(-100%); transition: transform 0.2s ease; z-index: 60; }
+            aside.open { transform: translateX(0); }
+            main { width: 100%; }
+            .p-8 { padding: 1rem; }
+            .px-8 { padding-left: 1rem; padding-right: 1rem; }
+            .grid.gap-6.lg\:grid-cols-4 { grid-template-columns: 1fr; }
+            .overflow-x-auto { overflow-x: auto; }
+            table { min-width: 760px; }
+            .rounded-\[2\.5rem\], .rounded-\[2rem\], .rounded-3xl { border-radius: 1.25rem; }
+        }
+        @media (max-width: 639px) {
+            header { padding: 0.9rem 0.9rem 1rem; }
+            .p-6 { padding: 1rem; }
+            .grid.gap-6.xl\:grid-cols-2 { grid-template-columns: 1fr; }
+            .w-full.max-w-md, .w-full.max-w-lg { max-width: 100%; }
+        }
     </style>
 </head>
 <body class="flex">
-    <aside class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
+    <div id="adminOverlay" class="fixed inset-0 z-50 hidden bg-slate-950/70"></div>
+    <button id="mobileAdminToggle" class="fixed left-4 top-4 z-50 rounded-full border border-slate-700 bg-slate-900/95 p-3 text-white lg:hidden"><i class="fas fa-bars"></i></button>
+    <aside id="adminSidebar" class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
         <div class="border-b border-slate-800 p-8">
             <div class="flex items-center gap-3">
                 <div class="rounded-lg bg-red-600 p-2 shadow-lg shadow-red-900/20"><i class="fas fa-terminal text-white"></i></div>
@@ -257,6 +280,7 @@
             return `h${Math.abs(hash).toString(16)}`;
         }
 
+        const app = window.odinApp;
         const users = [
             { id: 'ODIN-8842-X', name: 'Morris Thomas', username: 'morris', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com', phone: '+1-555-0101', accountNumber: '1002003001', registrationDate: '2025-01-14', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
             { id: 'ODIN-2217-B', name: 'Elena Hart', username: 'elena', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com', phone: '+1-555-0102', accountNumber: '1002003002', registrationDate: '2025-02-09', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
@@ -389,12 +413,14 @@
                             <p class="text-xs text-slate-500">OTP: <span class="font-semibold text-amber-400">${request.otp || '—'}</span></p>
                             <p class="mt-1 text-xs text-slate-500">${request.amount ? `$${Number(request.amount).toLocaleString()}` : '—'} • ${request.sender || 'Client'}</p>
                         </div>
-                        <span class="rounded-full bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-400">${request.status || 'Pending OTP'}</span>
+                        <span class="rounded-full bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-400">${app ? app.formatStatus(request.status || 'Processing') : request.status || 'Processing'}</span>
                     </div>
                     <div class="mt-4 grid gap-3 md:grid-cols-[1.1fr_0.8fr_auto]">
                         <select data-transfer-id="${request.id}" data-field="status" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500">
-                            <option value="Successful" ${request.status === 'Successful' ? 'selected' : ''}>Successful</option>
-                            <option value="Pending" ${request.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Processing" ${request.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                            <option value="Under Review" ${request.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
+                            <option value="Pending Verification" ${request.status === 'Pending Verification' ? 'selected' : ''}>Pending Verification</option>
+                            <option value="Completed" ${request.status === 'Completed' ? 'selected' : ''}>Completed</option>
                             <option value="Visit Nearest Branch" ${request.status === 'Visit Nearest Branch' ? 'selected' : ''}>Visit Nearest Branch</option>
                         </select>
                         <input type="date" data-transfer-id="${request.id}" data-field="date" value="${request.adminDate || ''}" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
@@ -510,48 +536,15 @@
             const requests = getTransferRequests();
             const request = requests.find((item) => item.id === requestId);
             if (!request) return;
-            const user = getUsers().find((item) => item.id === request.senderId);
-            const previousStatus = request.status;
-            const timestamp = adminDate && adminTime ? new Date(`${adminDate}T${adminTime}`).toISOString() : new Date().toISOString();
-            const oldDecision = request.adminDecision || previousStatus;
-
-            request.status = nextStatus;
-            request.adminDecision = nextStatus;
-            request.adminDate = adminDate;
-            request.adminTime = adminTime;
-            request.reviewedAt = timestamp;
-            request.completedAt = timestamp;
-
-            if (user) {
-                if (oldDecision === 'Successful' && nextStatus !== 'Successful') {
-                    user.balance = Number(user.balance || 0) + Number(request.amount || 0);
-                } else if (oldDecision !== 'Successful' && nextStatus === 'Successful') {
-                    user.balance = Math.max(0, Number(user.balance || 0) - Number(request.amount || 0));
-                }
+            const result = app.completeTransferRequest(request, nextStatus, adminDate, adminTime);
+            if (!result) return;
+            const normalizedNextStatus = result.transfer.status;
+            const requestIndex = requests.findIndex((item) => item.id === requestId);
+            if (requestIndex >= 0) {
+                requests[requestIndex] = result.transfer;
             }
-
-            const transactionEntry = {
-                id: `txn-${request.id}`,
-                requestId: request.id,
-                type: 'transfer',
-                beneficiary: request.beneficiary,
-                amount: Number(request.amount || 0),
-                status: nextStatus,
-                createdAt: timestamp,
-                completedAt: timestamp,
-                adminDate,
-                adminTime
-            };
-
-            if (user) {
-                const userIndex = getUsers().findIndex((item) => item.id === user.id);
-                const list = getUsers();
-                list[userIndex] = user;
-                saveUsers(list);
-            }
-            upsertTransaction(transactionEntry);
             saveTransferRequests(requests);
-            notifyAdmin('Transfer updated', `${request.beneficiary} is now marked ${nextStatus}`);
+            notifyAdmin('Transfer updated', `${request.beneficiary} is now marked ${normalizedNextStatus}`);
             renderAll();
         }
 
@@ -566,26 +559,14 @@
             if (!user) return;
             const selectedDate = topupDate.value;
             const selectedTime = topupTime.value;
-            const timestamp = selectedDate && selectedTime ? new Date(`${selectedDate}T${selectedTime}`).toISOString() : new Date().toISOString();
-            user.balance = Number(user.balance || 0) + amount;
-            const historyEntry = {
-                id: `fund-${Date.now()}`,
-                type: 'funding',
-                requestId: `fund-${Date.now()}`,
-                beneficiary: user.name,
-                amount,
-                status: 'Successful',
-                createdAt: timestamp,
-                completedAt: timestamp,
-                adminDate: selectedDate,
-                adminTime: selectedTime
-            };
-            saveUsers(list);
-            upsertTransaction(historyEntry);
+            const historyEntry = app.creditAccount(user.id, amount, selectedDate, selectedTime);
+            if (!historyEntry) {
+                return;
+            }
             closeModal();
             renderAll();
             notifyAdmin('Account funded', `${user.name} received a $${amount.toLocaleString()} credit`);
-            alert(`TRANSACTION SUCCESSFUL\n$${amount.toLocaleString()} credited to ${user.name}.`);
+            alert(`${app ? app.t('page.admin.topupSuccess', 'Transaction successful.') : 'Transaction successful.'}\n$${amount.toLocaleString()} credited to ${user.name}.`);
         }
 
         function registerClient() {
@@ -647,14 +628,14 @@
             const request = requests.find((item) => item.id === registrationId);
             if (!request) return;
             if (!otpValue) {
-                alert('Enter the OTP to approve registration.');
+                alert(app ? app.t('page.admin.otpRequired', 'Enter the OTP to approve registration.') : 'Enter the OTP to approve registration.');
                 return;
             }
             const list = getUsers();
             const user = list.find((item) => item.id === registrationId);
             if (!user) return;
             if (String(user.otp || '').trim() !== String(otpValue).trim()) {
-                alert('The OTP entered is incorrect.');
+                alert(app ? app.t('page.admin.otpIncorrect', 'The OTP entered is incorrect.') : 'The OTP entered is incorrect.');
                 return;
             }
             user.isActive = true;
@@ -698,6 +679,29 @@
             const registrationId = button.getAttribute('data-registration-id');
             const otpInput = registrationQueue.querySelector(`input[data-registration-id="${registrationId}"][data-field="otp"]`);
             approveRegistration(registrationId, otpInput.value);
+        });
+
+        const overlay = document.getElementById('adminOverlay');
+        const sidebar = document.getElementById('adminSidebar');
+        const toggleSidebar = () => {
+            const isOpen = sidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden', !isOpen);
+            if (window.innerWidth < 1024) {
+                document.body.style.overflow = isOpen ? 'hidden' : '';
+            }
+        };
+        document.getElementById('mobileAdminToggle').addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.add('hidden');
+            document.body.style.overflow = '';
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('open');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
         });
 
         supportPanelBtn.addEventListener('click', () => {

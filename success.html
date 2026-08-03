@@ -6,6 +6,7 @@
     <title>Transaction Successful | Odin Private</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="app.js"></script>
     <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); body { font-family: 'Inter', sans-serif; }.success-checkmark { animation: scaleIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards; } @keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }</style>
 </head>
 <body class="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100 p-6">
@@ -13,20 +14,20 @@
         <div class="relative overflow-hidden rounded-[2.5rem] border border-slate-100 bg-white shadow-2xl shadow-slate-200">
             <div class="relative bg-green-500 p-10 text-center">
                 <div class="success-checkmark mb-4 inline-flex h-20 w-20 items-center justify-center rounded-full bg-white shadow-lg"><i class="fas fa-check text-3xl text-green-500"></i></div>
-                <h2 class="text-2xl font-bold text-white">Transfer Initiated</h2>
+                <h2 class="text-2xl font-bold text-white" data-i18n="page.success.title">Transfer Submitted</h2>
                 <p class="mt-1 text-sm text-green-100">Ref ID: <span id="refId" class="font-mono"></span></p>
             </div>
             <div class="p-8">
                 <div class="mb-8 space-y-4">
-                    <div class="flex items-center justify-between border-b border-slate-50 py-2"><span class="text-xs font-bold uppercase text-slate-400">Amount Sent</span><span id="amountSent" class="font-bold text-slate-800"></span></div>
-                    <div class="flex items-center justify-between border-b border-slate-50 py-2"><span class="text-xs font-bold uppercase text-slate-400">To Recipient</span><span id="recipientName" class="font-bold text-slate-800"></span></div>
-                    <div class="flex items-center justify-between border-b border-slate-50 py-2"><span class="text-xs font-bold uppercase text-slate-400">Priority</span><span id="priorityLabel" class="font-bold text-slate-800"></span></div>
-                    <div class="flex items-center justify-between py-2"><span class="text-xs font-bold uppercase text-slate-400">Estimated Arrival</span><span id="arrivalTime" class="font-bold text-blue-600"></span></div>
+                    <div class="flex items-center justify-between border-b border-slate-50 py-2"><span class="text-xs font-bold uppercase text-slate-400" data-i18n="page.success.amount">Amount Sent</span><span id="amountSent" class="font-bold text-slate-800"></span></div>
+                    <div class="flex items-center justify-between border-b border-slate-50 py-2"><span class="text-xs font-bold uppercase text-slate-400" data-i18n="page.success.recipient">To Recipient</span><span id="recipientName" class="font-bold text-slate-800"></span></div>
+                    <div class="flex items-center justify-between border-b border-slate-50 py-2"><span class="text-xs font-bold uppercase text-slate-400" data-i18n="page.success.priority">Priority</span><span id="priorityLabel" class="font-bold text-slate-800"></span></div>
+                    <div class="flex items-center justify-between py-2"><span class="text-xs font-bold uppercase text-slate-400" data-i18n="page.success.arrival">Current Status</span><span id="arrivalTime" class="font-bold text-blue-600"></span></div>
                 </div>
                 <div class="mb-8 flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4"><i class="fas fa-envelope text-slate-400"></i><p class="text-[11px] leading-tight text-slate-500">A confirmation email with the full receipt has been sent to your registered address.</p></div>
                 <div class="space-y-3">
-                    <button id="downloadBtn" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-4 font-bold text-white transition hover:bg-slate-800"><i class="fas fa-download text-sm"></i> Download Receipt</button>
-                    <a href="dashboard.html" class="block w-full rounded-2xl bg-slate-100 py-4 text-center font-bold text-slate-600 transition hover:bg-slate-200">Back to Dashboard</a>
+                    <button id="downloadBtn" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-4 font-bold text-white transition hover:bg-slate-800"><i class="fas fa-download text-sm"></i> <span data-i18n="page.success.download">Download Receipt</span></button>
+                    <a href="dashboard.html" class="block w-full rounded-2xl bg-slate-100 py-4 text-center font-bold text-slate-600 transition hover:bg-slate-200" data-i18n="page.success.back">Back to Dashboard</a>
                 </div>
             </div>
         </div>
@@ -35,11 +36,12 @@
     <script>
         const transfer = JSON.parse(localStorage.getItem('pendingTransfer') || '{}');
         const refId = `TXN-${Math.floor(100000 + Math.random() * 900000)}-OCS`;
+        const app = window.odinApp;
         document.getElementById('refId').textContent = refId;
         document.getElementById('amountSent').textContent = `$${Number(transfer.amount || 0).toLocaleString()}`;
         document.getElementById('recipientName').textContent = transfer.beneficiary || 'Recipient';
         document.getElementById('priorityLabel').textContent = transfer.priority || 'Standard';
-        document.getElementById('arrivalTime').textContent = transfer.priority === 'same-day' ? 'Within 4 hours' : '1-2 business days';
+        document.getElementById('arrivalTime').textContent = app ? app.formatStatus(transfer.status || 'Processing') : 'Processing';
 
         document.getElementById('downloadBtn').addEventListener('click', () => {
             const receipt = `Odin Private Transfer Receipt\nReference: ${refId}\nRecipient: ${transfer.beneficiary || 'Recipient'}\nAmount: $${Number(transfer.amount || 0).toLocaleString()}\nPriority: ${transfer.priority || 'Standard'}`;
