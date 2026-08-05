@@ -1,18 +1,18 @@
 /**
- * ODINCORE Banking Software Engine - Production Standard
+ * ODINCORE - Core Application Engine
+ * Unified Full-Stack Banking Logic
  */
 
-const ODIN = (() => {
-  // Core Banking Data Layer
-  const STORAGE_KEYS = {
-    USERS: 'odincore_users',
-    CURRENT_USER: 'odincore_session_user',
-    TRANSACTIONS: 'odincore_transactions',
-    MESSAGES: 'odincore_messages',
-    LANG: 'odincore_lang'
+const App = (() => {
+  const KEYS = {
+    USERS: 'odin_users',
+    CURRENT_USER: 'odin_current_user',
+    TRANSACTIONS: 'odin_transactions',
+    MESSAGES: 'odin_messages',
+    LANG: 'odin_lang'
   };
 
-  const BANKING_STATUSES = {
+  const STATUSES = {
     PROCESSING: 'Processing',
     UNDER_REVIEW: 'Under Review',
     PENDING_VERIFICATION: 'Pending Verification',
@@ -21,71 +21,78 @@ const ODIN = (() => {
     VISIT_BRANCH: 'Visit Nearest Branch'
   };
 
-  // Translations Dictionary
-  const I18N = {
-    en: { welcome: "Welcome", balance: "Available Balance", transfer: "Transfer Funds" },
-    es: { welcome: "Bienvenido", balance: "Saldo Disponible", transfer: "Transferir Fondos" },
-    fr: { welcome: "Bienvenue", balance: "Solde Disponible", transfer: "Transférer des Fonds" }
-  };
-
-  // Internal Helpers
   const getStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
   const setStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
   // Initialize System State
   const init = () => {
-    if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
-      setStorage(STORAGE_KEYS.USERS, []);
-    }
-    if (!localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) {
-      setStorage(STORAGE_KEYS.TRANSACTIONS, []);
-    }
-    if (!localStorage.getItem(STORAGE_KEYS.MESSAGES)) {
-      setStorage(STORAGE_KEYS.MESSAGES, []);
-    }
+    if (!localStorage.getItem(KEYS.USERS)) setStorage(KEYS.USERS, []);
+    if (!localStorage.getItem(KEYS.TRANSACTIONS)) setStorage(KEYS.TRANSACTIONS, []);
+    if (!localStorage.getItem(KEYS.MESSAGES)) setStorage(KEYS.MESSAGES, []);
     autoDetectLanguage();
+    bindMobileSidebar();
   };
 
-  // Automatic Language Detection
   const autoDetectLanguage = () => {
-    const savedLang = localStorage.getItem(STORAGE_KEYS.LANG);
-    if (savedLang) return savedLang;
-    
-    const navLang = (navigator.language || 'en').substring(0, 2);
-    const selectedLang = I18N[navLang] ? navLang : 'en';
-    localStorage.setItem(STORAGE_KEYS.LANG, selectedLang);
-    return selectedLang;
+    if (!localStorage.getItem(KEYS.LANG)) {
+      const userLang = (navigator.language || 'en').substring(0, 2);
+      localStorage.setItem(KEYS.LANG, userLang);
+    }
   };
 
-  // Session & Authentication Engine
+  const bindMobileSidebar = () => {
+    const toggleBtn = document.getElementById('sidebar-toggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (toggleBtn && sidebar) {
+      toggleBtn.onclick = () => sidebar.classList.toggle('active');
+    }
+  };
+
+  // User Management & Authentication
+  const registerUser = (userData) => {
+    const users = getStorage(KEYS.USERS);
+    if (users.some(u => u.email === userData.email)) {
+      throw new Error('An account with this email address already exists.');
+    }
+    const newUser = {
+      accountNumber: 'ACC' + Math.floor(10000000 + Math.random() * 90000000),
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      pin: userData.pin || '1234',
+      initialBalance: parseFloat(userData.initialBalance || 0),
+      createdAt: new Date().toISOString()
+    };
+    users.push(newUser);
+    setStorage(KEYS.USERS, users);
+    return newUser;
+  };
+
   const login = (email, password) => {
-    const users = getStorage(STORAGE_KEYS.USERS);
+    const users = getStorage(KEYS.USERS);
     const user = users.find(u => u.email === email && u.password === password);
-    if (!user) throw new Error("Invalid login credentials.");
-    
-    localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
+    if (!user) throw new Error('Invalid email or password.');
+    setStorage(KEYS.CURRENT_USER, user);
     return user;
   };
 
   const logout = () => {
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    localStorage.removeItem(KEYS.CURRENT_USER);
     window.location.href = 'login.html';
   };
 
-  const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem(STORAGE_KEYS.CURRENT_USER));
-  };
+  const getCurrentUser = () => JSON.parse(localStorage.getItem(KEYS.CURRENT_USER));
 
-  // Financial Ledger Math Engine
+  // Ledger & Financial Calculation Engine
   const calculateBalance = (accountNumber) => {
-    const transactions = getStorage(STORAGE_KEYS.TRANSACTIONS);
-    const users = getStorage(STORAGE_KEYS.USERS);
+    const users = getStorage(KEYS.USERS);
     const user = users.find(u => u.accountNumber === accountNumber);
-    
     let balance = user ? parseFloat(user.initialBalance || 0) : 0;
 
-    transactions.forEach(tx => {
-      if (tx.status === BANKING_STATUSES.COMPLETED) {
+    const txs = getStorage(KEYS.TRANSACTIONS);
+    txs.forEach(tx => {
+      // Balance is strictly updated ONLY for Completed transactions
+      if (tx.status === STATUSES.COMPLETED) {
         if (tx.toAccount === accountNumber) {
           balance += parseFloat(tx.amount);
         }
@@ -98,67 +105,96 @@ const ODIN = (() => {
     return balance;
   };
 
-  // Secure Transfer Dispatcher
-  const initiateTransfer = (recipientAcc, amount, pin) => {
+  const initiateTransfer = ({ toAccount, amount, pin }) => {
     const user = getCurrentUser();
-    if (!user) throw new Error("Unauthorized session.");
+    if (!user) throw new Error('Session expired. Please log in again.');
 
-    // Validate PIN
     if (user.pin !== pin) {
-      throw new Error("Invalid Secure Payment PIN.");
+      throw new Error('Incorrect Security Transfer PIN.');
     }
 
-    const currentBalance = calculateBalance(user.accountNumber);
-    const transferAmount = parseFloat(amount);
-
-    if (isNaN(transferAmount) || transferAmount <= 0) {
-      throw new Error("Invalid transfer amount.");
+    const transferAmt = parseFloat(amount);
+    if (isNaN(transferAmt) || transferAmt <= 0) {
+      throw new Error('Invalid transfer amount.');
     }
 
-    if (currentBalance < transferAmount) {
-      throw new Error("Insufficient funds available.");
+    const currentBal = calculateBalance(user.accountNumber);
+    if (currentBal < transferAmt) {
+      throw new Error('Insufficient available balance for this transfer.');
     }
 
-    const transactions = getStorage(STORAGE_KEYS.TRANSACTIONS);
+    const txs = getStorage(KEYS.TRANSACTIONS);
     
-    // Prevent Duplicate Request Submission
-    const isDuplicate = transactions.some(tx => 
-      tx.fromAccount === user.accountNumber &&
-      tx.amount === transferAmount &&
-      tx.toAccount === recipientAcc &&
-      (Date.now() - new Date(tx.timestamp).getTime()) < 5000
+    // Duplicate transaction detection (5-second window lock)
+    const duplicate = txs.some(t => 
+      t.fromAccount === user.accountNumber &&
+      t.toAccount === toAccount &&
+      parseFloat(t.amount) === transferAmt &&
+      (Date.now() - new Date(t.timestamp).getTime()) < 5000
     );
 
-    if (isDuplicate) {
-      throw new Error("Duplicate transaction detected. Please wait.");
+    if (duplicate) {
+      throw new Error('Duplicate transaction detected. Please wait a moment.');
     }
 
     const newTx = {
-      id: 'TX-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+      id: 'TX' + Math.random().toString(36).substr(2, 9).toUpperCase(),
       fromAccount: user.accountNumber,
-      toAccount: recipientAcc,
-      amount: transferAmount,
-      status: BANKING_STATUSES.PROCESSING,
+      toAccount,
+      amount: transferAmt,
+      status: STATUSES.PROCESSING,
       timestamp: new Date().toISOString()
     };
 
-    transactions.push(newTx);
-    setStorage(STORAGE_KEYS.TRANSACTIONS, transactions);
+    txs.push(newTx);
+    setStorage(KEYS.TRANSACTIONS, txs);
     return newTx;
+  };
+
+  // Support Desk Messaging
+  const sendMessage = (sender, message) => {
+    const msgs = getStorage(KEYS.MESSAGES);
+    const newMsg = {
+      id: 'MSG' + Date.now(),
+      sender,
+      message,
+      timestamp: new Date().toISOString(),
+      reply: null
+    };
+    msgs.push(newMsg);
+    setStorage(KEYS.MESSAGES, msgs);
+    return newMsg;
+  };
+
+  const replyMessage = (msgId, replyText) => {
+    const msgs = getStorage(KEYS.MESSAGES);
+    const target = msgs.find(m => m.id === msgId);
+    if (target) {
+      target.reply = replyText;
+      target.replyTimestamp = new Date().toISOString();
+      setStorage(KEYS.MESSAGES, msgs);
+    }
   };
 
   return {
     init,
+    registerUser,
     login,
     logout,
     getCurrentUser,
     calculateBalance,
     initiateTransfer,
-    STATUSES: BANKING_STATUSES,
+    sendMessage,
+    replyMessage,
     getStorage,
     setStorage,
-    KEYS: STORAGE_KEYS
+    KEYS,
+    STATUSES
   };
 })();
 
-document.addEventListener('DOMContentLoaded', ODIN.init);
+// Assign to Global Window Object (Fixes "App is not defined" error)
+window.App = App;
+window.app = App;
+
+document.addEventListener('DOMContentLoaded', App.init);
