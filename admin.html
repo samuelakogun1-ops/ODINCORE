@@ -1,804 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Center | ODINROOT Internal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="app.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap'); 
-        html, body { height: 100%; } 
-        * { -webkit-tap-highlight-color: transparent; } 
-        body { 
-            margin: 0; 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #020617 0%, #0f172a 45%, #111827 100%); 
-            color: #e2e8f0; 
-            overflow-x: hidden; 
-            overscroll-behavior: none; 
-        } 
-        button, a, input, select, textarea { touch-action: manipulation; } 
-        .mono { font-family: 'JetBrains Mono', monospace; } 
-        .admin-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); } 
-        #topupModal, #registerModal, #otpModal { display: none; position: fixed; inset: 0; z-index: 80; align-items: center; justify-content: center; padding: 0.75rem; overflow-y: auto; -webkit-overflow-scrolling: touch; background: rgba(2, 6, 23, 0.92); }
-        #topupModal:not(.hidden), #registerModal:not(.hidden), #otpModal:not(.hidden) { display: flex; }
-        .modal-shell { width: min(100%, 32rem); max-width: 100%; max-height: min(90dvh, 56rem); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-        .modal-shell.modal-large { width: min(100%, 42rem); }
-        .modal-header { position: sticky; top: 0; z-index: 2; background: inherit; padding-bottom: 0.75rem; }
-        .modal-footer { position: sticky; bottom: 0; z-index: 2; background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.98) 35%); padding-top: 0.75rem; margin-top: 0.75rem; }
-        .modal-input { min-height: 2.6rem; padding: 0.8rem 0.9rem; font-size: 0.95rem; }
-        main { position: relative; z-index: 1; min-height: 100vh; } 
-        aside { position: relative; z-index: 20; } 
-        .action-btn { position: relative; z-index: 40; pointer-events: auto; } 
-        .toast-card { box-shadow: 0 18px 45px rgba(2, 6, 23, 0.4); } 
-        .toast-success { border-color: rgba(34, 197, 94, 0.3); background: rgba(5, 46, 22, 0.95); } 
-        .toast-warning { border-color: rgba(245, 158, 11, 0.25); background: rgba(69, 26, 3, 0.95); } 
-        .toast-error { border-color: rgba(248, 113, 113, 0.3); background: rgba(69, 10, 10, 0.95); }
-        #adminOverlay { display: none; pointer-events: none; }
-        #adminOverlay:not(.hidden) { display: block; pointer-events: auto; }
-        @media (max-width: 1023px) {
-            body { flex-direction: column; }
-            #adminOverlay { display: block; }
-            aside { width: min(86vw, 20rem); height: 100dvh; position: fixed; left: 0; top: 0; transform: translateX(-100%); transition: transform 0.2s ease; z-index: 70; overflow-y: auto; overscroll-behavior: contain; }
-            aside.open { transform: translateX(0); }
-            main { width: 100%; }
-            .p-8 { padding: 1rem; }
-            .px-8 { padding-left: 1rem; padding-right: 1rem; }
-            .grid.gap-6.lg\:grid-cols-4 { grid-template-columns: 1fr; }
-            .overflow-x-auto { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            table { min-width: 760px; }
-            .rounded-\[2\.5rem\], .rounded-\[2rem\], .rounded-3xl { border-radius: 1.25rem; }
-        }
-        @media (max-width: 639px) {
-            header { padding: 0.9rem 0.9rem 1rem; }
-            .p-6 { padding: 1rem; }
-            .grid.gap-6.xl\:grid-cols-2 { grid-template-columns: 1fr; }
-            .w-full.max-w-md, .w-full.max-w-lg { max-width: 100%; }
-            #topupModal, #registerModal, #otpModal { padding: 0.5rem; }
-            .modal-shell { max-height: 92dvh; border-radius: 1.25rem; }
-            .modal-shell .p-10, .modal-shell .p-8 { padding: 1rem !important; }
-            .modal-input { min-height: 2.45rem; padding: 0.75rem 0.85rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ODINCORE Admin Control Center</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="flex">
-    <div id="adminOverlay" class="fixed inset-0 z-50 hidden bg-slate-950/70"></div>
-    <button id="mobileAdminToggle" class="fixed left-4 top-4 z-[80] rounded-full border border-slate-700 bg-slate-900/95 p-3 text-white lg:hidden"><i class="fas fa-bars"></i></button>
-    <aside id="adminSidebar" class="sticky top-0 flex h-screen w-72 flex-col border-r border-slate-800 bg-slate-950/95 text-slate-100" style="pointer-events:auto;">
-        <div class="border-b border-slate-800 p-8">
-            <div class="flex items-center gap-3">
-                <div class="rounded-lg bg-red-600 p-2 shadow-lg shadow-red-900/20"><i class="fas fa-terminal text-white"></i></div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tighter text-white">ODIN<span class="text-sm text-red-500">ROOT</span></h1>
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Master Admin Access</p>
-                </div>
-            </div>
-        </div>
-        <nav class="flex-grow space-y-1 p-4">
-            <div class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Core Infrastructure</div>
-            <a href="admin.html" class="flex items-center gap-3 rounded-xl bg-slate-900 p-3 text-white"><i class="fas fa-users-gear text-blue-400"></i> User Directory</a>
-            <a href="vault.html" class="flex items-center gap-3 rounded-xl p-3 text-slate-200 transition hover:bg-white/5"><i class="fas fa-vault text-amber-500"></i> Global Vaults</a>
-            <div class="mt-6 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">Communications</div>
-            <button id="supportPanelBtn" class="group flex w-full items-center justify-between rounded-xl p-3 text-left text-slate-200 transition hover:bg-white/5">
-                <span class="flex items-center gap-3"><i class="fas fa-comment-dots text-green-400"></i><span>Support Desk</span></span>
-                <span class="animate-pulse rounded-full bg-red-500 px-1.5 py-0.5 text-[9px] text-white">1</span>
-            </button>
-        </nav>
-        <div class="border-t border-slate-800 p-6">
-            <a href="login.html" class="flex items-center gap-3 rounded-xl p-3 text-sm font-bold text-red-400 transition hover:bg-red-500/5"><i class="fas fa-power-off"></i> Terminate Session</a>
-        </div>
+<body>
+  <div class="app-container">
+    <aside class="sidebar" id="sidebar">
+      <div style="padding: 1.5rem; font-weight: bold; font-size: 1.2rem;">ODINCORE ADMIN</div>
+      <nav>
+        <a href="#users" style="display:block; padding: 1rem; color: #fff; text-decoration:none;">User Management</a>
+        <a href="#transfers" style="display:block; padding: 1rem; color: #fff; text-decoration:none;">Ledger & Transfers</a>
+        <a href="#support" style="display:block; padding: 1rem; color: #fff; text-decoration:none;">Support Desk</a>
+      </nav>
     </aside>
-    <main class="flex-grow">
-        <header class="sticky top-0 z-30 flex items-center justify-between border-b border-slate-800 bg-slate-950/80 px-8 py-6 backdrop-blur-md">
-            <div class="flex items-center gap-4">
-                <span class="flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-[10px] font-bold text-green-500"><span class="h-1.5 w-1.5 animate-pulse rounded-full bg-green-500"></span> SYSTEM STATUS: OPTIMAL</span>
-            </div>
-            <div class="text-right">
-                <p class="text-sm font-bold uppercase tracking-tight text-white">Root Administrator</p>
-                <p class="font-mono text-[10px] text-slate-500">NODE: 102.16.88.42</p>
-            </div>
-        </header>
-        <div class="p-8">
-            <div class="mb-8 grid gap-6 lg:grid-cols-4">
-                <div class="admin-gradient rounded-2xl border border-slate-800 p-6 shadow-xl">
-                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Liquidity</p>
-                    <h3 class="text-2xl font-bold text-white mono">$42,850,000</h3>
-                </div>
-                <div class="rounded-2xl border border-slate-800 bg-slate-950 p-6">
-                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Active Clients</p>
-                    <h3 class="text-2xl font-bold text-white mono" id="clientCount">3</h3>
-                </div>
-                <div class="rounded-2xl border border-slate-800 bg-slate-950 p-6">
-                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Pending Holds</p>
-                    <h3 class="text-2xl font-bold text-amber-400 mono" id="holdCount">0</h3>
-                </div>
-                <div class="rounded-2xl border border-slate-800 bg-slate-950 p-6">
-                    <p class="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">Support Queue</p>
-                    <h3 class="text-2xl font-bold text-sky-400 mono">1</h3>
-                </div>
-            </div>
 
-            <div class="mb-8 grid gap-6 xl:grid-cols-2">
-                <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
-                    <div class="border-b border-slate-800 bg-slate-900/50 p-6">
-                        <h3 class="text-lg font-bold text-white">Transfer Oversight</h3>
-                        <p class="mt-1 text-sm text-slate-500">Approve requests, assign status, and set the visible transaction timestamp.</p>
-                    </div>
-                    <div id="transferQueue" class="divide-y divide-slate-800"></div>
-                </div>
-                <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
-                    <div class="border-b border-slate-800 bg-slate-900/50 p-6">
-                        <h3 class="text-lg font-bold text-white">Registration Approvals</h3>
-                        <p class="mt-1 text-sm text-slate-500">Activate new clients only after OTP verification.</p>
-                    </div>
-                    <div id="registrationQueue" class="divide-y divide-slate-800"></div>
-                </div>
-            </div>
+    <main class="main-content">
+      <h2>Admin Operations Control</h2>
+      
+      <!-- User Creation Form -->
+      <section style="background: var(--card-bg); padding: 1rem; margin-top: 1rem; border-radius: 6px;">
+        <h3>Provision New Account</h3>
+        <form id="admin-create-user" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 1rem;">
+          <input type="text" id="nu-name" placeholder="Full Name" required style="padding: 0.5rem;">
+          <input type="email" id="nu-email" placeholder="Email" required style="padding: 0.5rem;">
+          <input type="password" id="nu-pass" placeholder="Password" required style="padding: 0.5rem;">
+          <input type="text" id="nu-pin" placeholder="4-Digit Secure PIN" maxlength="4" required style="padding: 0.5rem;">
+          <input type="number" id="nu-balance" placeholder="Initial Balance" required style="padding: 0.5rem;">
+          <button type="submit" style="background: var(--primary-color); color: #fff; border:none; padding: 0.5rem; cursor:pointer;">Create User</button>
+        </form>
+      </section>
 
-            <div class="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
-                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/50 p-6">
-                    <h3 class="text-lg font-bold text-white">Managed Client Registry</h3>
-                    <div class="relative z-20 flex flex-wrap items-center gap-3">
-                        <button id="registerUserBtn" class="relative z-20 rounded-lg bg-emerald-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-emerald-500">Register User</button>
-                        <input id="searchInput" type="text" placeholder="Search client..." class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-1.5 text-xs text-slate-200 outline-none focus:border-blue-500" />
-                    </div>
-                </div>
-                <table class="w-full text-left">
-                    <thead class="border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-widest text-slate-500">
-                        <tr>
-                            <th class="px-6 py-4">Client / ID</th>
-                            <th class="px-6 py-4">Verification</th>
-                            <th class="px-6 py-4">Balance</th>
-                            <th class="px-6 py-4">Status</th>
-                            <th class="px-6 py-4 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientTableBody" class="divide-y divide-slate-800"></tbody>
-                </table>
-            </div>
-
-            <div class="mt-8 overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 shadow-2xl">
-                <div class="border-b border-slate-800 bg-slate-900/50 p-6">
-                    <h3 class="text-lg font-bold text-white">User Management</h3>
-                    <p class="mt-1 text-sm text-slate-500">View account details, login history, and manage activation state.</p>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full min-w-[820px] text-left">
-                        <thead class="border-b border-slate-800 bg-slate-950 text-[10px] uppercase tracking-widest text-slate-500">
-                            <tr>
-                                <th class="px-6 py-4">Full Name</th>
-                                <th class="px-6 py-4">Username</th>
-                                <th class="px-6 py-4">Email</th>
-                                <th class="px-6 py-4">Phone</th>
-                                <th class="px-6 py-4">Account</th>
-                                <th class="px-6 py-4">Balance</th>
-                                <th class="px-6 py-4">Registered</th>
-                                <th class="px-6 py-4">Last Login</th>
-                                <th class="px-6 py-4">Activity</th>
-                            </tr>
-                        </thead>
-                        <tbody id="userManagementBody" class="divide-y divide-slate-800"></tbody>
-                    </table>
-                </div>
-            </div>
+      <!-- Ledger Adjustments & Status Overrides -->
+      <section style="margin-top: 2rem;">
+        <h3>Transaction Control & Status Management</h3>
+        <div class="table-responsive" style="margin-top: 1rem;">
+          <table>
+            <thead>
+              <tr>
+                <th>Tx ID</th>
+                <th>From Account</th>
+                <th>To Account</th>
+                <th>Amount</th>
+                <th>Timestamp</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-tx-table">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
         </div>
+      </section>
     </main>
+  </div>
 
-    <div id="topupModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
-        <div class="modal-shell relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-5 shadow-2xl sm:p-8 md:p-10">
-            <div class="relative z-10">
-                <div class="modal-header mb-6 flex items-start justify-between sm:mb-8">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight text-white">Manual Credit</h3>
-                        <p class="mt-1 text-sm text-slate-500">Beneficiary: <span id="targetUser" class="font-bold italic text-blue-400"></span></p>
-                    </div>
-                    <button id="closeModalBtn" class="text-slate-500 transition hover:text-white"><i class="fas fa-times text-xl"></i></button>
-                </div>
-                <div class="space-y-4 sm:space-y-6">
-                    <div>
-                        <label class="mb-3 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Deposit Amount (USD)</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span>
-                            <input type="number" id="topupAmount" placeholder="0.00" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 text-xl font-mono text-white shadow-inner outline-none focus:border-blue-500 sm:text-2xl" />
-                        </div>
-                    </div>
-                    <div class="grid gap-3 sm:gap-4 sm:grid-cols-2">
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Transaction Date</label>
-                            <input type="date" id="topupDate" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm font-mono text-white outline-none focus:border-blue-500" />
-                        </div>
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Transaction Time</label>
-                            <input type="time" id="topupTime" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm font-mono text-white outline-none focus:border-blue-500" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="authorizeTopupBtn" class="w-full rounded-2xl bg-blue-600 py-3 text-[10px] font-bold uppercase tracking-widest text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700 sm:py-4">Authorize Transaction</button>
-                    </div>
-                    <p class="text-center text-[9px] uppercase tracking-widest text-slate-600">Encryption Level: AES-256 BIT</p>
-                </div>
-            </div>
-            <div class="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-600/5 blur-3xl"></div>
-        </div>
-    </div>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const renderTxTable = () => {
+        const txs = ODIN.getStorage(ODIN.KEYS.TRANSACTIONS);
+        const tbody = document.getElementById('admin-tx-table');
+        tbody.innerHTML = '';
 
-    <div id="registerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 p-6 backdrop-blur-sm">
-        <div class="modal-shell modal-large relative w-full overflow-hidden rounded-[2.5rem] border border-slate-800 bg-slate-900 p-5 shadow-2xl sm:p-8">
-            <div class="relative z-10">
-                <div class="modal-header mb-6 flex items-start justify-between sm:mb-8">
-                    <div>
-                        <h3 class="text-2xl font-bold tracking-tight text-white">Register Client</h3>
-                        <p class="mt-1 text-sm text-slate-500">Create a new account profile and assign an initial balance.</p>
-                    </div>
-                    <button id="closeRegisterModalBtn" class="text-slate-500 transition hover:text-white"><i class="fas fa-times text-xl"></i></button>
-                </div>
-                <div class="space-y-3 sm:space-y-4">
-                    <div>
-                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Full Name</label>
-                        <input id="regName" type="text" placeholder="Client full name" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500" />
-                    </div>
-                    <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Username</label>
-                            <input id="regUsername" type="text" placeholder="username" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500" />
-                        </div>
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Phone Number</label>
-                            <input id="regPhone" type="text" placeholder="+1-555-0000" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500" />
-                        </div>
-                    </div>
-                    <div>
-                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Email Address</label>
-                        <input id="regEmail" type="email" placeholder="client@domain.com" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500" />
-                    </div>
-                    <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Account Number</label>
-                            <input id="regAccount" type="text" placeholder="1002003004" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500" />
-                        </div>
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Password</label>
-                            <input id="regPassword" type="password" placeholder="Set temporary password" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500" />
-                        </div>
-                    </div>
-                    <div class="grid gap-3 sm:grid-cols-2 sm:gap-4">
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Initial Balance</label>
-                            <div class="relative">
-                                <span class="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-slate-500">$</span>
-                                <input id="regBalance" type="number" min="0" step="100" placeholder="0.00" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 pl-10 text-sm font-mono text-white outline-none focus:border-blue-500" />
-                            </div>
-                        </div>
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Verification Level</label>
-                            <select id="regStatus" class="modal-input w-full rounded-2xl border border-slate-800 bg-slate-950 text-sm text-white outline-none focus:border-blue-500">
-                                <option value="Verified">Verified</option>
-                                <option value="Verified Elite">Verified Elite</option>
-                                <option value="Pending Review">Pending Review</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button id="createUserBtn" class="w-full rounded-2xl bg-emerald-600 py-3 text-[10px] font-bold uppercase tracking-widest text-white transition hover:bg-emerald-500 sm:py-4">Create Client Profile</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function hashPassword(password) {
-            let hash = 0;
-            for (let index = 0; index < password.length; index += 1) {
-                hash = (hash << 5) - hash + password.charCodeAt(index);
-                hash |= 0;
-            }
-            return `h${Math.abs(hash).toString(16)}`;
-        }
-
-        const app = window.odinApp;
-        const users = [
-            { id: 'ODIN-8842-X', name: 'Morris Thomas', username: 'morris', status: 'Verified Elite', balance: 94250, held: false, initials: 'MT', email: 'morris@odinprivate.com', phone: '+1-555-0101', accountNumber: '1002003001', registrationDate: '2025-01-14', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
-            { id: 'ODIN-2217-B', name: 'Elena Hart', username: 'elena', status: 'Verified', balance: 24800, held: false, initials: 'EH', email: 'elena@odinprivate.com', phone: '+1-555-0102', accountNumber: '1002003002', registrationDate: '2025-02-09', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' },
-            { id: 'ODIN-3394-C', name: 'Amir Das', username: 'amir', status: 'Pending Review', balance: 12600, held: false, initials: 'AD', email: 'amir@odinprivate.com', phone: '+1-555-0103', accountNumber: '1002003003', registrationDate: '2025-03-11', lastLogin: '', loginActivity: [], isActive: true, passwordHash: hashPassword('Welcome123!'), registrationStatus: 'Active' }
-        ];
-        let selectedUserId = null;
-
-        const clientTableBody = document.getElementById('clientTableBody');
-        const clientCount = document.getElementById('clientCount');
-        const holdCount = document.getElementById('holdCount');
-        const searchInput = document.getElementById('searchInput');
-        const topupModal = document.getElementById('topupModal');
-        const targetUser = document.getElementById('targetUser');
-        const topupAmount = document.getElementById('topupAmount');
-        const topupDate = document.getElementById('topupDate');
-        const topupTime = document.getElementById('topupTime');
-        const supportPanelBtn = document.getElementById('supportPanelBtn');
-        const registerUserBtn = document.getElementById('registerUserBtn');
-        const registerModal = document.getElementById('registerModal');
-        const closeRegisterModalBtn = document.getElementById('closeRegisterModalBtn');
-        const createUserBtn = document.getElementById('createUserBtn');
-        const transferQueue = document.getElementById('transferQueue');
-        const registrationQueue = document.getElementById('registrationQueue');
-        const userManagementBody = document.getElementById('userManagementBody');
-
-        function notifyAdmin(title, message, type = 'info') {
-            const notifications = JSON.parse(localStorage.getItem('odinNotifications') || '[]');
-            notifications.unshift({ id: Date.now(), title, message, type, createdAt: new Date().toISOString() });
-            localStorage.setItem('odinNotifications', JSON.stringify(notifications.slice(0, 8)));
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, { body: message });
-            }
-            window.dispatchEvent(new Event('odin:state-updated'));
-            window.dispatchEvent(new Event('odin:notifications-updated'));
-        }
-
-        function ensureUserDefaults(user) {
-            return {
-                id: user.id || `ODIN-${Date.now()}`,
-                name: user.name || 'Unnamed Client',
-                username: user.username || (user.name || 'client').toLowerCase().replace(/\s+/g, '.'),
-                status: user.status || 'Verified',
-                balance: Number(user.balance || 0),
-                held: Boolean(user.held),
-                initials: user.initials || (user.name || 'U').split(' ').filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U',
-                email: user.email || '',
-                phone: user.phone || '',
-                accountNumber: user.accountNumber || '',
-                registrationDate: user.registrationDate || new Date().toISOString(),
-                lastLogin: user.lastLogin || '',
-                loginActivity: Array.isArray(user.loginActivity) ? user.loginActivity : [],
-                isActive: user.isActive !== false,
-                passwordHash: user.passwordHash || hashPassword('Welcome123!'),
-                registrationStatus: user.registrationStatus || 'Active',
-                otp: user.otp || ''
-            };
-        }
-
-        function getUsers() {
-            const stored = localStorage.getItem('odinAdminUsers');
-            if (stored) {
-                try {
-                    return JSON.parse(stored).map(ensureUserDefaults);
-                } catch (error) {
-                    return users.map(ensureUserDefaults);
-                }
-            }
-            return users.map(ensureUserDefaults);
-        }
-
-        function saveUsers(list) {
-            const normalized = list.map(ensureUserDefaults);
-            localStorage.setItem('odinAdminUsers', JSON.stringify(normalized));
-            window.dispatchEvent(new Event('odin:state-updated'));
-        }
-
-        function getTransferRequests() {
-            return JSON.parse(localStorage.getItem('odinTransferRequests') || '[]');
-        }
-
-        function saveTransferRequests(list) {
-            localStorage.setItem('odinTransferRequests', JSON.stringify(list));
-            window.dispatchEvent(new Event('odin:state-updated'));
-        }
-
-        function getRegistrationRequests() {
-            return JSON.parse(localStorage.getItem('odinRegistrationRequests') || '[]');
-        }
-
-        function saveRegistrationRequests(list) {
-            localStorage.setItem('odinRegistrationRequests', JSON.stringify(list));
-            window.dispatchEvent(new Event('odin:state-updated'));
-        }
-
-        function renderTable() {
-            const allUsers = getUsers();
-            const query = searchInput.value.toLowerCase();
-            const visible = allUsers.filter((user) => `${user.name} ${user.id} ${user.status}`.toLowerCase().includes(query));
-            clientTableBody.innerHTML = '';
-            visible.forEach((user) => {
-                const row = document.createElement('tr');
-                row.className = 'transition hover:bg-slate-900/40';
-                row.innerHTML = `
-                    <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="flex h-9 w-9 items-center justify-center rounded-lg border border-blue-500/20 bg-blue-600/10 text-xs font-bold text-blue-500">${user.initials}</div><div><p class="font-bold text-slate-200">${user.name}</p><p class="mono text-[10px] text-slate-500">${user.id}</p></div></div></td>
-                    <td class="px-6 py-4"><span class="rounded-md border px-2.5 py-1 text-[9px] font-black uppercase tracking-tighter ${user.status.includes('Pending') ? 'border-amber-500/20 bg-amber-500/10 text-amber-400' : 'border-green-500/20 bg-green-500/10 text-green-500'}">${user.status}</span></td>
-                    <td class="px-6 py-4"><p class="text-sm font-bold text-slate-200 mono">$${Number(user.balance || 0).toLocaleString()}</p></td>
-                    <td class="px-6 py-4"><p class="rounded-full px-3 py-1 text-[10px] font-bold uppercase ${user.held ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-amber-500/20'}">${user.held ? 'Held' : 'Active'}</p></td>
-                    <td class="relative z-20 space-x-2 px-6 py-4 text-right">
-                        <button type="button" data-action="topup" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-700">Top Up</button>
-                        <button type="button" data-action="message" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-[10px] font-bold text-white transition hover:bg-slate-700">Message</button>
-                        <button type="button" data-action="hold" data-user-id="${user.id}" class="action-btn relative z-20 rounded-xl border ${user.held ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white' : 'border-amber-500/20 bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white'} px-4 py-2 text-[10px] font-bold transition">${user.held ? 'Release' : 'Hold'}</button>
-                    </td>
-                `;
-                clientTableBody.appendChild(row);
-            });
-            clientCount.textContent = allUsers.length.toString();
-            holdCount.textContent = allUsers.filter((user) => user.held).length.toString();
-        }
-
-        function renderTransferQueue() {
-            const requests = getTransferRequests();
-            if (!requests.length) {
-                transferQueue.innerHTML = '<div class="p-6 text-sm text-slate-500">No transfer requests are waiting for review.</div>';
-                return;
-            }
-            transferQueue.innerHTML = requests.map((request) => `
-                <div class="p-6">
-                    <div class="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                            <p class="font-semibold text-white">${request.beneficiary || 'Transfer request'}</p>
-                            <p class="text-xs text-slate-500">OTP: <span class="font-semibold text-amber-400">${request.otp || '—'}</span></p>
-                            <p class="mt-1 text-xs text-slate-500">${request.amount ? `$${Number(request.amount).toLocaleString()}` : '—'} • ${request.sender || 'Client'}</p>
-                        </div>
-                        <span class="rounded-full bg-blue-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-400">${app ? app.formatStatus(request.status || 'Processing') : request.status || 'Processing'}</span>
-                    </div>
-                    <div class="mt-4 grid gap-3 md:grid-cols-[1.1fr_0.8fr_auto]">
-                        <select data-transfer-id="${request.id}" data-field="status" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500">
-                            <option value="Processing" ${request.status === 'Processing' ? 'selected' : ''}>Processing</option>
-                            <option value="Under Review" ${request.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
-                            <option value="Pending Verification" ${request.status === 'Pending Verification' ? 'selected' : ''}>Pending Verification</option>
-                            <option value="Completed" ${request.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                            <option value="Visit Nearest Branch" ${request.status === 'Visit Nearest Branch' ? 'selected' : ''}>Visit Nearest Branch</option>
-                        </select>
-                        <input type="date" data-transfer-id="${request.id}" data-field="date" value="${request.adminDate || ''}" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
-                        <input type="time" data-transfer-id="${request.id}" data-field="time" value="${request.adminTime || ''}" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
-                    </div>
-                    <button type="button" data-action="review-transfer" data-transfer-id="${request.id}" class="mt-4 rounded-xl bg-emerald-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-emerald-500">Apply decision</button>
-                </div>
-            `).join('');
-        }
-
-        function renderRegistrationQueue() {
-            const requests = getRegistrationRequests();
-            if (!requests.length) {
-                registrationQueue.innerHTML = '<div class="p-6 text-sm text-slate-500">No registration requests need approval.</div>';
-                return;
-            }
-            registrationQueue.innerHTML = requests.map((request) => `
-                <div class="p-6">
-                    <div class="flex items-start justify-between gap-3">
-                        <div>
-                            <p class="font-semibold text-white">${request.name}</p>
-                            <p class="text-xs text-slate-500">${request.email}</p>
-                            <p class="mt-1 text-xs text-slate-500">OTP: <span class="font-semibold text-amber-400">${request.otp || '—'}</span></p>
-                        </div>
-                        <span class="rounded-full bg-amber-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-400">${request.registrationStatus || 'Pending OTP'}</span>
-                    </div>
-                    <div class="mt-4 flex flex-wrap items-center gap-3">
-                        <input type="text" data-registration-id="${request.id}" data-field="otp" placeholder="Enter OTP" class="rounded-2xl border border-slate-800 bg-slate-900 px-4 py-3 text-sm text-white outline-none focus:border-blue-500" />
-                        <button type="button" data-action="approve-registration" data-registration-id="${request.id}" class="rounded-xl bg-blue-600 px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition hover:bg-blue-700">Approve</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderUserManagement() {
-            const allUsers = getUsers();
-            userManagementBody.innerHTML = allUsers.map((user) => `
-                <tr class="transition hover:bg-slate-900/40">
-                    <td class="px-6 py-4"><div class="font-semibold text-slate-200">${user.name}</div><div class="text-[10px] text-slate-500">${user.id}</div></td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${user.username || '—'}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${user.email || '—'}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${user.phone || '—'}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${user.accountNumber || '—'}</td>
-                    <td class="px-6 py-4 text-sm font-semibold text-slate-200">$${Number(user.balance || 0).toLocaleString()}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${user.registrationDate ? new Date(user.registrationDate).toLocaleDateString() : '—'}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '—'}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${Array.isArray(user.loginActivity) ? user.loginActivity.length : 0} sessions</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderAll() {
-            renderTable();
-            renderTransferQueue();
-            renderRegistrationQueue();
-            renderUserManagement();
-        }
-
-        function generateUserId() {
-            const stamp = Date.now().toString().slice(-4);
-            const suffix = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-            return `ODIN-${stamp}-${suffix}`;
-        }
-
-        function createInitials(fullName) {
-            return fullName.split(' ').filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join('') || 'U';
-        }
-
-        function openTopup(id) {
-            selectedUserId = id;
-            const user = getUsers().find((item) => item.id === id);
-            targetUser.textContent = `${user.name} (${user.id})`;
-            topupAmount.value = '';
-            const now = new Date();
-            const offset = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-            topupDate.value = offset.slice(0, 10);
-            topupTime.value = offset.slice(11, 16);
-            topupModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            topupModal.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        function openRegisterModal() {
-            document.getElementById('regName').value = '';
-            document.getElementById('regUsername').value = '';
-            document.getElementById('regPhone').value = '';
-            document.getElementById('regEmail').value = '';
-            document.getElementById('regAccount').value = '';
-            document.getElementById('regPassword').value = '';
-            document.getElementById('regBalance').value = '';
-            document.getElementById('regStatus').value = 'Verified';
-            registerModal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeRegisterModal() {
-            registerModal.classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        function upsertTransaction(entry) {
-            const history = JSON.parse(localStorage.getItem('odinTransactions') || '[]');
-            const existingIndex = history.findIndex((item) => item.requestId === entry.requestId || item.id === entry.id);
-            if (existingIndex >= 0) {
-                history[existingIndex] = entry;
-            } else {
-                history.unshift(entry);
-            }
-            localStorage.setItem('odinTransactions', JSON.stringify(history.slice(0, 12)));
-        }
-
-        function applyTransferDecision(requestId, nextStatus, adminDate, adminTime) {
-            const requests = getTransferRequests();
-            const request = requests.find((item) => item.id === requestId);
-            if (!request) return;
-            const result = app.completeTransferRequest(request, nextStatus, adminDate, adminTime);
-            if (!result) return;
-            const normalizedNextStatus = result.transfer.status;
-            const requestIndex = requests.findIndex((item) => item.id === requestId);
-            if (requestIndex >= 0) {
-                requests[requestIndex] = result.transfer;
-            }
-            saveTransferRequests(requests);
-            notifyAdmin('Transfer updated', `${request.beneficiary} is now marked ${normalizedNextStatus}`);
-            renderAll();
-        }
-
-        function executeTopup() {
-            const amount = Number(topupAmount.value);
-            if (!amount || amount <= 0) {
-                alert('CRITICAL ERROR: Invalid Transaction Amount.');
-                return;
-            }
-            const list = getUsers();
-            const user = list.find((item) => item.id === selectedUserId);
-            if (!user) return;
-            const selectedDate = topupDate.value;
-            const selectedTime = topupTime.value;
-            const historyEntry = app.creditAccount(user.id, amount, selectedDate, selectedTime);
-            if (!historyEntry) {
-                return;
-            }
-            closeModal();
-            renderAll();
-            notifyAdmin('Account funded', `${user.name} received a $${amount.toLocaleString()} credit`);
-            alert(`${app ? app.t('page.admin.topupSuccess', 'Transaction successful.') : 'Transaction successful.'}\n$${amount.toLocaleString()} credited to ${user.name}.`);
-        }
-
-        function registerClient() {
-            const name = document.getElementById('regName').value.trim();
-            const username = document.getElementById('regUsername').value.trim().toLowerCase();
-            const phone = document.getElementById('regPhone').value.trim();
-            const email = document.getElementById('regEmail').value.trim().toLowerCase();
-            const accountNumber = document.getElementById('regAccount').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const balance = Number(document.getElementById('regBalance').value || 0);
-            const status = document.getElementById('regStatus').value;
-
-            if (!name || !email) {
-                alert('Please provide both a full name and email address.');
-                return;
-            }
-
-            const list = getUsers();
-            const exists = list.some((item) => item.email && item.email.toLowerCase() === email);
-            if (exists) {
-                alert('A client with this email already exists.');
-                return;
-            }
-
-            const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            const newUser = {
-                id: generateUserId(),
-                name,
-                username: username || name.toLowerCase().replace(/\s+/g, '.'),
-                phone,
-                accountNumber: accountNumber || `100200${Math.floor(1000 + Math.random() * 9000)}`,
-                status,
-                balance: Number(balance) || 0,
-                held: false,
-                initials: createInitials(name),
-                email,
-                isActive: false,
-                registrationStatus: 'Pending OTP',
-                registrationDate: new Date().toISOString(),
-                lastLogin: '',
-                loginActivity: [],
-                passwordHash: hashPassword(password || 'Welcome123!'),
-                otp
-            };
-
-            list.unshift(newUser);
-            saveUsers(list);
-            const registrationRequests = getRegistrationRequests();
-            registrationRequests.unshift({ id: newUser.id, name, email, otp, registrationStatus: 'Pending OTP' });
-            saveRegistrationRequests(registrationRequests);
-            renderAll();
-            closeRegisterModal();
-            notifyAdmin('Registration request', `${name} requires OTP verification`);
-            alert(`CLIENT PROFILE CREATED\n${newUser.name} is pending OTP verification.`);
-        }
-
-        function approveRegistration(registrationId, otpValue) {
-            const requests = getRegistrationRequests();
-            const request = requests.find((item) => item.id === registrationId);
-            if (!request) return;
-            if (!otpValue) {
-                alert(app ? app.t('page.admin.otpRequired', 'Enter the OTP to approve registration.') : 'Enter the OTP to approve registration.');
-                return;
-            }
-            const list = getUsers();
-            const user = list.find((item) => item.id === registrationId);
-            if (!user) return;
-            if (String(user.otp || '').trim() !== String(otpValue).trim()) {
-                alert(app ? app.t('page.admin.otpIncorrect', 'The OTP entered is incorrect.') : 'The OTP entered is incorrect.');
-                return;
-            }
-            user.isActive = true;
-            user.registrationStatus = 'Active';
-            user.otp = '';
-            saveUsers(list);
-            request.registrationStatus = 'Approved';
-            saveRegistrationRequests(requests.filter((item) => item.id !== registrationId).concat(request));
-            renderAll();
-            notifyAdmin('Registration approved', `${user.name} is now active`);
-        }
-
-        function toggleHold(id) {
-            const list = getUsers();
-            const user = list.find((item) => item.id === id);
-            if (!user) return;
-            user.held = !user.held;
-            user.status = user.held ? 'Held for review' : 'Verified';
-            saveUsers(list);
-            renderAll();
-        }
-
-        function messageUser(id) {
-            localStorage.setItem('odinAdminMessageTarget', id);
-            window.location.href = 'admin-support.html';
-        }
-
-        transferQueue.addEventListener('click', (event) => {
-            const button = event.target.closest('button[data-action="review-transfer"]');
-            if (!button) return;
-            const transferId = button.getAttribute('data-transfer-id');
-            const statusSelect = transferQueue.querySelector(`select[data-transfer-id="${transferId}"][data-field="status"]`);
-            const dateInput = transferQueue.querySelector(`input[data-transfer-id="${transferId}"][data-field="date"]`);
-            const timeInput = transferQueue.querySelector(`input[data-transfer-id="${transferId}"][data-field="time"]`);
-            applyTransferDecision(transferId, statusSelect.value, dateInput.value, timeInput.value);
+        txs.forEach((tx, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${tx.id}</td>
+            <td>${tx.fromAccount}</td>
+            <td>${tx.toAccount}</td>
+            <td>$${parseFloat(tx.amount).toFixed(2)}</td>
+            <td><input type="datetime-local" value="${new Date(tx.timestamp).toISOString().slice(0, 16)}" onchange="updateTxDate(${idx}, this.value)"></td>
+            <td><span class="badge badge-${tx.status.toLowerCase().replace(/\s+/g, '-')}">${tx.status}</span></td>
+            <td>
+              <select onchange="updateTxStatus(${idx}, this.value)">
+                ${Object.values(ODIN.STATUSES).map(s => `<option value="${s}" ${tx.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+              </select>
+            </td>
+          `;
+          tbody.appendChild(tr);
         });
+      };
 
-        registrationQueue.addEventListener('click', (event) => {
-            const button = event.target.closest('button[data-action="approve-registration"]');
-            if (!button) return;
-            const registrationId = button.getAttribute('data-registration-id');
-            const otpInput = registrationQueue.querySelector(`input[data-registration-id="${registrationId}"][data-field="otp"]`);
-            approveRegistration(registrationId, otpInput.value);
-        });
-
-        const overlay = document.getElementById('adminOverlay');
-        const sidebar = document.getElementById('adminSidebar');
-        const mobileToggle = document.getElementById('mobileAdminToggle');
-        const toggleSidebar = (event) => {
-            if (event) {
-                event.preventDefault();
-            }
-            const isOpen = sidebar.classList.toggle('open');
-            overlay.classList.toggle('hidden', !isOpen);
-            if (window.innerWidth < 1024) {
-                document.body.style.overflow = isOpen ? 'hidden' : '';
-            }
+      document.getElementById('admin-create-user').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const users = ODIN.getStorage(ODIN.KEYS.USERS);
+        const newUser = {
+          accountNumber: 'ACC' + Math.floor(10000000 + Math.random() * 90000000),
+          name: document.getElementById('nu-name').value,
+          email: document.getElementById('nu-email').value,
+          password: document.getElementById('nu-pass').value,
+          pin: document.getElementById('nu-pin').value,
+          initialBalance: parseFloat(document.getElementById('nu-balance').value)
         };
-        const closeSidebar = () => {
-            sidebar.classList.remove('open');
-            overlay.classList.add('hidden');
-            document.body.style.overflow = '';
-        };
-        mobileToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', closeSidebar);
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('open');
-                overlay.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-        });
+        users.push(newUser);
+        ODIN.setStorage(ODIN.KEYS.USERS, users);
+        alert(`User created! Account Number: ${newUser.accountNumber}`);
+        e.target.reset();
+      });
 
-        supportPanelBtn.addEventListener('click', () => {
-            window.location.href = 'admin-support.html';
-        });
+      window.updateTxStatus = (idx, newStatus) => {
+        const txs = ODIN.getStorage(ODIN.KEYS.TRANSACTIONS);
+        txs[idx].status = newStatus;
+        ODIN.setStorage(ODIN.KEYS.TRANSACTIONS, txs);
+        renderTxTable();
+      };
 
-        topupModal.addEventListener('click', (event) => {
-            if (event.target === topupModal) {
-                closeModal();
-            }
-        });
+      window.updateTxDate = (idx, newDate) => {
+        const txs = ODIN.getStorage(ODIN.KEYS.TRANSACTIONS);
+        txs[idx].timestamp = new Date(newDate).toISOString();
+        ODIN.setStorage(ODIN.KEYS.TRANSACTIONS, txs);
+        renderTxTable();
+      };
 
-        registerModal.addEventListener('click', (event) => {
-            if (event.target === registerModal) {
-                closeRegisterModal();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                if (!topupModal.classList.contains('hidden')) {
-                    closeModal();
-                }
-                if (!registerModal.classList.contains('hidden')) {
-                    closeRegisterModal();
-                }
-                if (sidebar.classList.contains('open')) {
-                    closeSidebar();
-                }
-            }
-        });
-
-        clientTableBody.addEventListener('click', (event) => {
-            const button = event.target.closest('button[data-action]');
-            if (!button) return;
-            const action = button.getAttribute('data-action');
-            const userId = button.getAttribute('data-user-id');
-            if (action === 'topup') {
-                openTopup(userId);
-            } else if (action === 'message') {
-                messageUser(userId);
-            } else if (action === 'hold') {
-                toggleHold(userId);
-            }
-        });
-
-        searchInput.addEventListener('input', renderTable);
-        registerUserBtn.addEventListener('click', openRegisterModal);
-        closeRegisterModalBtn.addEventListener('click', closeRegisterModal);
-        createUserBtn.addEventListener('click', registerClient);
-        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-        document.getElementById('authorizeTopupBtn').addEventListener('click', executeTopup);
-
-        if (!localStorage.getItem('odinAdminUsers')) {
-            saveUsers(users);
-        }
-        if (!localStorage.getItem('odinTransferRequests')) {
-            localStorage.setItem('odinTransferRequests', '[]');
-        }
-        if (!localStorage.getItem('odinRegistrationRequests')) {
-            localStorage.setItem('odinRegistrationRequests', '[]');
-        }
-
-        renderAll();
-        window.addEventListener('storage', renderAll);
-        window.addEventListener('odin:state-updated', renderAll);
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission().catch(() => {});
-        }
-    </script>
+      renderTxTable();
+    });
+  </script>
 </body>
 </html>
