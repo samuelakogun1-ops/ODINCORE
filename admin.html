@@ -11,29 +11,30 @@
     <aside class="sidebar">
       <div style="padding: 1.5rem; font-weight: bold; color: #0d6efd;">ADMIN PANEL</div>
       <nav style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
-        <a href="#users" style="color: #fff; text-decoration: none;">User Management</a>
-        <a href="#ledger" style="color: #fff; text-decoration: none;">Ledger Controls</a>
-        <a href="admin-support.html" style="color: #fff; text-decoration: none;">Support Desk Desk</a>
+        <a href="admin.html" style="color: #fff; text-decoration: none;">User & Ledger Controls</a>
+        <a href="admin-support.html" style="color: #fff; text-decoration: none;">Support Desk</a>
       </nav>
     </aside>
 
     <main class="main-content">
-      <h2>System Management & Operations</h2>
+      <button id="sidebar-toggle" style="margin-bottom: 1rem; width: auto; display: none;">☰ Menu</button>
 
-      <!-- Account Provisioning -->
+      <h2>Admin Operations Center</h2>
+
+      <!-- User Account Creation -->
       <section style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
-        <h3>Register New User</h3>
+        <h3>Register New Account</h3>
         <form id="admin-user-form" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 1rem;">
           <input type="text" id="reg-name" placeholder="Full Name" required>
           <input type="email" id="reg-email" placeholder="Email Address" required>
           <input type="password" id="reg-pass" placeholder="Account Password" required>
           <input type="text" id="reg-pin" placeholder="4-Digit PIN" maxlength="4" required>
-          <input type="number" id="reg-bal" placeholder="Initial Deposit ($)" required>
+          <input type="number" id="reg-bal" placeholder="Initial Balance ($)" required>
           <button type="submit">Create User</button>
         </form>
       </section>
 
-      <!-- Ledger Controls & Overrides -->
+      <!-- Ledger Transaction Controls -->
       <section style="margin-top: 2rem;">
         <h3>Transaction Ledger Overrides</h3>
         <div class="table-responsive">
@@ -46,7 +47,7 @@
                 <th>Amount</th>
                 <th>Date & Time</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th>Action Status</th>
               </tr>
             </thead>
             <tbody id="admin-ledger-table">
@@ -58,11 +59,12 @@
     </main>
   </div>
 
+  <!-- app.js MUST load BEFORE calling inline script -->
   <script src="app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const renderLedger = () => {
-        const txs = App.getStorage(App.KEYS.TRANSACTIONS);
+        const txs = window.App.getStorage(window.App.KEYS.TRANSACTIONS);
         const tbody = document.getElementById('admin-ledger-table');
         tbody.innerHTML = '';
 
@@ -77,7 +79,7 @@
             <td><strong>${tx.status}</strong></td>
             <td>
               <select onchange="updateStatus(${idx}, this.value)">
-                ${Object.values(App.STATUSES).map(s => `<option value="${s}" ${tx.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                ${Object.values(window.App.STATUSES).map(s => `<option value="${s}" ${tx.status === s ? 'selected' : ''}>${s}</option>`).join('')}
               </select>
             </td>
           `;
@@ -88,7 +90,7 @@
       document.getElementById('admin-user-form').addEventListener('submit', (e) => {
         e.preventDefault();
         try {
-          const newUser = App.registerUser({
+          const newUser = window.App.registerUser({
             name: document.getElementById('reg-name').value,
             email: document.getElementById('reg-email').value,
             password: document.getElementById('reg-pass').value,
@@ -103,16 +105,16 @@
       });
 
       window.updateStatus = (index, status) => {
-        const txs = App.getStorage(App.KEYS.TRANSACTIONS);
+        const txs = window.App.getStorage(window.App.KEYS.TRANSACTIONS);
         txs[index].status = status;
-        App.setStorage(App.KEYS.TRANSACTIONS, txs);
+        window.App.setStorage(window.App.KEYS.TRANSACTIONS, txs);
         renderLedger();
       };
 
       window.updateDate = (index, dateVal) => {
-        const txs = App.getStorage(App.KEYS.TRANSACTIONS);
+        const txs = window.App.getStorage(window.App.KEYS.TRANSACTIONS);
         txs[index].timestamp = new Date(dateVal).toISOString();
-        App.setStorage(App.KEYS.TRANSACTIONS, txs);
+        window.App.setStorage(window.App.KEYS.TRANSACTIONS, txs);
         renderLedger();
       };
 
