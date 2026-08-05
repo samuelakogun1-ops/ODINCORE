@@ -1,93 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="app-container">
-    <aside class="sidebar">
-      <div style="padding: 1.5rem; font-weight: bold;">ODINCORE BANK</div>
-      <nav style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
-        <a href="dashboard.html" style="color: #fff; text-decoration: none;">Dashboard</a>
-        <a href="transfer.html" style="color: #fff; text-decoration: none;">Transfer Funds</a>
-        <a href="support.html" style="color: #fff; text-decoration: none;">Support Desk</a>
-        <a href="#" onclick="window.App.logout()" style="color: var(--danger); text-decoration: none; margin-top: 2rem;">Logout</a>
-      </nav>
-    </aside>
-
-    <main class="main-content">
-      <button id="sidebar-toggle" style="margin-bottom: 1rem; width: auto; display: none;">☰ Menu</button>
-      
-      <header>
-        <h2 id="welcome-text">Welcome Back</h2>
-      </header>
-
-      <section style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
-        <span style="color: #94a3b8;">Available Balance</span>
-        <h1 id="user-balance" style="font-size: 2.5rem; margin-top: 0.5rem;">$0.00</h1>
-      </section>
-
-      <section style="margin-top: 2rem;">
-        <h3>Transaction History</h3>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Date & Time</th>
-                <th>Reference ID</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="dashboard-tx-table">
-              <!-- Dynamically Populated -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
+<section style="margin-top: 2rem;">
+  <h3>Transaction History</h3>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>Date &amp; Time</th>
+          <th>Reference ID</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="dashboard-tx-table">
+        <!-- Dynamically Populated -->
+      </tbody>
+    </table>
   </div>
+</section>
 
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const user = window.App.getCurrentUser();
-      if (!user) {
-        window.location.href = 'login.html';
+<script src="app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check global App object availability
+    const Engine = window.App || window.app;
+    if (!Engine) {
+      console.error("ODINCORE Engine failed to initialize.");
+      return;
+    }
+
+    const user = Engine.getCurrentUser();
+    if (!user) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const welcomeEl = document.getElementById('welcome-text');
+    if (welcomeEl) welcomeEl.innerText = `Welcome, ${user.name}`;
+
+    const refreshDisplay = () => {
+      const balance = Engine.calculateBalance(user.accountNumber);
+      const balanceEl = document.getElementById('user-balance');
+      if (balanceEl) balanceEl.innerText = `$${balance.toFixed(2)}`;
+
+      const txs = Engine.getStorage(Engine.KEYS.TRANSACTIONS);
+      const userTxs = txs.filter(t => t.fromAccount === user.accountNumber || t.toAccount === user.accountNumber);
+      const tbody = document.getElementById('dashboard-tx-table');
+      
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (userTxs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding: 1.5rem;">No transaction history found.</td></tr>`;
         return;
       }
 
-      document.getElementById('welcome-text').innerText = `Welcome, ${user.name}`;
+      userTxs.reverse().forEach(tx => {
+        const isDebit = tx.fromAccount === user.accountNumber;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${new Date(tx.timestamp).toLocaleString()}</td>
+          <td>${tx.id}</td>
+          <td>${isDebit ? 'Transfer Out' : 'Credit Received'}</td>
+          <td style="color: ${isDebit ? '#ef4444' : '#22c55e'}">${isDebit ? '-' : '+'}$${parseFloat(tx.amount).toFixed(2)}</td>
+          <td><strong>${tx.status}</strong></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    };
 
-      const refreshDisplay = () => {
-        const balance = window.App.calculateBalance(user.accountNumber);
-        document.getElementById('user-balance').innerText = `$${balance.toFixed(2)}`;
-
-        const txs = window.App.getStorage(window.App.KEYS.TRANSACTIONS);
-        const userTxs = txs.filter(t => t.fromAccount === user.accountNumber || t.toAccount === user.accountNumber);
-        const tbody = document.getElementById('dashboard-tx-table');
-        tbody.innerHTML = '';
-
-        userTxs.reverse().forEach(tx => {
-          const isDebit = tx.fromAccount === user.accountNumber;
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${new Date(tx.timestamp).toLocaleString()}</td>
-            <td>${tx.id}</td>
-            <td>${isDebit ? 'Transfer Out' : 'Credit Received'}</td>
-            <td style="color: ${isDebit ? 'var(--danger)' : 'var(--success)'}">${isDebit ? '-' : '+'}$${parseFloat(tx.amount).toFixed(2)}</td>
-            <td><strong>${tx.status}</strong></td>
-          `;
-          tbody.appendChild(tr);
-        });
-      };
-
-      refreshDisplay();
-    });
-  </script>
-</body>
-</html>
+    refreshDisplay();
+  });
+</script>
