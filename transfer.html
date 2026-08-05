@@ -1,261 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Transfer | Odin Private</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="app.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfer Funds</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-slate-100">
-    <div class="mx-auto max-w-2xl p-6 sm:p-8">
-        <div class="mb-8 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-800" data-i18n="page.transfer.title">New Transfer</h1>
-                <p class="text-sm text-slate-500" data-i18n="page.transfer.description">Securely prepare your next international payment.</p>
-            </div>
-            <div class="text-right">
-                <p id="senderName" class="text-sm font-bold text-slate-900">Morris Thomas</p>
-                <p class="text-[10px] font-bold uppercase text-blue-600">Senior Engineer Access</p>
-            </div>
-        </div>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div style="padding: 1.5rem; font-weight: bold;">ODINCORE BANK</div>
+      <nav style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
+        <a href="dashboard.html" style="color: #fff; text-decoration: none;">Dashboard</a>
+        <a href="transfer.html" style="color: #fff; text-decoration: none;">Transfer Funds</a>
+        <a href="support.html" style="color: #fff; text-decoration: none;">Support Desk</a>
+        <a href="#" onclick="window.App.logout()" style="color: var(--danger); text-decoration: none; margin-top: 2rem;">Logout</a>
+      </nav>
+    </aside>
 
-        <div class="rounded-[2.5rem] border border-slate-200 bg-white p-8 shadow-sm">
-            <div class="space-y-6">
-                <div>
-                    <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.recipientName">Recipient Full Name</label>
-                    <input type="text" id="recName" placeholder="Enter legal name" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 font-medium focus:border-blue-500 focus:outline-none">
-                </div>
+    <main class="main-content">
+      <button id="sidebar-toggle" style="margin-bottom: 1rem; width: auto; display: none;">☰ Menu</button>
 
-                <div class="grid gap-4 md:grid-cols-2">
-                    <div>
-                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.accountNumber">Account Number / IBAN</label>
-                        <input type="text" id="recIban" placeholder="Enter number" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-bold focus:border-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.swift">SWIFT / BIC Code</label>
-                        <input type="text" id="recSwift" placeholder="Enter SWIFT" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-bold focus:border-blue-500 focus:outline-none">
-                    </div>
-                </div>
+      <h2>Execute Transfer</h2>
 
-                <div class="grid gap-4 md:grid-cols-2">
-                    <div>
-                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.currency">Destination Currency</label>
-                        <select id="destCurrency" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-semibold focus:border-blue-500 focus:outline-none">
-                            <option value="USD">USD</option>
-                            <option value="EUR">EUR</option>
-                            <option value="GBP">GBP</option>
-                            <option value="AED">AED</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.priority">Priority</label>
-                        <select id="priorityLevel" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 text-sm font-semibold focus:border-blue-500 focus:outline-none">
-                            <option value="standard">Standard</option>
-                            <option value="priority">Priority</option>
-                            <option value="same-day">Same Day</option>
-                        </select>
-                    </div>
-                </div>
+      <section style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; max-width: 500px;">
+        <form id="transfer-form" style="display: grid; gap: 1rem;">
+          <div>
+            <label style="display:block; margin-bottom: 0.25rem;">Recipient Account Number</label>
+            <input type="text" id="tf-acc" placeholder="e.g. ACC12345678" required>
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 0.25rem;">Amount ($)</label>
+            <input type="number" step="0.01" id="tf-amt" placeholder="0.00" required>
+          </div>
+          <div>
+            <label style="display:block; margin-bottom: 0.25rem;">4-Digit Security PIN</label>
+            <input type="password" id="tf-pin" maxlength="4" placeholder="****" required>
+          </div>
+          <button type="submit">Submit Transfer Request</button>
+        </form>
+      </section>
+    </main>
+  </div>
 
-                <div>
-                    <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.amount">Amount to Send (USD)</label>
-                    <div class="relative">
-                        <span class="absolute left-5 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
-                        <input type="number" id="transferAmt" placeholder="0.00" class="w-full rounded-2xl border border-slate-100 bg-slate-50 p-5 pl-10 text-xl font-bold focus:border-blue-500 focus:outline-none">
-                    </div>
-                    <p class="mt-2 text-[10px] font-medium text-slate-400"><span data-i18n="common.availableBalance">Available balance:</span> <span id="availableBalance" class="font-bold text-blue-600">$0.00</span></p>
-                </div>
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.App.getCurrentUser();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
 
-                <div id="estimateBox" class="rounded-2xl border border-blue-100 bg-blue-50/50 p-5 text-sm text-slate-700">
-                    <div class="flex items-center justify-between">
-                        <span class="font-semibold" data-i18n="page.transfer.estimatedDelivery">Estimated delivery</span>
-                        <span id="deliveryTime" class="font-bold text-blue-700">1-2 business days</span>
-                    </div>
-                    <div class="mt-2 flex items-center justify-between">
-                        <span class="font-semibold" data-i18n="page.transfer.estimatedFee">Estimated fee</span>
-                        <span id="feeEstimate" class="font-bold text-blue-700">$0.00</span>
-                    </div>
-                </div>
-
-                <div class="flex gap-4 rounded-2xl border border-blue-100 bg-blue-50/50 p-5">
-                    <i class="fas fa-info-circle mt-1 text-blue-500"></i>
-                    <p class="text-[11px] leading-relaxed text-slate-600">Transfers are prepared securely and can be reviewed before final dispatch. Verified accounts receive priority processing.</p>
-                </div>
-
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                    <p class="mb-3 text-sm font-semibold text-slate-700" data-i18n="page.transfer.pinTitle">Secure Transfer PIN</p>
-                    <div class="grid gap-3 md:grid-cols-2">
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.pinEnter">Enter your transaction PIN</label>
-                            <input type="password" id="transactionPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" placeholder="••••" class="w-full rounded-2xl border border-slate-100 bg-white p-4 text-sm font-medium focus:border-blue-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="mb-2 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400" data-i18n="page.transfer.pinCreate">Create transaction PIN</label>
-                            <input type="password" id="createPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" placeholder="••••" class="w-full rounded-2xl border border-slate-100 bg-white p-4 text-sm font-medium focus:border-blue-500 focus:outline-none">
-                        </div>
-                    </div>
-                    <p class="mt-3 text-[11px] text-slate-500" data-i18n="page.transfer.pinCreatePrompt">Create a 4- or 6-digit PIN for secure transfers.</p>
-                    <p id="pinHelpText" class="mt-2 text-sm text-slate-600"></p>
-                </div>
-                <button id="proceedBtn" class="w-full rounded-2xl bg-blue-600 py-5 font-bold text-white shadow-lg shadow-blue-100 transition hover:bg-blue-700" data-i18n="page.transfer.proceed">Proceed to Review →</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        if (localStorage.getItem('odinAuth') !== 'true') {
-            window.location.href = 'login.html';
+      document.getElementById('transfer-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        try {
+          window.App.initiateTransfer({
+            toAccount: document.getElementById('tf-acc').value,
+            amount: document.getElementById('tf-amt').value,
+            pin: document.getElementById('tf-pin').value
+          });
+          alert('Transfer request submitted successfully!');
+          window.location.href = 'dashboard.html';
+        } catch (err) {
+          alert(err.message);
         }
-
-        const senderName = document.getElementById('senderName');
-        const userEmail = localStorage.getItem('odinUser') || 'morris@odinprivate.com';
-        const userName = userEmail.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-        const app = window.odinApp;
-        const formatCurrency = app ? app.formatCurrency : (amount) => `$${Number(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-        function updateBalanceDisplay() {
-            const activeUser = app ? app.getCurrentUserProfile() : null;
-            const balanceValue = document.getElementById('availableBalance');
-            if (balanceValue) {
-                balanceValue.textContent = formatCurrency(activeUser?.balance || 0);
-            }
-            senderName.textContent = (activeUser?.name || userName).toUpperCase();
-        }
-
-        senderName.textContent = userName.toUpperCase();
-        updateBalanceDisplay();
-        window.addEventListener('storage', updateBalanceDisplay);
-        window.addEventListener('focus', updateBalanceDisplay);
-
-        const feeEstimate = document.getElementById('feeEstimate');
-        const deliveryTime = document.getElementById('deliveryTime');
-        const amountInput = document.getElementById('transferAmt');
-        const priorityInput = document.getElementById('priorityLevel');
-        const transactionPinInput = document.getElementById('transactionPin');
-        const createPinInput = document.getElementById('createPin');
-        const pinHelpText = document.getElementById('pinHelpText');
-
-        function updateEstimate() {
-            const amount = Number(amountInput.value) || 0;
-            const priority = priorityInput.value;
-            let fee = 0;
-            let timeText = '1-2 business days';
-
-            if (priority === 'priority') {
-                fee = amount * 0.008;
-                timeText = 'Same business day';
-            } else if (priority === 'same-day') {
-                fee = amount * 0.015;
-                timeText = 'Within 4 hours';
-            } else {
-                fee = amount * 0.004;
-            }
-
-            feeEstimate.textContent = `$${fee.toFixed(2)}`;
-            deliveryTime.textContent = timeText;
-        }
-
-        [amountInput, priorityInput].forEach((element) => element.addEventListener('input', updateEstimate));
-        [amountInput, priorityInput].forEach((element) => element.addEventListener('change', updateEstimate));
-        updateEstimate();
-        renderTransferMessage();
-
-        function setPinStatus(message, isError) {
-            pinHelpText.textContent = message;
-            pinHelpText.className = `mt-2 text-sm ${isError ? 'text-red-600' : 'text-slate-600'}`;
-        }
-
-        function renderTransferMessage() {
-            const currentUser = app ? app.getCurrentUserProfile() : null;
-            if (!currentUser?.transactionPinSet) {
-                setPinStatus(app ? app.t('page.transfer.pinCreatePrompt', 'Create a 4- or 6-digit PIN for secure transfers.') : 'Create a 4- or 6-digit PIN for secure transfers.');
-            }
-        }
-
-        document.getElementById('proceedBtn').addEventListener('click', function () {
-            const name = document.getElementById('recName').value.trim();
-            const iban = document.getElementById('recIban').value.trim();
-            const swift = document.getElementById('recSwift').value.trim();
-            const amt = Number(document.getElementById('transferAmt').value);
-            const enteredPin = transactionPinInput.value.trim();
-            const createPin = createPinInput.value.trim();
-
-            if (!name || !iban || !swift || !amt || amt <= 0) {
-                alert(app ? app.t('page.transfer.alertIncomplete', 'Please complete all beneficiary details and enter a valid amount.') : 'Please complete all beneficiary details and enter a valid amount.');
-                return;
-            }
-
-            const currentUser = app ? app.getCurrentUserProfile() : null;
-            if (currentUser && amt > (currentUser.balance || 0)) {
-                alert(app ? app.t('page.transfer.alertBalance', 'The transfer amount exceeds your available balance.') : 'The transfer amount exceeds your available balance.');
-                return;
-            }
-
-            const pinCandidate = createPin || enteredPin;
-            const pinLength = pinCandidate.length;
-            if (pinLength !== 4 && pinLength !== 6) {
-                setPinStatus(app ? app.t('page.transfer.pinInvalid', 'Please enter a 4- or 6-digit PIN.') : 'Please enter a 4- or 6-digit PIN.', true);
-                return;
-            }
-
-            if (!currentUser?.transactionPin) {
-                if (!createPin || createPin !== enteredPin) {
-                    setPinStatus(app ? app.t('page.transfer.pinMismatch', 'The PIN values do not match.') : 'The PIN values do not match.', true);
-                    return;
-                }
-                if (app && typeof app.setTransactionPin === 'function') {
-                    const updatedUser = app.setTransactionPin(currentUser, createPin);
-                    const users = app.getAdminUsers();
-                    const index = users.findIndex((item) => item.id === updatedUser.id);
-                    if (index >= 0) {
-                        users[index] = updatedUser;
-                        app.saveUsers(users);
-                    }
-                }
-            } else if (app && typeof app.verifyTransactionPin === 'function' && !app.verifyTransactionPin(currentUser, enteredPin)) {
-                setPinStatus(app ? app.t('page.transfer.pinError', 'The PIN you entered is incorrect.') : 'The PIN you entered is incorrect.', true);
-                return;
-            }
-
-            this.disabled = true;
-            this.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> ${app ? app.t('page.transfer.preparingReview', 'Preparing review...') : 'Preparing review...'}`;
-
-            const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            const transferData = {
-                id: `TX-${Date.now()}`,
-                beneficiary: name,
-                account: iban,
-                swiftCode: swift,
-                amount: amt,
-                sender: userName,
-                senderId: currentUser?.id || localStorage.getItem('odinActiveUserId'),
-                status: 'Processing',
-                createdAt: new Date().toISOString(),
-                otp,
-                adminDecision: 'Processing',
-                adminDate: '',
-                adminTime: '',
-                priority: priorityInput?.value || 'standard'
-            };
-
-            const pendingRequests = JSON.parse(localStorage.getItem('odinTransferRequests') || '[]');
-            pendingRequests.unshift(transferData);
-            localStorage.setItem('odinTransferRequests', JSON.stringify(pendingRequests));
-            localStorage.setItem('pendingTransfer', JSON.stringify(transferData));
-            localStorage.setItem('odinNotifications', JSON.stringify([
-                ...(JSON.parse(localStorage.getItem('odinNotifications') || '[]')),
-                { id: Date.now(), type: 'New transfer request', message: `Transfer request created for ${name}`, createdAt: new Date().toISOString() }
-            ].slice(-8)));
-            setTimeout(() => {
-                window.location.href = 'review-transfer.html';
-            }, 700);
-        });
-    </script>
+      });
+    });
+  </script>
 </body>
 </html>
