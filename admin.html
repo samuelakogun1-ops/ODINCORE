@@ -3,54 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ODINCORE Admin Control Center</title>
+  <title>Admin Operations Control</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app-container">
-    <aside class="sidebar" id="sidebar">
-      <div style="padding: 1.5rem; font-weight: bold; font-size: 1.2rem;">ODINCORE ADMIN</div>
-      <nav>
-        <a href="#users" style="display:block; padding: 1rem; color: #fff; text-decoration:none;">User Management</a>
-        <a href="#transfers" style="display:block; padding: 1rem; color: #fff; text-decoration:none;">Ledger & Transfers</a>
-        <a href="#support" style="display:block; padding: 1rem; color: #fff; text-decoration:none;">Support Desk</a>
+    <aside class="sidebar">
+      <div style="padding: 1.5rem; font-weight: bold; color: #0d6efd;">ADMIN PANEL</div>
+      <nav style="display: flex; flex-direction: column; gap: 0.5rem; padding: 1rem;">
+        <a href="#users" style="color: #fff; text-decoration: none;">User Management</a>
+        <a href="#ledger" style="color: #fff; text-decoration: none;">Ledger Controls</a>
+        <a href="admin-support.html" style="color: #fff; text-decoration: none;">Support Desk Desk</a>
       </nav>
     </aside>
 
     <main class="main-content">
-      <h2>Admin Operations Control</h2>
-      
-      <!-- User Creation Form -->
-      <section style="background: var(--card-bg); padding: 1rem; margin-top: 1rem; border-radius: 6px;">
-        <h3>Provision New Account</h3>
-        <form id="admin-create-user" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 1rem;">
-          <input type="text" id="nu-name" placeholder="Full Name" required style="padding: 0.5rem;">
-          <input type="email" id="nu-email" placeholder="Email" required style="padding: 0.5rem;">
-          <input type="password" id="nu-pass" placeholder="Password" required style="padding: 0.5rem;">
-          <input type="text" id="nu-pin" placeholder="4-Digit Secure PIN" maxlength="4" required style="padding: 0.5rem;">
-          <input type="number" id="nu-balance" placeholder="Initial Balance" required style="padding: 0.5rem;">
-          <button type="submit" style="background: var(--primary-color); color: #fff; border:none; padding: 0.5rem; cursor:pointer;">Create User</button>
+      <h2>System Management & Operations</h2>
+
+      <!-- Account Provisioning -->
+      <section style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; margin-top: 1rem;">
+        <h3>Register New User</h3>
+        <form id="admin-user-form" style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 1rem;">
+          <input type="text" id="reg-name" placeholder="Full Name" required>
+          <input type="email" id="reg-email" placeholder="Email Address" required>
+          <input type="password" id="reg-pass" placeholder="Account Password" required>
+          <input type="text" id="reg-pin" placeholder="4-Digit PIN" maxlength="4" required>
+          <input type="number" id="reg-bal" placeholder="Initial Deposit ($)" required>
+          <button type="submit">Create User</button>
         </form>
       </section>
 
-      <!-- Ledger Adjustments & Status Overrides -->
+      <!-- Ledger Controls & Overrides -->
       <section style="margin-top: 2rem;">
-        <h3>Transaction Control & Status Management</h3>
-        <div class="table-responsive" style="margin-top: 1rem;">
+        <h3>Transaction Ledger Overrides</h3>
+        <div class="table-responsive">
           <table>
             <thead>
               <tr>
                 <th>Tx ID</th>
-                <th>From Account</th>
-                <th>To Account</th>
+                <th>From</th>
+                <th>To</th>
                 <th>Amount</th>
-                <th>Timestamp</th>
+                <th>Date & Time</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th>Action</th>
               </tr>
             </thead>
-            <tbody id="admin-tx-table">
-              <!-- Dynamically populated -->
+            <tbody id="admin-ledger-table">
+              <!-- Dynamically Populated -->
             </tbody>
           </table>
         </div>
@@ -61,9 +61,9 @@
   <script src="app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const renderTxTable = () => {
-        const txs = ODIN.getStorage(ODIN.KEYS.TRANSACTIONS);
-        const tbody = document.getElementById('admin-tx-table');
+      const renderLedger = () => {
+        const txs = App.getStorage(App.KEYS.TRANSACTIONS);
+        const tbody = document.getElementById('admin-ledger-table');
         tbody.innerHTML = '';
 
         txs.forEach((tx, idx) => {
@@ -73,11 +73,11 @@
             <td>${tx.fromAccount}</td>
             <td>${tx.toAccount}</td>
             <td>$${parseFloat(tx.amount).toFixed(2)}</td>
-            <td><input type="datetime-local" value="${new Date(tx.timestamp).toISOString().slice(0, 16)}" onchange="updateTxDate(${idx}, this.value)"></td>
-            <td><span class="badge badge-${tx.status.toLowerCase().replace(/\s+/g, '-')}">${tx.status}</span></td>
+            <td><input type="datetime-local" value="${new Date(tx.timestamp).toISOString().slice(0, 16)}" onchange="updateDate(${idx}, this.value)"></td>
+            <td><strong>${tx.status}</strong></td>
             <td>
-              <select onchange="updateTxStatus(${idx}, this.value)">
-                ${Object.values(ODIN.STATUSES).map(s => `<option value="${s}" ${tx.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+              <select onchange="updateStatus(${idx}, this.value)">
+                ${Object.values(App.STATUSES).map(s => `<option value="${s}" ${tx.status === s ? 'selected' : ''}>${s}</option>`).join('')}
               </select>
             </td>
           `;
@@ -85,38 +85,38 @@
         });
       };
 
-      document.getElementById('admin-create-user').addEventListener('submit', (e) => {
+      document.getElementById('admin-user-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        const users = ODIN.getStorage(ODIN.KEYS.USERS);
-        const newUser = {
-          accountNumber: 'ACC' + Math.floor(10000000 + Math.random() * 90000000),
-          name: document.getElementById('nu-name').value,
-          email: document.getElementById('nu-email').value,
-          password: document.getElementById('nu-pass').value,
-          pin: document.getElementById('nu-pin').value,
-          initialBalance: parseFloat(document.getElementById('nu-balance').value)
-        };
-        users.push(newUser);
-        ODIN.setStorage(ODIN.KEYS.USERS, users);
-        alert(`User created! Account Number: ${newUser.accountNumber}`);
-        e.target.reset();
+        try {
+          const newUser = App.registerUser({
+            name: document.getElementById('reg-name').value,
+            email: document.getElementById('reg-email').value,
+            password: document.getElementById('reg-pass').value,
+            pin: document.getElementById('reg-pin').value,
+            initialBalance: document.getElementById('reg-bal').value
+          });
+          alert(`Account successfully created!\nAccount Number: ${newUser.accountNumber}`);
+          e.target.reset();
+        } catch (err) {
+          alert(err.message);
+        }
       });
 
-      window.updateTxStatus = (idx, newStatus) => {
-        const txs = ODIN.getStorage(ODIN.KEYS.TRANSACTIONS);
-        txs[idx].status = newStatus;
-        ODIN.setStorage(ODIN.KEYS.TRANSACTIONS, txs);
-        renderTxTable();
+      window.updateStatus = (index, status) => {
+        const txs = App.getStorage(App.KEYS.TRANSACTIONS);
+        txs[index].status = status;
+        App.setStorage(App.KEYS.TRANSACTIONS, txs);
+        renderLedger();
       };
 
-      window.updateTxDate = (idx, newDate) => {
-        const txs = ODIN.getStorage(ODIN.KEYS.TRANSACTIONS);
-        txs[idx].timestamp = new Date(newDate).toISOString();
-        ODIN.setStorage(ODIN.KEYS.TRANSACTIONS, txs);
-        renderTxTable();
+      window.updateDate = (index, dateVal) => {
+        const txs = App.getStorage(App.KEYS.TRANSACTIONS);
+        txs[index].timestamp = new Date(dateVal).toISOString();
+        App.setStorage(App.KEYS.TRANSACTIONS, txs);
+        renderLedger();
       };
 
-      renderTxTable();
+      renderLedger();
     });
   </script>
 </body>
