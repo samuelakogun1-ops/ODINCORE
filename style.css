@@ -1,11 +1,11 @@
-/* Core Styling & Mobile Layout Fixes */
 :root {
-  --primary-color: #0d6efd;
-  --bg-dark: #0a0f1d;
-  --card-bg: #161f33;
-  --text-main: #f8f9fa;
-  --text-muted: #a0aec0;
-  --border-color: #2d3748;
+  --primary: #0d6efd;
+  --dark-bg: #0f172a;
+  --card-bg: #1e293b;
+  --text-light: #f8fafc;
+  --border-color: #334155;
+  --danger: #ef4444;
+  --success: #22c55e;
 }
 
 * {
@@ -15,18 +15,17 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--dark-bg);
+  color: var(--text-light);
   overflow-x: hidden;
+  width: 100vw;
 }
 
-/* Sidebar & Navigation */
 .app-container {
   display: flex;
   min-height: 100vh;
-  width: 100vw;
+  position: relative;
 }
 
 .sidebar {
@@ -37,24 +36,45 @@ body {
   z-index: 1000;
 }
 
-.sidebar.collapsed {
-  transform: translateX(-100%);
-  position: absolute;
-}
-
 .main-content {
   flex: 1;
   padding: 1.5rem;
   width: 100%;
-  overflow-y: auto;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
-/* Responsive Table Wrapper */
+/* Forms & Input Protection */
+form input, form select, form button, form textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: #0f172a;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+form button {
+  background: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+form button:hover {
+  opacity: 0.9;
+}
+
+/* Scrollable Tables on Small Displays */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
 }
 
 table {
@@ -69,55 +89,24 @@ th, td {
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Responsive Modals */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.modal-content {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  width: 90vw;
-  max-width: 500px;
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 1.5rem;
-}
-
-/* Status Badges */
-.badge {
-  padding: 0.25em 0.6em;
-  font-size: 75%;
-  font-weight: 700;
-  border-radius: 0.25rem;
-  text-transform: uppercase;
-}
-.badge-processing { background-color: #007bff; color: #fff; }
-.badge-under-review { background-color: #ffc107; color: #000; }
-.badge-pending-verification { background-color: #17a2b8; color: #fff; }
-.badge-completed { background-color: #28a745; color: #fff; }
-.badge-declined { background-color: #dc3545; color: #fff; }
-.badge-visit-branch { background-color: #6c757d; color: #fff; }
-
+/* Mobile Breakpoints */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
+    top: 0;
+    left: 0;
     height: 100vh;
     transform: translateX(-100%);
   }
+
   .sidebar.active {
     transform: translateX(0);
   }
+
+  #sidebar-toggle {
+    display: block !important;
+  }
+
   .main-content {
     padding: 1rem;
   }
