@@ -1,0 +1,126 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isUser() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'user';
+    }
+    
+    function isOwnProfile(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // ============================================
+    // USERS COLLECTION
+    // ============================================
+    
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwnProfile(userId);
+      
+      // Admins can read all user profiles
+      allow read: if isAdmin();
+      
+      // Users can only create their own profile during registration
+      allow create: if isOwnProfile(userId) && 
+                       request.resource.data.role == 'user' &&
+                       request.resource.data.accountStatus == 'active';
+      
+      // Users can update limited fields in their own profile
+      allow update: if isOwnProfile(userId) &&
+                       !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'accountStatus', 'uid', 'email']) &&
+                       request.resource.data.role == resource.data.role &&
+                       request.resource.data.accountStatus == resource.data.accountStatus;
+      
+      // Only admins can create new user profiles
+      allow create: if isAdmin();
+      
+      // Only admins can update user profiles (including status, role, balance via ledger)
+      allow update: if isAdmin();
+      
+      // Admins can delete user profiles
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================
+    // TRANSACTIONS COLLECTION (Ledger)
+    // ============================================
+    
+    match /transactions/{transactionId} {
+      // Users can read transactions involving them
+      allow read: if isAuthenticated() &&
+                     (resource.data.fromUserId == request.auth.uid ||
+                      resource.data.toUserId == request.auth.uid);
+      
+      // Admins can read all transactions
+      allow read: if isAdmin();
+      
+      // Users can create transfer requests (type: 'transfer', status: 'Processing')
+      allow create: if isUser() &&
+                       request.resource.data.type == 'transfer' &&
+                       request.resource.data.fromUserId == request.auth.uid &&
+                       request.resource.data.status == 'Processing' &&
+                       request.resource.data.amount > 0;
+      
+      // Admins can create any transaction (funding, etc.)
+      allow create: if isAdmin();
+      
+      // Only admins can update transaction status
+      allow update: if isAdmin() &&
+                       request.resource.data.type == resource.data.type &&
+                       request.resource.data.fromUserId == resource.data.fromUserId &&
+                       request.resource.data.toUserId == resource.data.toUserId &&
+                       request.resource.data.amount == resource.data.amount &&
+                       request.resource.data.createdAt == resource.data.createdAt;
+      
+      // Only admins can delete transactions
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================
+    // MESSAGES COLLECTION (Support Desk)
+    // ============================================
+    
+    match /messages/{messageId} {
+      // Users can read their own messages
+      allow read: if isOwnProfile(resource.data.senderId);
+      
+      // Admins can read all messages
+      allow read: if isAdmin();
+      
+      // Users can create new support messages
+      allow create: if isUser() &&
+                       request.resource.data.senderId == request.auth.uid &&
+                       request.resource.data.status == 'open';
+      
+      // Only admins can reply to messages
+      allow update: if isAdmin() &&
+                       request.resource.data.senderId == resource.data.senderId;
+      
+      // Only admins can delete messages
+      allow delete: if isAdmin();
+    }
+    
+    // ============================================
+    // DENY ALL BY DEFAULT
+    // ============================================
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
